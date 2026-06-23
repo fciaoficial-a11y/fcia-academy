@@ -38,6 +38,7 @@ import { Route as ModuloSlugRouteImport } from './routes/modulo.$slug'
 import { Route as InstrutorSlugRouteImport } from './routes/instrutor.$slug'
 import { Route as CursoSlugRouteImport } from './routes/curso.$slug'
 import { Route as CertificadoIdRouteImport } from './routes/certificado.$id'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AulaSlugRouteImport } from './routes/aula.$slug'
 import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
 import { Route as AdminTrilhasRouteImport } from './routes/admin.trilhas'
@@ -194,6 +195,11 @@ const CertificadoIdRoute = CertificadoIdRouteImport.update({
   path: '/certificado/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
 const AulaSlugRoute = AulaSlugRouteImport.update({
   id: '/aula/$slug',
   path: '/aula/$slug',
@@ -276,6 +282,7 @@ export interface FileRoutesByFullPath {
   '/admin/trilhas': typeof AdminTrilhasRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/aula/$slug': typeof AulaSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/certificado/$id': typeof CertificadoIdRoute
   '/curso/$slug': typeof CursoSlugRoute
   '/instrutor/$slug': typeof InstrutorSlugRoute
@@ -315,6 +322,7 @@ export interface FileRoutesByTo {
   '/admin/trilhas': typeof AdminTrilhasRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/aula/$slug': typeof AulaSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/certificado/$id': typeof CertificadoIdRoute
   '/curso/$slug': typeof CursoSlugRoute
   '/instrutor/$slug': typeof InstrutorSlugRoute
@@ -357,6 +365,7 @@ export interface FileRoutesById {
   '/admin/trilhas': typeof AdminTrilhasRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/aula/$slug': typeof AulaSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/certificado/$id': typeof CertificadoIdRoute
   '/curso/$slug': typeof CursoSlugRoute
   '/instrutor/$slug': typeof InstrutorSlugRoute
@@ -400,6 +409,7 @@ export interface FileRouteTypes {
     | '/admin/trilhas'
     | '/admin/usuarios'
     | '/aula/$slug'
+    | '/blog/$slug'
     | '/certificado/$id'
     | '/curso/$slug'
     | '/instrutor/$slug'
@@ -439,6 +449,7 @@ export interface FileRouteTypes {
     | '/admin/trilhas'
     | '/admin/usuarios'
     | '/aula/$slug'
+    | '/blog/$slug'
     | '/certificado/$id'
     | '/curso/$slug'
     | '/instrutor/$slug'
@@ -480,6 +491,7 @@ export interface FileRouteTypes {
     | '/admin/trilhas'
     | '/admin/usuarios'
     | '/aula/$slug'
+    | '/blog/$slug'
     | '/certificado/$id'
     | '/curso/$slug'
     | '/instrutor/$slug'
@@ -728,6 +740,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CertificadoIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/aula/$slug': {
       id: '/aula/$slug'
       path: '/aula/$slug'
@@ -838,10 +857,12 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
 
 const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
 }
 
