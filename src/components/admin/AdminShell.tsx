@@ -6,23 +6,16 @@ import {
 import { cn } from "@/lib/utils";
 import { SearchInput } from "@/components/shared/SearchInput";
 
-type AdminNavItem = {
-  to: string;
-  label: string;
-  icon: typeof LayoutDashboard;
-  exact?: boolean;
-};
-
-const ITEMS: AdminNavItem[] = [
-  { to: "/admin", label: "Visão geral", icon: LayoutDashboard, exact: true },
-  { to: "/admin/trilhas", label: "Trilhas", icon: Map },
-  { to: "/admin/cursos", label: "Cursos", icon: BookOpen },
-  { to: "/admin/modulos", label: "Módulos", icon: Layers },
-  { to: "/admin/questoes", label: "Questões", icon: HelpCircle },
-  { to: "/admin/certificados", label: "Certificados", icon: Award },
-  { to: "/admin/usuarios", label: "Usuários", icon: Users },
-  { to: "/admin/ai-studio", label: "AI Studio", icon: Sparkles },
-];
+const ITEMS = [
+  { to: "/admin", label: "Visão geral", icon: LayoutDashboard, exact: true as boolean | undefined },
+  { to: "/admin/trilhas", label: "Trilhas", icon: Map, exact: undefined as boolean | undefined },
+  { to: "/admin/cursos", label: "Cursos", icon: BookOpen, exact: undefined as boolean | undefined },
+  { to: "/admin/modulos", label: "Módulos", icon: Layers, exact: undefined as boolean | undefined },
+  { to: "/admin/questoes", label: "Questões", icon: HelpCircle, exact: undefined as boolean | undefined },
+  { to: "/admin/certificados", label: "Certificados", icon: Award, exact: undefined as boolean | undefined },
+  { to: "/admin/usuarios", label: "Usuários", icon: Users, exact: undefined as boolean | undefined },
+  { to: "/admin/ai-studio", label: "AI Studio", icon: Sparkles, exact: undefined as boolean | undefined },
+] as const;
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
