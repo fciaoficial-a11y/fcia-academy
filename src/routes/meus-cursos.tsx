@@ -61,7 +61,7 @@ function CourseApprovalRow({ courseId, title, slug }: { courseId: string; title:
       <div className="flex items-center gap-2">
         {passed && <Badge variant="secondary" className="gap-1"><Award className="h-3 w-3" />Aprovado</Badge>}
         {certData ? (
-          <Link className="text-xs text-primary underline" to="/certificado/$id" params={{ id: certData.code }}>Certificado</Link>
+          <Link className="text-xs text-primary underline" to="/certificado/$code" params={{ code: certData.code }}>Certificado</Link>
         ) : (
           <Link className="text-xs text-muted-foreground underline" to="/curso/$slug/prova" params={{ slug }}>Fazer prova</Link>
         )}

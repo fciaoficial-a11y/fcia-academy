@@ -607,3 +607,31 @@ export const getMyCertificate = createServerFn({ method: "POST" })
       .maybeSingle();
     return cert ?? null;
   });
+
+const CodeInput = z.object({ code: z.string().min(4).max(80) });
+
+export const getCertificateByCode = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) => CodeInput.parse(d))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: cert, error } = await supabaseAdmin
+      .from("issued_certificates")
+      .select("id, code, issued_at, hours_load, user_id, course_id")
+      .eq("code", data.code)
+      .maybeSingle();
+    if (error || !cert) return { valid: false as const };
+
+    const [{ data: course }, { data: profile }] = await Promise.all([
+      supabaseAdmin.from("courses").select("title, hours_load").eq("id", cert.course_id).maybeSingle(),
+      supabaseAdmin.from("profiles").select("full_name").eq("id", cert.user_id).maybeSingle(),
+    ]);
+
+    return {
+      valid: true as const,
+      code: cert.code,
+      studentName: profile?.full_name ?? "Aluno FCIA",
+      courseName: course?.title ?? "Curso FCIA",
+      issuedAt: cert.issued_at,
+      hoursLoad: cert.hours_load ?? course?.hours_load ?? null,
+    };
+  });
