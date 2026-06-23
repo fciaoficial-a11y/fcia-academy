@@ -21,6 +21,18 @@ function DashboardGated() {
   return (<RequireAuth><Dashboard /></RequireAuth>);
 }
 
+function RealStat({ label, loading, error, value }: { label: string; loading: boolean; error: Error | null; value: number }) {
+  return (
+    <div className="rounded-2xl border border-border/60 bg-card/60 p-4">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+      <p className="mt-1 font-display text-2xl font-semibold text-foreground">
+        {loading ? "…" : error ? "—" : value}
+      </p>
+      {error && <p className="mt-1 text-[10px] text-destructive">{error.message}</p>}
+    </div>
+  );
+}
+
 const ICONS = { aula: Play, quiz: Brain, certificado: Award, conquista: Zap } as const;
 
 function Dashboard() {
