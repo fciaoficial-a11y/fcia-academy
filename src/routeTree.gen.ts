@@ -27,7 +27,6 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
-import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as BlogRouteImport } from './routes/blog'
@@ -63,6 +62,8 @@ import { Route as BlogCategoriaSlugRouteImport } from './routes/blog.categoria.$
 import { Route as BlogAutorSlugRouteImport } from './routes/blog.autor.$slug'
 import { Route as AdminAiStudioPdfToCourseRouteImport } from './routes/admin.ai-studio.pdf-to-course'
 import { Route as AdminAiStudioToolRouteImport } from './routes/admin.ai-studio.$tool'
+import { Route as AuthenticatedCheckoutCourseIdRouteImport } from './routes/_authenticated.checkout.$courseId'
+import { Route as ApiPublicWebhooksMercadoPagoRouteImport } from './routes/api/public/webhooks/mercado-pago'
 import { Route as AdminAiStudioDraftsIdRouteImport } from './routes/admin.ai-studio.drafts.$id'
 
 const VitrineRoute = VitrineRouteImport.update({
@@ -153,11 +154,6 @@ const ConquistasRoute = ConquistasRouteImport.update({
 const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
   id: '/configuracoes',
   path: '/configuracoes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CatalogoRoute = CatalogoRouteImport.update({
@@ -335,6 +331,18 @@ const AdminAiStudioToolRoute = AdminAiStudioToolRouteImport.update({
   path: '/$tool',
   getParentRoute: () => AdminAiStudioRoute,
 } as any)
+const AuthenticatedCheckoutCourseIdRoute =
+  AuthenticatedCheckoutCourseIdRouteImport.update({
+    id: '/checkout/$courseId',
+    path: '/checkout/$courseId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const ApiPublicWebhooksMercadoPagoRoute =
+  ApiPublicWebhooksMercadoPagoRouteImport.update({
+    id: '/api/public/webhooks/mercado-pago',
+    path: '/api/public/webhooks/mercado-pago',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AdminAiStudioDraftsIdRoute = AdminAiStudioDraftsIdRouteImport.update({
   id: '/drafts/$id',
   path: '/drafts/$id',
@@ -347,7 +355,6 @@ export interface FileRoutesByFullPath {
   '/blog': typeof BlogRouteWithChildren
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
-  '/checkout': typeof CheckoutRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conquistas': typeof ConquistasRoute
   '/contato': typeof ContatoRoute
@@ -389,6 +396,7 @@ export interface FileRoutesByFullPath {
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/system/': typeof SystemIndexRoute
+  '/checkout/$courseId': typeof AuthenticatedCheckoutCourseIdRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -396,13 +404,13 @@ export interface FileRoutesByFullPath {
   '/curso/$slug/prova': typeof CursoSlugProvaRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
   '/admin/ai-studio/drafts/$id': typeof AdminAiStudioDraftsIdRoute
+  '/api/public/webhooks/mercado-pago': typeof ApiPublicWebhooksMercadoPagoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
-  '/checkout': typeof CheckoutRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conquistas': typeof ConquistasRoute
   '/contato': typeof ContatoRoute
@@ -442,6 +450,7 @@ export interface FileRoutesByTo {
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog': typeof BlogIndexRoute
   '/system': typeof SystemIndexRoute
+  '/checkout/$courseId': typeof AuthenticatedCheckoutCourseIdRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -449,6 +458,7 @@ export interface FileRoutesByTo {
   '/curso/$slug/prova': typeof CursoSlugProvaRoute
   '/admin/ai-studio': typeof AdminAiStudioIndexRoute
   '/admin/ai-studio/drafts/$id': typeof AdminAiStudioDraftsIdRoute
+  '/api/public/webhooks/mercado-pago': typeof ApiPublicWebhooksMercadoPagoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -458,7 +468,6 @@ export interface FileRoutesById {
   '/blog': typeof BlogRouteWithChildren
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
-  '/checkout': typeof CheckoutRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conquistas': typeof ConquistasRoute
   '/contato': typeof ContatoRoute
@@ -500,6 +509,7 @@ export interface FileRoutesById {
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/system/': typeof SystemIndexRoute
+  '/_authenticated/checkout/$courseId': typeof AuthenticatedCheckoutCourseIdRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -507,6 +517,7 @@ export interface FileRoutesById {
   '/curso/$slug/prova': typeof CursoSlugProvaRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
   '/admin/ai-studio/drafts/$id': typeof AdminAiStudioDraftsIdRoute
+  '/api/public/webhooks/mercado-pago': typeof ApiPublicWebhooksMercadoPagoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -516,7 +527,6 @@ export interface FileRouteTypes {
     | '/blog'
     | '/cadastro'
     | '/catalogo'
-    | '/checkout'
     | '/configuracoes'
     | '/conquistas'
     | '/contato'
@@ -558,6 +568,7 @@ export interface FileRouteTypes {
     | '/trilha/$slug'
     | '/blog/'
     | '/system/'
+    | '/checkout/$courseId'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
@@ -565,13 +576,13 @@ export interface FileRouteTypes {
     | '/curso/$slug/prova'
     | '/admin/ai-studio/'
     | '/admin/ai-studio/drafts/$id'
+    | '/api/public/webhooks/mercado-pago'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/admin'
     | '/cadastro'
     | '/catalogo'
-    | '/checkout'
     | '/configuracoes'
     | '/conquistas'
     | '/contato'
@@ -611,6 +622,7 @@ export interface FileRouteTypes {
     | '/trilha/$slug'
     | '/blog'
     | '/system'
+    | '/checkout/$courseId'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
@@ -618,6 +630,7 @@ export interface FileRouteTypes {
     | '/curso/$slug/prova'
     | '/admin/ai-studio'
     | '/admin/ai-studio/drafts/$id'
+    | '/api/public/webhooks/mercado-pago'
   id:
     | '__root__'
     | '/'
@@ -626,7 +639,6 @@ export interface FileRouteTypes {
     | '/blog'
     | '/cadastro'
     | '/catalogo'
-    | '/checkout'
     | '/configuracoes'
     | '/conquistas'
     | '/contato'
@@ -668,6 +680,7 @@ export interface FileRouteTypes {
     | '/trilha/$slug'
     | '/blog/'
     | '/system/'
+    | '/_authenticated/checkout/$courseId'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
@@ -675,6 +688,7 @@ export interface FileRouteTypes {
     | '/curso/$slug/prova'
     | '/admin/ai-studio/'
     | '/admin/ai-studio/drafts/$id'
+    | '/api/public/webhooks/mercado-pago'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -684,7 +698,6 @@ export interface RootRouteChildren {
   BlogRoute: typeof BlogRouteWithChildren
   CadastroRoute: typeof CadastroRoute
   CatalogoRoute: typeof CatalogoRoute
-  CheckoutRoute: typeof CheckoutRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   ConquistasRoute: typeof ConquistasRoute
   ContatoRoute: typeof ContatoRoute
@@ -709,6 +722,7 @@ export interface RootRouteChildren {
   InstrutorSlugRoute: typeof InstrutorSlugRoute
   ModuloSlugRoute: typeof ModuloSlugRoute
   TrilhaSlugRoute: typeof TrilhaSlugRoute
+  ApiPublicWebhooksMercadoPagoRoute: typeof ApiPublicWebhooksMercadoPagoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -837,13 +851,6 @@ declare module '@tanstack/react-router' {
       path: '/configuracoes'
       fullPath: '/configuracoes'
       preLoaderRoute: typeof ConfiguracoesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/catalogo': {
@@ -1091,6 +1098,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAiStudioToolRouteImport
       parentRoute: typeof AdminAiStudioRoute
     }
+    '/_authenticated/checkout/$courseId': {
+      id: '/_authenticated/checkout/$courseId'
+      path: '/checkout/$courseId'
+      fullPath: '/checkout/$courseId'
+      preLoaderRoute: typeof AuthenticatedCheckoutCourseIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/api/public/webhooks/mercado-pago': {
+      id: '/api/public/webhooks/mercado-pago'
+      path: '/api/public/webhooks/mercado-pago'
+      fullPath: '/api/public/webhooks/mercado-pago'
+      preLoaderRoute: typeof ApiPublicWebhooksMercadoPagoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/ai-studio/drafts/$id': {
       id: '/admin/ai-studio/drafts/$id'
       path: '/drafts/$id'
@@ -1103,10 +1124,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedMeusCursosRoute: typeof AuthenticatedMeusCursosRoute
+  AuthenticatedCheckoutCourseIdRoute: typeof AuthenticatedCheckoutCourseIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedMeusCursosRoute: AuthenticatedMeusCursosRoute,
+  AuthenticatedCheckoutCourseIdRoute: AuthenticatedCheckoutCourseIdRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -1211,7 +1234,6 @@ const rootRouteChildren: RootRouteChildren = {
   BlogRoute: BlogRouteWithChildren,
   CadastroRoute: CadastroRoute,
   CatalogoRoute: CatalogoRoute,
-  CheckoutRoute: CheckoutRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
   ConquistasRoute: ConquistasRoute,
   ContatoRoute: ContatoRoute,
@@ -1236,6 +1258,7 @@ const rootRouteChildren: RootRouteChildren = {
   InstrutorSlugRoute: InstrutorSlugRoute,
   ModuloSlugRoute: ModuloSlugRoute,
   TrilhaSlugRoute: TrilhaSlugRoute,
+  ApiPublicWebhooksMercadoPagoRoute: ApiPublicWebhooksMercadoPagoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

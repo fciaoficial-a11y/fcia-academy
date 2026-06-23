@@ -1,17 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient, useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 import { AppShell } from "@/components/app/AppShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, CheckCircle2, Clock, Compass, Loader2, ShoppingBag } from "lucide-react";
-import { toast } from "sonner";
+import { BookOpen, CheckCircle2, Clock, Compass, ShoppingBag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { coursesQO, myEnrollmentsQO, enrollInCourse, enrollmentsKey, type CourseRow } from "@/lib/learning";
+import { coursesQO, myEnrollmentsQO, type CourseRow, type EnrollmentWithCourse } from "@/lib/learning";
 
 type Track = { id: string; slug: string; title: string; description: string | null; hours_load: number | null };
 
@@ -61,10 +60,11 @@ function VitrinePage() {
   const tracks = useSuspenseQuery(tracksQO());
   const { user } = useAuth();
   const enrollments = useQuery(myEnrollmentsQO(user?.id));
-  const enrolledIds = useMemo(
-    () => new Set((enrollments.data ?? []).map((e) => e.course_id)),
-    [enrollments.data],
-  );
+  const enrollmentByCourse = useMemo(() => {
+    const m = new Map<string, EnrollmentWithCourse>();
+    (enrollments.data ?? []).forEach((e) => m.set(e.course_id, e));
+    return m;
+  }, [enrollments.data]);
   const [search, setSearch] = useState(q);
 
   const filteredCourses = useMemo(() => {
@@ -116,7 +116,11 @@ function VitrinePage() {
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {filteredCourses.map((c) => (
                 <li key={c.id}>
-                  <CourseCard course={c} enrolled={enrolledIds.has(c.id)} userId={user?.id} />
+                  <CourseCard
+                    course={c}
+                    enrollment={enrollmentByCourse.get(c.id) ?? null}
+                    userId={user?.id}
+                  />
                 </li>
               ))}
             </ul>
@@ -159,29 +163,36 @@ function EmptyState({ label }: { label: string }) {
   );
 }
 
-function CourseCard({ course, enrolled, userId }: { course: CourseRow; enrolled: boolean; userId: string | undefined }) {
-  const qc = useQueryClient();
-  const navigate = useNavigate();
-  const enrollM = useMutation({
-    mutationFn: () => {
-      if (!userId) throw new Error("auth");
-      return enrollInCourse(course.id, userId);
-    },
-    onSuccess: () => {
-      toast.success("Matrícula realizada");
-      qc.invalidateQueries({ queryKey: enrollmentsKey(userId ?? "anon") });
-      navigate({ to: "/curso/$slug", params: { slug: course.slug } });
-    },
-    onError: (e: Error) => toast.error(e.message || "Falha ao matricular"),
-  });
+function formatPrice(cents: number | undefined, currency: string | undefined) {
+  if (!cents) return null;
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: currency || "BRL" }).format(cents / 100);
+}
+
+function CourseCard({
+  course,
+  enrollment,
+  userId,
+}: {
+  course: CourseRow;
+  enrollment: EnrollmentWithCourse | null;
+  userId: string | undefined;
+}) {
+  const isActive = enrollment?.accessStatus === "active";
+  const isPending = enrollment?.accessStatus === "pending";
+  const price = formatPrice(course.price_cents, course.currency);
 
   return (
     <article className="flex h-full flex-col rounded-2xl border border-border/60 bg-card/60 p-5 backdrop-blur-xl">
       <div className="flex items-start justify-between gap-3">
         <Badge variant="secondary" className="text-[10px] uppercase tracking-wider">Curso</Badge>
-        {enrolled && (
+        {isActive && (
           <span className="inline-flex items-center gap-1 text-[10px] text-primary">
             <CheckCircle2 className="h-3 w-3" /> Matriculado
+          </span>
+        )}
+        {isPending && (
+          <span className="inline-flex items-center gap-1 text-[10px] text-amber-500">
+            Aguardando pagamento
           </span>
         )}
       </div>
@@ -193,23 +204,30 @@ function CourseCard({ course, enrolled, userId }: { course: CourseRow; enrolled:
         )}
         <span className="inline-flex items-center gap-1"><BookOpen className="h-3 w-3" /> Módulos</span>
       </div>
+      {price && <p className="mt-3 font-mono text-lg font-semibold text-foreground">{price}</p>}
       <div className="mt-auto flex gap-2 pt-4">
         <Button asChild variant="outline" size="sm" className="flex-1">
           <Link to="/curso/$slug" params={{ slug: course.slug }}>Ver curso</Link>
         </Button>
-        {enrolled ? (
+        {isActive ? (
           <Button asChild size="sm" className="flex-1">
-            <Link to="/curso/$slug" params={{ slug: course.slug }}>Acessar curso</Link>
+            <Link to="/curso/$slug" params={{ slug: course.slug }}>Acessar</Link>
+          </Button>
+        ) : isPending ? (
+          <Button asChild size="sm" className="flex-1">
+            <Link to="/checkout/$courseId" params={{ courseId: course.id }}>Concluir pagamento</Link>
           </Button>
         ) : !userId ? (
           <Button asChild size="sm" className="flex-1">
-            <Link to="/cadastro" search={{ next: `/curso/${course.slug}` }}>
+            <Link to="/cadastro" search={{ next: `/checkout/${course.id}` }}>
               <ShoppingBag className="mr-1 h-3.5 w-3.5" /> Matricular
             </Link>
           </Button>
         ) : (
-          <Button size="sm" className="flex-1" disabled={enrollM.isPending} onClick={() => enrollM.mutate()}>
-            {enrollM.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Matricular"}
+          <Button asChild size="sm" className="flex-1">
+            <Link to="/checkout/$courseId" params={{ courseId: course.id }}>
+              <ShoppingBag className="mr-1 h-3.5 w-3.5" /> Matricular
+            </Link>
           </Button>
         )}
       </div>

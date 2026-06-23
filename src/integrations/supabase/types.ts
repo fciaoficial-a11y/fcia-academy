@@ -170,10 +170,12 @@ export type Database = {
       courses: {
         Row: {
           created_at: string
+          currency: string
           description: string | null
           hours_load: number | null
           id: string
           order_index: number
+          price_cents: number
           slug: string
           title: string
           track_id: string | null
@@ -181,10 +183,12 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          currency?: string
           description?: string | null
           hours_load?: number | null
           id?: string
           order_index?: number
+          price_cents?: number
           slug: string
           title: string
           track_id?: string | null
@@ -192,10 +196,12 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          currency?: string
           description?: string | null
           hours_load?: number | null
           id?: string
           order_index?: number
+          price_cents?: number
           slug?: string
           title?: string
           track_id?: string | null
@@ -213,29 +219,35 @@ export type Database = {
       }
       enrollments: {
         Row: {
+          access_status: string
           course_id: string
           created_at: string
           enrolled_at: string
           id: string
           last_lesson_id: string | null
+          paid_at: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          access_status?: string
           course_id: string
           created_at?: string
           enrolled_at?: string
           id?: string
           last_lesson_id?: string | null
+          paid_at?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          access_status?: string
           course_id?: string
           created_at?: string
           enrolled_at?: string
           id?: string
           last_lesson_id?: string | null
+          paid_at?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -486,6 +498,84 @@ export type Database = {
           },
         ]
       }
+      payments: {
+        Row: {
+          amount_cents: number
+          approved_at: string | null
+          course_id: string
+          created_at: string
+          currency: string
+          enrollment_id: string | null
+          expires_at: string | null
+          id: string
+          method: string
+          provider: string
+          provider_payment_id: string | null
+          qr_code: string | null
+          qr_code_base64: string | null
+          raw_event: Json | null
+          status: string
+          ticket_url: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_cents: number
+          approved_at?: string | null
+          course_id: string
+          created_at?: string
+          currency?: string
+          enrollment_id?: string | null
+          expires_at?: string | null
+          id?: string
+          method?: string
+          provider?: string
+          provider_payment_id?: string | null
+          qr_code?: string | null
+          qr_code_base64?: string | null
+          raw_event?: Json | null
+          status?: string
+          ticket_url?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number
+          approved_at?: string | null
+          course_id?: string
+          created_at?: string
+          currency?: string
+          enrollment_id?: string | null
+          expires_at?: string | null
+          id?: string
+          method?: string
+          provider?: string
+          provider_payment_id?: string | null
+          qr_code?: string | null
+          qr_code_base64?: string | null
+          raw_event?: Json | null
+          status?: string
+          ticket_url?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -667,6 +757,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      process_mercado_pago_payment: {
+        Args: { p_provider_payment_id: string; p_raw: Json; p_status: string }
+        Returns: Json
       }
       publish_course_draft: {
         Args: {
