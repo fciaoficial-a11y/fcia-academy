@@ -26,6 +26,12 @@ import { Route as CertificadosRouteImport } from './routes/certificados'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TrilhaSlugRouteImport } from './routes/trilha.$slug'
+import { Route as QuizIdRouteImport } from './routes/quiz.$id'
+import { Route as ModuloSlugRouteImport } from './routes/modulo.$slug'
+import { Route as CursoSlugRouteImport } from './routes/curso.$slug'
+import { Route as CertificadoIdRouteImport } from './routes/certificado.$id'
+import { Route as AulaSlugRouteImport } from './routes/aula.$slug'
 
 const TrilhasRoute = TrilhasRouteImport.update({
   id: '/trilhas',
@@ -112,6 +118,36 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrilhaSlugRoute = TrilhaSlugRouteImport.update({
+  id: '/trilha/$slug',
+  path: '/trilha/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizIdRoute = QuizIdRouteImport.update({
+  id: '/quiz/$id',
+  path: '/quiz/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModuloSlugRoute = ModuloSlugRouteImport.update({
+  id: '/modulo/$slug',
+  path: '/modulo/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CursoSlugRoute = CursoSlugRouteImport.update({
+  id: '/curso/$slug',
+  path: '/curso/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CertificadoIdRoute = CertificadoIdRouteImport.update({
+  id: '/certificado/$id',
+  path: '/certificado/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AulaSlugRoute = AulaSlugRouteImport.update({
+  id: '/aula/$slug',
+  path: '/aula/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -131,6 +167,12 @@ export interface FileRoutesByFullPath {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
+  '/aula/$slug': typeof AulaSlugRoute
+  '/certificado/$id': typeof CertificadoIdRoute
+  '/curso/$slug': typeof CursoSlugRoute
+  '/modulo/$slug': typeof ModuloSlugRoute
+  '/quiz/$id': typeof QuizIdRoute
+  '/trilha/$slug': typeof TrilhaSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -150,6 +192,12 @@ export interface FileRoutesByTo {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
+  '/aula/$slug': typeof AulaSlugRoute
+  '/certificado/$id': typeof CertificadoIdRoute
+  '/curso/$slug': typeof CursoSlugRoute
+  '/modulo/$slug': typeof ModuloSlugRoute
+  '/quiz/$id': typeof QuizIdRoute
+  '/trilha/$slug': typeof TrilhaSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -170,6 +218,12 @@ export interface FileRoutesById {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
+  '/aula/$slug': typeof AulaSlugRoute
+  '/certificado/$id': typeof CertificadoIdRoute
+  '/curso/$slug': typeof CursoSlugRoute
+  '/modulo/$slug': typeof ModuloSlugRoute
+  '/quiz/$id': typeof QuizIdRoute
+  '/trilha/$slug': typeof TrilhaSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -191,6 +245,12 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/sobre'
     | '/trilhas'
+    | '/aula/$slug'
+    | '/certificado/$id'
+    | '/curso/$slug'
+    | '/modulo/$slug'
+    | '/quiz/$id'
+    | '/trilha/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -210,6 +270,12 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/sobre'
     | '/trilhas'
+    | '/aula/$slug'
+    | '/certificado/$id'
+    | '/curso/$slug'
+    | '/modulo/$slug'
+    | '/quiz/$id'
+    | '/trilha/$slug'
   id:
     | '__root__'
     | '/'
@@ -229,6 +295,12 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/sobre'
     | '/trilhas'
+    | '/aula/$slug'
+    | '/certificado/$id'
+    | '/curso/$slug'
+    | '/modulo/$slug'
+    | '/quiz/$id'
+    | '/trilha/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -249,6 +321,12 @@ export interface RootRouteChildren {
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
   SobreRoute: typeof SobreRoute
   TrilhasRoute: typeof TrilhasRoute
+  AulaSlugRoute: typeof AulaSlugRoute
+  CertificadoIdRoute: typeof CertificadoIdRoute
+  CursoSlugRoute: typeof CursoSlugRoute
+  ModuloSlugRoute: typeof ModuloSlugRoute
+  QuizIdRoute: typeof QuizIdRoute
+  TrilhaSlugRoute: typeof TrilhaSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -372,6 +450,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trilha/$slug': {
+      id: '/trilha/$slug'
+      path: '/trilha/$slug'
+      fullPath: '/trilha/$slug'
+      preLoaderRoute: typeof TrilhaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz/$id': {
+      id: '/quiz/$id'
+      path: '/quiz/$id'
+      fullPath: '/quiz/$id'
+      preLoaderRoute: typeof QuizIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/modulo/$slug': {
+      id: '/modulo/$slug'
+      path: '/modulo/$slug'
+      fullPath: '/modulo/$slug'
+      preLoaderRoute: typeof ModuloSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/curso/$slug': {
+      id: '/curso/$slug'
+      path: '/curso/$slug'
+      fullPath: '/curso/$slug'
+      preLoaderRoute: typeof CursoSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/certificado/$id': {
+      id: '/certificado/$id'
+      path: '/certificado/$id'
+      fullPath: '/certificado/$id'
+      preLoaderRoute: typeof CertificadoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aula/$slug': {
+      id: '/aula/$slug'
+      path: '/aula/$slug'
+      fullPath: '/aula/$slug'
+      preLoaderRoute: typeof AulaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -393,6 +513,12 @@ const rootRouteChildren: RootRouteChildren = {
   RecuperarSenhaRoute: RecuperarSenhaRoute,
   SobreRoute: SobreRoute,
   TrilhasRoute: TrilhasRoute,
+  AulaSlugRoute: AulaSlugRoute,
+  CertificadoIdRoute: CertificadoIdRoute,
+  CursoSlugRoute: CursoSlugRoute,
+  ModuloSlugRoute: ModuloSlugRoute,
+  QuizIdRoute: QuizIdRoute,
+  TrilhaSlugRoute: TrilhaSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
