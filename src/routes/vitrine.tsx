@@ -1,17 +1,17 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient, useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+import { useQuery, useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 import { AppShell } from "@/components/app/AppShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, CheckCircle2, Clock, Compass, Loader2, ShoppingBag } from "lucide-react";
-import { toast } from "sonner";
+import { BookOpen, CheckCircle2, Clock, Compass, ShoppingBag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { coursesQO, myEnrollmentsQO, enrollInCourse, enrollmentsKey, type CourseRow } from "@/lib/learning";
+import { coursesQO, myEnrollmentsQO, type CourseRow, type EnrollmentWithCourse } from "@/lib/learning";
 
 type Track = { id: string; slug: string; title: string; description: string | null; hours_load: number | null };
 
@@ -61,10 +61,11 @@ function VitrinePage() {
   const tracks = useSuspenseQuery(tracksQO());
   const { user } = useAuth();
   const enrollments = useQuery(myEnrollmentsQO(user?.id));
-  const enrolledIds = useMemo(
-    () => new Set((enrollments.data ?? []).map((e) => e.course_id)),
-    [enrollments.data],
-  );
+  const enrollmentByCourse = useMemo(() => {
+    const m = new Map<string, EnrollmentWithCourse>();
+    (enrollments.data ?? []).forEach((e) => m.set(e.course_id, e));
+    return m;
+  }, [enrollments.data]);
   const [search, setSearch] = useState(q);
 
   const filteredCourses = useMemo(() => {
@@ -116,7 +117,11 @@ function VitrinePage() {
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {filteredCourses.map((c) => (
                 <li key={c.id}>
-                  <CourseCard course={c} enrolled={enrolledIds.has(c.id)} userId={user?.id} />
+                  <CourseCard
+                    course={c}
+                    enrollment={enrollmentByCourse.get(c.id) ?? null}
+                    userId={user?.id}
+                  />
                 </li>
               ))}
             </ul>
