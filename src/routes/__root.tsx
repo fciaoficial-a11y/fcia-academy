@@ -78,14 +78,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "FCIA ACADEMY" },
+      { name: "description", content: "Fcia Academy Core reconstructs the FCIA Academy platform, preserving all frontend elements and design." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "FCIA ACADEMY" },
+      { property: "og:description", content: "Fcia Academy Core reconstructs the FCIA Academy platform, preserving all frontend elements and design." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "FCIA ACADEMY" },
+      { name: "twitter:description", content: "Fcia Academy Core reconstructs the FCIA Academy platform, preserving all frontend elements and design." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cc381a8f-196e-461a-8190-2ff734d143f1/id-preview-974f3993--233b70db-355a-405c-94c9-7c068f868c1a.lovable.app-1782251139451.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cc381a8f-196e-461a-8190-2ff734d143f1/id-preview-974f3993--233b70db-355a-405c-94c9-7c068f868c1a.lovable.app-1782251139451.png" },
     ],
     links: [
       {
