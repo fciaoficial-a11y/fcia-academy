@@ -38,7 +38,6 @@ import { Route as SystemSecurityStatusRouteImport } from './routes/system.securi
 import { Route as SystemSchemaRouteImport } from './routes/system.schema'
 import { Route as SystemOpsStatusRouteImport } from './routes/system.ops-status'
 import { Route as SystemLaunchStatusRouteImport } from './routes/system.launch-status'
-import { Route as QuizIdRouteImport } from './routes/quiz.$id'
 import { Route as ModuloSlugRouteImport } from './routes/modulo.$slug'
 import { Route as InstrutorSlugRouteImport } from './routes/instrutor.$slug'
 import { Route as CursoSlugRouteImport } from './routes/curso.$slug'
@@ -205,11 +204,6 @@ const SystemLaunchStatusRoute = SystemLaunchStatusRouteImport.update({
   path: '/system/launch-status',
   getParentRoute: () => rootRouteImport,
 } as any)
-const QuizIdRoute = QuizIdRouteImport.update({
-  id: '/quiz/$id',
-  path: '/quiz/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ModuloSlugRoute = ModuloSlugRouteImport.update({
   id: '/modulo/$slug',
   path: '/modulo/$slug',
@@ -347,7 +341,6 @@ export interface FileRoutesByFullPath {
   '/curso/$slug': typeof CursoSlugRouteWithChildren
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
-  '/quiz/$id': typeof QuizIdRoute
   '/system/launch-status': typeof SystemLaunchStatusRoute
   '/system/ops-status': typeof SystemOpsStatusRoute
   '/system/schema': typeof SystemSchemaRoute
@@ -397,7 +390,6 @@ export interface FileRoutesByTo {
   '/curso/$slug': typeof CursoSlugRouteWithChildren
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
-  '/quiz/$id': typeof QuizIdRoute
   '/system/launch-status': typeof SystemLaunchStatusRoute
   '/system/ops-status': typeof SystemOpsStatusRoute
   '/system/schema': typeof SystemSchemaRoute
@@ -450,7 +442,6 @@ export interface FileRoutesById {
   '/curso/$slug': typeof CursoSlugRouteWithChildren
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
-  '/quiz/$id': typeof QuizIdRoute
   '/system/launch-status': typeof SystemLaunchStatusRoute
   '/system/ops-status': typeof SystemOpsStatusRoute
   '/system/schema': typeof SystemSchemaRoute
@@ -504,7 +495,6 @@ export interface FileRouteTypes {
     | '/curso/$slug'
     | '/instrutor/$slug'
     | '/modulo/$slug'
-    | '/quiz/$id'
     | '/system/launch-status'
     | '/system/ops-status'
     | '/system/schema'
@@ -554,7 +544,6 @@ export interface FileRouteTypes {
     | '/curso/$slug'
     | '/instrutor/$slug'
     | '/modulo/$slug'
-    | '/quiz/$id'
     | '/system/launch-status'
     | '/system/ops-status'
     | '/system/schema'
@@ -606,7 +595,6 @@ export interface FileRouteTypes {
     | '/curso/$slug'
     | '/instrutor/$slug'
     | '/modulo/$slug'
-    | '/quiz/$id'
     | '/system/launch-status'
     | '/system/ops-status'
     | '/system/schema'
@@ -651,7 +639,6 @@ export interface RootRouteChildren {
   CursoSlugRoute: typeof CursoSlugRouteWithChildren
   InstrutorSlugRoute: typeof InstrutorSlugRoute
   ModuloSlugRoute: typeof ModuloSlugRoute
-  QuizIdRoute: typeof QuizIdRoute
   SystemLaunchStatusRoute: typeof SystemLaunchStatusRoute
   SystemOpsStatusRoute: typeof SystemOpsStatusRoute
   SystemSchemaRoute: typeof SystemSchemaRoute
@@ -864,13 +851,6 @@ declare module '@tanstack/react-router' {
       path: '/system/launch-status'
       fullPath: '/system/launch-status'
       preLoaderRoute: typeof SystemLaunchStatusRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quiz/$id': {
-      id: '/quiz/$id'
-      path: '/quiz/$id'
-      fullPath: '/quiz/$id'
-      preLoaderRoute: typeof QuizIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/modulo/$slug': {
@@ -1111,7 +1091,6 @@ const rootRouteChildren: RootRouteChildren = {
   CursoSlugRoute: CursoSlugRouteWithChildren,
   InstrutorSlugRoute: InstrutorSlugRoute,
   ModuloSlugRoute: ModuloSlugRoute,
-  QuizIdRoute: QuizIdRoute,
   SystemLaunchStatusRoute: SystemLaunchStatusRoute,
   SystemOpsStatusRoute: SystemOpsStatusRoute,
   SystemSchemaRoute: SystemSchemaRoute,
