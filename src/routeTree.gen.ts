@@ -48,6 +48,7 @@ import { Route as AdminCursosRouteImport } from './routes/admin.cursos'
 import { Route as AdminCertificadosRouteImport } from './routes/admin.certificados'
 import { Route as AdminAiStudioRouteImport } from './routes/admin.ai-studio'
 import { Route as AdminAiStudioIndexRouteImport } from './routes/admin.ai-studio.index'
+import { Route as BlogCategoriaSlugRouteImport } from './routes/blog.categoria.$slug'
 import { Route as AdminAiStudioToolRouteImport } from './routes/admin.ai-studio.$tool'
 
 const TrilhasRoute = TrilhasRouteImport.update({
@@ -245,6 +246,11 @@ const AdminAiStudioIndexRoute = AdminAiStudioIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminAiStudioRoute,
 } as any)
+const BlogCategoriaSlugRoute = BlogCategoriaSlugRouteImport.update({
+  id: '/categoria/$slug',
+  path: '/categoria/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
 const AdminAiStudioToolRoute = AdminAiStudioToolRouteImport.update({
   id: '/$tool',
   path: '/$tool',
@@ -291,6 +297,7 @@ export interface FileRoutesByFullPath {
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
+  '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
 }
 export interface FileRoutesByTo {
@@ -331,6 +338,7 @@ export interface FileRoutesByTo {
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
+  '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/admin/ai-studio': typeof AdminAiStudioIndexRoute
 }
 export interface FileRoutesById {
@@ -374,6 +382,7 @@ export interface FileRoutesById {
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
+  '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
 }
 export interface FileRouteTypes {
@@ -418,6 +427,7 @@ export interface FileRouteTypes {
     | '/trilha/$slug'
     | '/blog/'
     | '/admin/ai-studio/$tool'
+    | '/blog/categoria/$slug'
     | '/admin/ai-studio/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -458,6 +468,7 @@ export interface FileRouteTypes {
     | '/trilha/$slug'
     | '/blog'
     | '/admin/ai-studio/$tool'
+    | '/blog/categoria/$slug'
     | '/admin/ai-studio'
   id:
     | '__root__'
@@ -500,6 +511,7 @@ export interface FileRouteTypes {
     | '/trilha/$slug'
     | '/blog/'
     | '/admin/ai-studio/$tool'
+    | '/blog/categoria/$slug'
     | '/admin/ai-studio/'
   fileRoutesById: FileRoutesById
 }
@@ -810,6 +822,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAiStudioIndexRouteImport
       parentRoute: typeof AdminAiStudioRoute
     }
+    '/blog/categoria/$slug': {
+      id: '/blog/categoria/$slug'
+      path: '/categoria/$slug'
+      fullPath: '/blog/categoria/$slug'
+      preLoaderRoute: typeof BlogCategoriaSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/admin/ai-studio/$tool': {
       id: '/admin/ai-studio/$tool'
       path: '/$tool'
@@ -859,11 +878,13 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  BlogCategoriaSlugRoute: typeof BlogCategoriaSlugRoute
 }
 
 const BlogRouteChildren: BlogRouteChildren = {
   BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
+  BlogCategoriaSlugRoute: BlogCategoriaSlugRoute,
 }
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
