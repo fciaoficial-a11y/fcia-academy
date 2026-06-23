@@ -203,3 +203,180 @@ export const generateCourseDraft = createServerFn({ method: "POST" })
 
     return { draftId: draft.id, payload };
   });
+
+function slugify(input: string): string {
+  return input
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+    .slice(0, 60) || `curso-${Date.now()}`;
+}
+
+const PayloadShape = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+  objectives: z.array(z.string()),
+  hoursLoad: z.number(),
+  modules: z.array(
+    z.object({
+      title: z.string().min(1),
+      summary: z.string().default(""),
+      content: z.string().default(""),
+      exercises: z.array(z.string()).default([]),
+    }),
+  ).min(1),
+  questionBank: z.array(
+    z.object({
+      stem: z.string().min(1),
+      options: z.array(z.string()).length(4),
+      correctIndex: z.number().int().min(0).max(3),
+      explanation: z.string().default(""),
+    }),
+  ).min(1),
+  certificateTemplate: z.object({
+    heading: z.string(),
+    body: z.string(),
+    signature: z.string(),
+  }),
+});
+
+const PublishInput = z.object({
+  draftId: z.string().uuid(),
+  overrides: PayloadShape.partial().optional(),
+  trackId: z.string().uuid().nullish(),
+  passingScore: z.number().int().min(1).max(100).optional(),
+  questionCount: z.number().int().min(1).max(50).optional(),
+});
+
+const UpdateDraftInput = z.object({
+  draftId: z.string().uuid(),
+  payload: PayloadShape,
+});
+
+export const updateCourseDraft = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => UpdateDraftInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context as any;
+    await assertAdmin(supabase, userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("ai_course_drafts")
+      .update({ ai_payload: data.payload as any })
+      .eq("id", data.draftId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const publishCourseDraft = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => PublishInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context as any;
+    await assertAdmin(supabase, userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: draft, error: dErr } = await supabaseAdmin
+      .from("ai_course_drafts")
+      .select("id, status, ai_payload, course_id")
+      .eq("id", data.draftId)
+      .maybeSingle();
+    if (dErr || !draft) throw new Error("Draft não encontrado");
+    if (draft.status === "published") throw new Error("Draft já publicado");
+    if (!draft.ai_payload) throw new Error("Draft ainda não está pronto para revisão");
+
+    const merged = { ...(draft.ai_payload as any), ...(data.overrides ?? {}) };
+    const payload = PayloadShape.parse(merged);
+
+    // unique slug
+    let baseSlug = slugify(payload.title);
+    let slug = baseSlug;
+    for (let i = 2; i < 50; i++) {
+      const { data: hit } = await supabaseAdmin
+        .from("courses")
+        .select("id")
+        .eq("slug", slug)
+        .maybeSingle();
+      if (!hit) break;
+      slug = `${baseSlug}-${i}`;
+    }
+
+    // 1) course
+    const { data: course, error: cErr } = await supabaseAdmin
+      .from("courses")
+      .insert({
+        slug,
+        title: payload.title,
+        description: payload.description,
+        hours_load: payload.hoursLoad,
+        track_id: data.trackId ?? null,
+        order_index: 0,
+      })
+      .select("id, slug")
+      .single();
+    if (cErr || !course) throw new Error(`Falha ao criar curso: ${cErr?.message}`);
+
+    const rollback = async (msg: string) => {
+      await supabaseAdmin.from("courses").delete().eq("id", course.id);
+      throw new Error(msg);
+    };
+
+    // 2) modules
+    const moduleRows = payload.modules.map((m, idx) => ({
+      course_id: course.id,
+      slug: `${slugify(m.title)}-${idx + 1}`,
+      title: m.title,
+      content: [m.summary, m.content, ...(m.exercises ?? []).map((e) => `- ${e}`)]
+        .filter(Boolean)
+        .join("\n\n"),
+      order_index: idx,
+    }));
+    const { error: mErr } = await supabaseAdmin.from("modules").insert(moduleRows);
+    if (mErr) await rollback(`Falha ao criar módulos: ${mErr.message}`);
+
+    // 3) questions
+    const questionRows = payload.questionBank.map((q) => ({
+      course_id: course.id,
+      stem: q.stem,
+      options: q.options as any,
+      correct_index: q.correctIndex,
+      explanation: q.explanation,
+    }));
+    const { error: qErr } = await supabaseAdmin.from("questions").insert(questionRows);
+    if (qErr) await rollback(`Falha ao criar questões: ${qErr.message}`);
+
+    // 4) exam config
+    const questionCount = Math.min(data.questionCount ?? 10, payload.questionBank.length);
+    const { error: eErr } = await supabaseAdmin.from("course_exams").insert({
+      course_id: course.id,
+      passing_score: data.passingScore ?? 70,
+      question_count: questionCount,
+      shuffle_seed_strategy: "random",
+      published: true,
+    });
+    if (eErr) await rollback(`Falha ao criar prova: ${eErr.message}`);
+
+    // 5) update draft → published (certificate template lives inside ai_payload)
+    const finalPayload = { ...payload, certificateTemplate: payload.certificateTemplate };
+    const { error: updErr } = await supabaseAdmin
+      .from("ai_course_drafts")
+      .update({
+        status: "published",
+        course_id: course.id,
+        ai_payload: finalPayload as any,
+      })
+      .eq("id", draft.id);
+    if (updErr) await rollback(`Falha ao atualizar draft: ${updErr.message}`);
+
+    return {
+      ok: true,
+      courseId: course.id,
+      slug: course.slug,
+      modules: moduleRows.length,
+      questions: questionRows.length,
+      passingScore: data.passingScore ?? 70,
+      questionCount,
+    };
+  });

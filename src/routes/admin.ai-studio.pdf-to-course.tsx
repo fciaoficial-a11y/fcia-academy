@@ -181,11 +181,21 @@ function PdfToCoursePage() {
                       </button>
                       <button
                         onClick={() => setActiveDraftId(d.id)}
-                        disabled={d.status !== "ready_for_review"}
+                        disabled={d.status !== "ready_for_review" && d.status !== "published"}
                         className="inline-flex items-center rounded-full bg-secondary/70 px-3 py-1 text-[11px] font-medium text-foreground hover:bg-secondary disabled:opacity-50"
                       >
-                        Revisar
+                        Pré-visualizar
                       </button>
+                      <Link
+                        to="/admin/ai-studio/drafts/$id"
+                        params={{ id: d.id }}
+                        className={cn(
+                          "inline-flex items-center rounded-full bg-primary/15 px-3 py-1 text-[11px] font-medium text-primary hover:bg-primary/20",
+                          d.status !== "ready_for_review" && d.status !== "published" && "pointer-events-none opacity-50",
+                        )}
+                      >
+                        Revisar & publicar
+                      </Link>
                     </div>
                   </li>
                 );
