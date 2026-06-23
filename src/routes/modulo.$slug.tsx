@@ -1,7 +1,9 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { MODULES, type Lesson } from "@/lib/mock-data";
+import { mockModuleQO } from "@/lib/learning";
 import { CheckCircle2, Circle, Play } from "lucide-react";
 
 export const Route = createFileRoute("/modulo/$slug")({
@@ -12,10 +14,10 @@ export const Route = createFileRoute("/modulo/$slug")({
       { name: "description", content: m?.summary ?? "Módulo do curso." },
     ] };
   },
-  loader: ({ params }) => {
-    const mod = MODULES.find((x) => x.slug === params.slug);
+  loader: async ({ params, context }) => {
+    const { queryClient } = context as { queryClient: import("@tanstack/react-query").QueryClient };
+    const mod = await queryClient.ensureQueryData(mockModuleQO(params.slug));
     if (!mod) throw notFound();
-    return { mod };
   },
   notFoundComponent: () => <StudentShell><p className="text-muted-foreground">Módulo não encontrado.</p></StudentShell>,
   errorComponent: ({ error }) => <StudentShell><p className="text-destructive">Erro: {error.message}</p></StudentShell>,
@@ -23,7 +25,9 @@ export const Route = createFileRoute("/modulo/$slug")({
 });
 
 function ModuleDetail() {
-  const { mod } = Route.useLoaderData();
+  const { slug } = Route.useParams();
+  const { data: mod } = useSuspenseQuery(mockModuleQO(slug));
+  if (!mod) return null;
   return (
     <StudentShell>
       <PageHeader crumbs={[{ label: "Curso", to: "/curso/$slug" }, { label: mod.title }]} eyebrow="Módulo" title={mod.title} description={mod.summary} />
