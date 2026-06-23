@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VitrineRouteImport } from './routes/vitrine'
 import { Route as TrilhasRouteImport } from './routes/trilhas'
 import { Route as SystemRouteImport } from './routes/system'
 import { Route as SobreRouteImport } from './routes/sobre'
@@ -64,6 +65,11 @@ import { Route as AdminAiStudioPdfToCourseRouteImport } from './routes/admin.ai-
 import { Route as AdminAiStudioToolRouteImport } from './routes/admin.ai-studio.$tool'
 import { Route as AdminAiStudioDraftsIdRouteImport } from './routes/admin.ai-studio.drafts.$id'
 
+const VitrineRoute = VitrineRouteImport.update({
+  id: '/vitrine',
+  path: '/vitrine',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TrilhasRoute = TrilhasRouteImport.update({
   id: '/trilhas',
   path: '/trilhas',
@@ -359,6 +365,7 @@ export interface FileRoutesByFullPath {
   '/sobre': typeof SobreRoute
   '/system': typeof SystemRouteWithChildren
   '/trilhas': typeof TrilhasRoute
+  '/vitrine': typeof VitrineRoute
   '/meus-cursos': typeof AuthenticatedMeusCursosRoute
   '/admin/ai-studio': typeof AdminAiStudioRouteWithChildren
   '/admin/certificados': typeof AdminCertificadosRoute
@@ -412,6 +419,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
+  '/vitrine': typeof VitrineRoute
   '/meus-cursos': typeof AuthenticatedMeusCursosRoute
   '/admin/certificados': typeof AdminCertificadosRoute
   '/admin/cursos': typeof AdminCursosRoute
@@ -468,6 +476,7 @@ export interface FileRoutesById {
   '/sobre': typeof SobreRoute
   '/system': typeof SystemRouteWithChildren
   '/trilhas': typeof TrilhasRoute
+  '/vitrine': typeof VitrineRoute
   '/_authenticated/meus-cursos': typeof AuthenticatedMeusCursosRoute
   '/admin/ai-studio': typeof AdminAiStudioRouteWithChildren
   '/admin/certificados': typeof AdminCertificadosRoute
@@ -525,6 +534,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/system'
     | '/trilhas'
+    | '/vitrine'
     | '/meus-cursos'
     | '/admin/ai-studio'
     | '/admin/certificados'
@@ -578,6 +588,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sobre'
     | '/trilhas'
+    | '/vitrine'
     | '/meus-cursos'
     | '/admin/certificados'
     | '/admin/cursos'
@@ -633,6 +644,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/system'
     | '/trilhas'
+    | '/vitrine'
     | '/_authenticated/meus-cursos'
     | '/admin/ai-studio'
     | '/admin/certificados'
@@ -690,6 +702,7 @@ export interface RootRouteChildren {
   SobreRoute: typeof SobreRoute
   SystemRoute: typeof SystemRouteWithChildren
   TrilhasRoute: typeof TrilhasRoute
+  VitrineRoute: typeof VitrineRoute
   AulaSlugRoute: typeof AulaSlugRoute
   CertificadoCodeRoute: typeof CertificadoCodeRoute
   CursoSlugRoute: typeof CursoSlugRouteWithChildren
@@ -700,6 +713,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vitrine': {
+      id: '/vitrine'
+      path: '/vitrine'
+      fullPath: '/vitrine'
+      preLoaderRoute: typeof VitrineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/trilhas': {
       id: '/trilhas'
       path: '/trilhas'
@@ -1209,6 +1229,7 @@ const rootRouteChildren: RootRouteChildren = {
   SobreRoute: SobreRoute,
   SystemRoute: SystemRouteWithChildren,
   TrilhasRoute: TrilhasRoute,
+  VitrineRoute: VitrineRoute,
   AulaSlugRoute: AulaSlugRoute,
   CertificadoCodeRoute: CertificadoCodeRoute,
   CursoSlugRoute: CursoSlugRouteWithChildren,
