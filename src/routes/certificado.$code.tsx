@@ -2,12 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { QRCodeSVG } from "qrcode.react";
-import { Award, CheckCircle2, Download, ShieldCheck, ShieldX, Sparkles } from "lucide-react";
+import { Award, CheckCircle2, Download, Link2, ShieldCheck, ShieldX, Sparkles } from "lucide-react";
+import { useState } from "react";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { getCertificateByCode } from "@/lib/ai-study.functions";
 import { useAuth } from "@/hooks/useAuth";
-import { CERTIFICATES } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/certificado/$code")({
   head: ({ params }) => ({
@@ -39,23 +39,8 @@ function PublicCertPage() {
     ? `${window.location.origin}/certificado/${code}`
     : `/certificado/${code}`;
 
-  // Fallback para demonstração quando o código não existe no banco
-  const mockFallback = !query.isLoading && query.data && !query.data.valid
-    ? CERTIFICATES.find((c) => c.id === code || c.code === code)
-    : undefined;
-
-  const cert = query.data?.valid
-    ? query.data
-    : mockFallback
-      ? {
-          valid: true as const,
-          code: mockFallback.code,
-          studentName: "Aluno FCIA",
-          courseName: mockFallback.courseTitle,
-          issuedAt: mockFallback.issuedAt,
-          hoursLoad: mockFallback.hours,
-        }
-      : null;
+  const cert = query.data?.valid ? query.data : null;
+  const isRevoked = cert?.status === "revoked";
 
   return (
     <StudentShell>
@@ -78,7 +63,7 @@ function PublicCertPage() {
         </div>
       )}
 
-      {cert && <CertificateRender cert={cert} publicUrl={publicUrl} isOwner={!!user} />}
+      {cert && <CertificateRender cert={cert} publicUrl={publicUrl} isOwner={!!user} isRevoked={isRevoked} />}
     </StudentShell>
   );
 }
@@ -89,27 +74,62 @@ type CertData = {
   courseName: string;
   issuedAt: string;
   hoursLoad: number | null;
+  status?: string;
+  revokedAt?: string | null;
+  revokedReason?: string | null;
 };
 
-function CertificateRender({ cert, publicUrl, isOwner }: { cert: CertData; publicUrl: string; isOwner: boolean }) {
+function CertificateRender({ cert, publicUrl, isOwner, isRevoked }: { cert: CertData; publicUrl: string; isOwner: boolean; isRevoked: boolean }) {
   const issued = new Date(cert.issuedAt).toLocaleDateString("pt-BR", {
     day: "2-digit", month: "long", year: "numeric",
   });
+  const [copied, setCopied] = useState(false);
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(publicUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      /* noop */
+    }
+  };
 
   return (
     <div className="grid gap-6">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3">
-        <span className="inline-flex items-center gap-2 text-sm font-medium text-emerald-300">
-          <CheckCircle2 className="h-4 w-4" /> Certificado válido e autêntico
+      <div
+        className={`flex flex-wrap items-center justify-between gap-3 rounded-2xl border px-4 py-3 ${
+          isRevoked
+            ? "border-destructive/40 bg-destructive/10"
+            : "border-emerald-500/30 bg-emerald-500/10"
+        }`}
+      >
+        <span
+          className={`inline-flex items-center gap-2 text-sm font-medium ${
+            isRevoked ? "text-destructive" : "text-emerald-300"
+          }`}
+        >
+          {isRevoked ? <ShieldX className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4" />}
+          {isRevoked
+            ? `Certificado revogado${cert.revokedReason ? ` — ${cert.revokedReason}` : ""}`
+            : "Certificado válido e autêntico"}
         </span>
-        {isOwner && (
+        <div className="flex flex-wrap items-center gap-2">
           <button
-            onClick={() => window.print()}
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-3 py-1.5 text-xs font-medium text-primary-foreground ring-glow"
+            onClick={copyLink}
+            className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/40 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-background/60"
           >
-            <Download className="h-3.5 w-3.5" /> Baixar PDF
+            <Link2 className="h-3.5 w-3.5" /> {copied ? "Link copiado" : "Copiar link"}
           </button>
-        )}
+          {isOwner && !isRevoked && (
+            <button
+              onClick={() => window.print()}
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-3 py-1.5 text-xs font-medium text-primary-foreground ring-glow"
+            >
+              <Download className="h-3.5 w-3.5" /> Baixar PDF
+            </button>
+          )}
+        </div>
       </div>
 
       <article className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br from-card/80 via-card/60 to-background p-8 backdrop-blur-xl ring-glow sm:p-12">
