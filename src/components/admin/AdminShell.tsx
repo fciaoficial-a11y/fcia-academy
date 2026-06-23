@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SearchInput } from "@/components/shared/SearchInput";
+import { ViewAsSwitch } from "@/components/auth/ViewAsSwitch";
 
 const ITEMS = [
   { to: "/admin", label: "Visão geral", icon: LayoutDashboard, exact: true as boolean | undefined },
@@ -51,7 +52,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-40 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-border/60 bg-background/70 px-4 py-3 backdrop-blur-xl sm:flex sm:px-6">
           <div className="min-w-0 flex-1"><SearchInput placeholder="Buscar no admin…" /></div>
-          <Link to="/dashboard" className="shrink-0 rounded-full bg-secondary/60 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary">Sair do admin</Link>
+          <div className="flex shrink-0 items-center gap-2">
+            <ViewAsSwitch />
+            <Link to="/dashboard" className="rounded-full bg-secondary/60 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary">Sair do admin</Link>
+          </div>
         </header>
         <main className="flex-1 px-4 pb-10 pt-6 sm:px-6">
           <div className="mx-auto w-full max-w-7xl space-y-8">{children}</div>
