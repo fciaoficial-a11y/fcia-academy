@@ -1,10 +1,12 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
+import { z } from "zod";
 import { AuthShell, AuthInput, AuthSubmit } from "@/components/auth/AuthShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/onboarding")({
+  validateSearch: z.object({ next: z.string().optional().catch(undefined) }),
   head: () => ({
     meta: [
       { title: "Bem-vindo — FCIA Academy" },
@@ -23,6 +25,7 @@ const OBJECTIVES = [
 
 function OnboardingPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const { user, loading: authLoading } = useAuth();
   const [name, setName] = useState("");
   const [objective, setObjective] = useState(OBJECTIVES[0].v);
@@ -30,16 +33,25 @@ function OnboardingPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const goNext = () => {
+    if (next && next.startsWith("/")) {
+      navigate({ to: next });
+    } else {
+      navigate({ to: "/dashboard" });
+    }
+  };
+
   useEffect(() => {
     if (authLoading) return;
     if (!user) { navigate({ to: "/login" }); return; }
     supabase.from("profiles").select("full_name, objective, onboarded_at").eq("id", user.id).maybeSingle()
       .then(({ data }: { data: any }) => {
-        if (data?.onboarded_at) { navigate({ to: "/dashboard" }); return; }
+        if (data?.onboarded_at) { goNext(); return; }
         if (data?.full_name) setName(data.full_name);
         if (data?.objective) setObjective(data.objective);
       });
-  }, [user, authLoading, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, authLoading]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -55,7 +67,7 @@ function OnboardingPage() {
     });
     setLoading(false);
     if (err) { setError(err.message); return; }
-    navigate({ to: "/catalogo" });
+    goNext();
   }
 
   return (
