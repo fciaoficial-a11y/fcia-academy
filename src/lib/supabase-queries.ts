@@ -53,6 +53,23 @@ export const certificatesQuery = () =>
 export const profilesQuery = () =>
   queryOptions({ queryKey: ["sb", "profiles"], queryFn: () => listTable("profiles", 1) });
 
+export const achievementsQuery = () =>
+  queryOptions({ queryKey: ["sb", "achievements"], queryFn: () => listTable("achievements", 100) });
+
+export const userAchievementsQuery = (userId?: string) =>
+  queryOptions({
+    queryKey: ["sb", "user_achievements", userId ?? "anon"],
+    queryFn: async () => {
+      if (!isSupabaseConfigured) return { rows: [], count: 0, configured: false };
+      const sb = getSupabase();
+      let q = sb.from("user_achievements").select("*", { count: "exact" }).limit(100);
+      if (userId) q = q.eq("user_id", userId);
+      const { data, count, error } = await q;
+      if (error) throw new Error(error.message);
+      return { rows: (data ?? []) as Row[], count: count ?? 0, configured: true };
+    },
+  });
+
 // ---- Normalizers: tolerant mapping for unknown column names ----
 
 function pick(row: Row, keys: string[]): string | undefined {
