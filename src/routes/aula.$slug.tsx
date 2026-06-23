@@ -1,8 +1,11 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { MODULES } from "@/lib/mock-data";
-import { Play, FileDown, ArrowRight, CheckCircle2, Circle } from "lucide-react";
+import { CoursePlayer } from "@/components/learning/CoursePlayer";
+import { ModuleSidebar } from "@/components/learning/ModuleSidebar";
+import { ProgressSystem } from "@/components/learning/ProgressSystem";
+import { MODULES, type Lesson } from "@/lib/mock-data";
+import { FileDown, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/aula/$slug")({
   head: ({ params }) => {
@@ -27,19 +30,14 @@ export const Route = createFileRoute("/aula/$slug")({
 
 function LessonPage() {
   const { lesson, mod, next } = Route.useLoaderData();
+  const completedLessons = mod.lessons.filter((l: Lesson) => l.completed).length;
   return (
     <StudentShell>
       <PageHeader crumbs={[{ label: "Módulo", to: "/modulo/$slug" }, { label: lesson.title }]} eyebrow={mod.title} title={lesson.title} description={`${lesson.type.toUpperCase()} · ${lesson.durationMin} min`} />
 
       <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <section className="space-y-4">
-          <div className="relative grid aspect-video place-items-center overflow-hidden rounded-3xl border border-border/60 bg-card/80 backdrop-blur-xl">
-            <div className="absolute inset-0 tech-grid opacity-30" />
-            <button className="relative z-10 grid h-20 w-20 place-items-center rounded-full bg-gradient-to-br from-primary to-accent text-primary-foreground ring-glow">
-              <Play className="h-8 w-8" />
-            </button>
-            <span className="absolute bottom-3 left-3 z-10 rounded-full bg-background/60 px-3 py-1 text-xs text-foreground backdrop-blur">Player · placeholder</span>
-          </div>
+          <CoursePlayer lesson={lesson} moduleTitle={mod.title} />
 
           <div className="rounded-3xl border border-border/60 bg-card/60 p-5 backdrop-blur-xl">
             <h3 className="font-display text-base font-semibold text-foreground">Anotações</h3>
@@ -60,23 +58,14 @@ function LessonPage() {
         </section>
 
         <aside className="space-y-4">
-          <section className="rounded-3xl border border-border/60 bg-card/60 p-5 backdrop-blur-xl">
-            <h3 className="font-display text-base font-semibold text-foreground">Aulas do módulo</h3>
-            <ul className="mt-3 space-y-1">
-              {mod.lessons.map((l) => {
-                const active = l.slug === lesson.slug;
-                return (
-                  <li key={l.slug}>
-                    <Link to="/aula/$slug" params={{ slug: l.slug }} className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm ${active ? "bg-secondary text-foreground ring-1 ring-inset ring-primary/30" : "text-muted-foreground hover:bg-secondary/40 hover:text-foreground"}`}>
-                      {l.completed ? <CheckCircle2 className="h-4 w-4 text-primary" /> : <Circle className="h-4 w-4" />}
-                      <span className="min-w-0 flex-1 truncate">{l.title}</span>
-                      <span className="text-[10px] text-muted-foreground">{l.durationMin}m</span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
+          <ModuleSidebar mod={mod} currentSlug={lesson.slug} />
+          <ProgressSystem
+            label={mod.title}
+            completed={completedLessons}
+            total={mod.lessons.length}
+            variant="course"
+            hint="Progresso deste módulo"
+          />
 
           <div className="flex flex-wrap gap-2">
             <Link to="/quiz/$id" params={{ id: "q-react-hooks" }} className="rounded-full bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground">Fazer quiz</Link>

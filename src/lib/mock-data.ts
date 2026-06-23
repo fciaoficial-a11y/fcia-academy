@@ -331,3 +331,103 @@ export const ADMIN_RESOURCES = {
     { id: "q3", course: "typescript-pro", module: "Generics", prompt: "Quando usar generics?", level: "Intermediário" },
   ],
 };
+
+export interface LeaderboardEntry {
+  rank: number;
+  name: string;
+  xp: number;
+  level: number;
+  delta: number;
+  isYou?: boolean;
+}
+
+export const LEADERBOARD: LeaderboardEntry[] = [
+  { rank: 1, name: "Aline Pires", xp: 18030, level: 28, delta: 0 },
+  { rank: 2, name: "Diego Lima", xp: 12440, level: 22, delta: 1 },
+  { rank: 3, name: "Helena Costa", xp: 9870, level: 19, delta: -1 },
+  { rank: 4, name: "Bruna Tavares", xp: 7210, level: 17, delta: 2 },
+  { rank: 5, name: "Marina Souza", xp: 4820, level: 14, delta: 3, isYou: true },
+  { rank: 6, name: "Rafael Nunes", xp: 920, level: 5, delta: -2 },
+];
+
+export interface XPLevel {
+  level: number;
+  required: number;
+  title: string;
+}
+
+export const XP_LEVELS: XPLevel[] = [
+  { level: 12, required: 3200, title: "Aprendiz" },
+  { level: 13, required: 4000, title: "Praticante" },
+  { level: 14, required: 4820, title: "Estudante Dedicado" },
+  { level: 15, required: 6000, title: "Especialista Jr." },
+  { level: 16, required: 7500, title: "Especialista" },
+];
+
+export interface AIStudioTool {
+  slug: "quiz" | "resumo" | "objetivos" | "exercicios" | "curso" | "copy" | "certificado";
+  title: string;
+  description: string;
+  inputs: { label: string; placeholder: string; type: "text" | "textarea" | "select"; options?: string[] }[];
+  outputLabel: string;
+}
+
+export const AI_STUDIO_TOOLS: AIStudioTool[] = [
+  {
+    slug: "quiz", title: "Gerar Quiz", description: "Crie banco de questões a partir de um tema ou aula.",
+    inputs: [
+      { label: "Tema/Aula", placeholder: "Ex: React Hooks — useEffect", type: "text" },
+      { label: "Nível", placeholder: "", type: "select", options: ["Iniciante", "Intermediário", "Avançado"] },
+      { label: "Nº de questões", placeholder: "10", type: "text" },
+    ],
+    outputLabel: "Questões geradas",
+  },
+  {
+    slug: "resumo", title: "Gerar Resumo", description: "Sintetize uma aula longa em pontos-chave acionáveis.",
+    inputs: [
+      { label: "Conteúdo bruto", placeholder: "Cole transcrição ou texto…", type: "textarea" },
+      { label: "Formato", placeholder: "", type: "select", options: ["Bullets", "Parágrafo", "Mapa mental"] },
+    ],
+    outputLabel: "Resumo",
+  },
+  {
+    slug: "objetivos", title: "Gerar Objetivos", description: "Liste objetivos de aprendizagem mensuráveis.",
+    inputs: [
+      { label: "Tópico", placeholder: "Ex: SQL Joins", type: "text" },
+      { label: "Público-alvo", placeholder: "Ex: devs juniores", type: "text" },
+    ],
+    outputLabel: "Objetivos",
+  },
+  {
+    slug: "exercicios", title: "Gerar Exercícios", description: "Práticas guiadas com critérios de aceite.",
+    inputs: [
+      { label: "Tópico", placeholder: "Ex: Generics em TypeScript", type: "text" },
+      { label: "Tipo", placeholder: "", type: "select", options: ["Coding", "Case", "Reflexão"] },
+    ],
+    outputLabel: "Exercícios",
+  },
+  {
+    slug: "curso", title: "Gerar Curso Completo", description: "Esqueleto de curso com módulos e aulas.",
+    inputs: [
+      { label: "Título proposto", placeholder: "Ex: Liderança Técnica Sênior", type: "text" },
+      { label: "Briefing", placeholder: "Descreva escopo, público e duração…", type: "textarea" },
+    ],
+    outputLabel: "Estrutura do curso",
+  },
+  {
+    slug: "copy", title: "Gerar Copy", description: "Headlines, descrições e CTAs para landing e catálogo.",
+    inputs: [
+      { label: "Produto/Curso", placeholder: "Ex: Plano Pro", type: "text" },
+      { label: "Tom", placeholder: "", type: "select", options: ["Direto", "Inspirador", "Técnico"] },
+    ],
+    outputLabel: "Copy",
+  },
+  {
+    slug: "certificado", title: "Gerar Certificado", description: "Template de certificado com selo e validação.",
+    inputs: [
+      { label: "Nome do curso", placeholder: "Ex: React Fundamentos", type: "text" },
+      { label: "Carga horária", placeholder: "Ex: 12h", type: "text" },
+    ],
+    outputLabel: "Pré-visualização",
+  },
+];
