@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQueries } from "@tanstack/react-query";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatCard } from "@/components/cards/StatCard";
@@ -7,21 +8,42 @@ import { AchievementCard } from "@/components/cards/AchievementCard";
 import { CertificateCard } from "@/components/cards/CertificateCard";
 import { STUDENT_PROFILE, STUDENT_STATS, COURSES, ACHIEVEMENTS, CERTIFICATES, ACTIVITIES, UPCOMING } from "@/lib/mock-data";
 import { Play, Zap, BookOpen, Brain, Award } from "lucide-react";
+import { tracksQuery, coursesQuery, certificatesQuery } from "@/lib/supabase-queries";
+import { RealDataSection } from "@/components/data/DataState";
+import { RequireAuth } from "@/components/auth/RequireAuth";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — FCIA Academy" }, { name: "description", content: "Acompanhe XP, progresso, conquistas e próximas aulas." }] }),
-  component: Dashboard,
+  component: DashboardGated,
 });
+
+function DashboardGated() {
+  return (<RequireAuth><Dashboard /></RequireAuth>);
+}
 
 const ICONS = { aula: Play, quiz: Brain, certificado: Award, conquista: Zap } as const;
 
 function Dashboard() {
   const inProgress = COURSES.filter((c) => c.progress > 0 && c.progress < 100);
   const xpPct = Math.round((STUDENT_PROFILE.xp / STUDENT_PROFILE.xpToNext) * 100);
+  const [tr, co, ce] = useQueries({
+    queries: [tracksQuery(), coursesQuery(), certificatesQuery()],
+  });
 
   return (
     <StudentShell>
       <PageHeader eyebrow={`Olá, ${STUDENT_PROFILE.name.split(" ")[0]}`} title="Seu painel de aprendizado" description="Continue de onde parou e siga conquistando XP." />
+
+      <RealDataSection
+        title="Resumo do banco"
+        source="tracks · courses · certificates"
+      >
+        <div className="grid gap-3 sm:grid-cols-3">
+          <RealStat label="Trilhas" loading={tr.isLoading} error={tr.error as Error | null} value={tr.data?.count ?? 0} />
+          <RealStat label="Cursos" loading={co.isLoading} error={co.error as Error | null} value={co.data?.count ?? 0} />
+          <RealStat label="Certificados" loading={ce.isLoading} error={ce.error as Error | null} value={ce.data?.count ?? 0} />
+        </div>
+      </RealDataSection>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {STUDENT_STATS.map((s) => <StatCard key={s.label} {...s} />)}
