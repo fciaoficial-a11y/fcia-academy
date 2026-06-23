@@ -78,7 +78,9 @@ export function ExamRunner({ courseId, courseSlug }: { courseId: string; courseS
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const alreadyPassed = !!cert.data || (attempts.data ?? []).some((a) => a.passed);
+  const attemptRows = (attempts.data ?? []) as Array<{ id: string; started_at: string; finished_at: string | null; score: number | null; passed: boolean }>;
+  const certData = cert.data as { id: string; code: string; qr_payload: string; issued_at: string; hours_load: number | null } | null;
+  const alreadyPassed = !!certData || attemptRows.some((a) => a.passed);
   const allAnswered = active ? active.questions.every((q) => typeof answers[q.id] === "number") : false;
 
   if (alreadyPassed && !result) {
@@ -89,13 +91,13 @@ export function ExamRunner({ courseId, courseSlug }: { courseId: string; courseS
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">Você foi aprovado neste curso. Nova submissão está bloqueada.</p>
-          {cert.data && (
+          {certData && (
             <div className="flex flex-wrap items-center gap-3">
-              <Badge variant="secondary">Código: {cert.data.code}</Badge>
-              <Button asChild size="sm"><Link to="/certificado/$id" params={{ id: cert.data.code }}>Ver certificado</Link></Button>
+              <Badge variant="secondary">Código: {certData.code}</Badge>
+              <Button asChild size="sm"><Link to="/certificado/$id" params={{ id: certData.code }}>Ver certificado</Link></Button>
             </div>
           )}
-          <AttemptsHistory rows={attempts.data ?? []} />
+          <AttemptsHistory rows={attemptRows} />
         </CardContent>
       </Card>
     );
@@ -139,7 +141,7 @@ export function ExamRunner({ courseId, courseSlug }: { courseId: string; courseS
           </Card>
         )}
 
-        <AttemptsHistory rows={attempts.data ?? []} />
+            <AttemptsHistory rows={attemptRows} />
       </div>
     );
   }
@@ -154,7 +156,7 @@ export function ExamRunner({ courseId, courseSlug }: { courseId: string; courseS
             {startMut.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Começar prova
           </Button>
-          <AttemptsHistory rows={attempts.data ?? []} />
+        <AttemptsHistory rows={attemptRows} />
         </CardContent>
       </Card>
     );
