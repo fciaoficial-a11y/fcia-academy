@@ -333,8 +333,29 @@ export const publishCourseDraft = createServerFn({ method: "POST" })
         .join("\n\n"),
       order_index: idx,
     }));
-    const { error: mErr } = await supabaseAdmin.from("modules").insert(moduleRows);
-    if (mErr) await rollback(`Falha ao criar módulos: ${mErr.message}`);
+    const { data: insertedModules, error: mErr } = await supabaseAdmin
+      .from("modules")
+      .insert(moduleRows)
+      .select("id, order_index");
+    if (mErr || !insertedModules) await rollback(`Falha ao criar módulos: ${mErr?.message}`);
+
+    // 2b) one default lesson per module — granularidade mínima
+    const lessonRows = (insertedModules ?? []).map((m: any) => {
+      const src = payload.modules[m.order_index];
+      return {
+        module_id: m.id,
+        slug: "introducao",
+        title: src?.title ?? "Aula 1",
+        content: [src?.summary, src?.content, ...(src?.exercises ?? []).map((e: string) => `- ${e}`)]
+          .filter(Boolean)
+          .join("\n\n"),
+        order_index: 0,
+      };
+    });
+    if (lessonRows.length > 0) {
+      const { error: lErr } = await supabaseAdmin.from("lessons").insert(lessonRows);
+      if (lErr) await rollback(`Falha ao criar aulas: ${lErr.message}`);
+    }
 
     // 3) questions
     const questionRows = payload.questionBank.map((q) => ({
