@@ -35,6 +35,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as TrilhaSlugRouteImport } from './routes/trilha.$slug'
 import { Route as SystemStatusRouteImport } from './routes/system.status'
 import { Route as SystemSetupRouteImport } from './routes/system.setup'
+import { Route as SystemSecurityStatusRouteImport } from './routes/system.security-status'
 import { Route as SystemSchemaRouteImport } from './routes/system.schema'
 import { Route as QuizIdRouteImport } from './routes/quiz.$id'
 import { Route as ModuloSlugRouteImport } from './routes/modulo.$slug'
@@ -185,6 +186,11 @@ const SystemSetupRoute = SystemSetupRouteImport.update({
   path: '/system/setup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SystemSecurityStatusRoute = SystemSecurityStatusRouteImport.update({
+  id: '/system/security-status',
+  path: '/system/security-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SystemSchemaRoute = SystemSchemaRouteImport.update({
   id: '/system/schema',
   path: '/system/schema',
@@ -319,6 +325,7 @@ export interface FileRoutesByFullPath {
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
   '/system/schema': typeof SystemSchemaRoute
+  '/system/security-status': typeof SystemSecurityStatusRoute
   '/system/setup': typeof SystemSetupRoute
   '/system/status': typeof SystemStatusRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
@@ -364,6 +371,7 @@ export interface FileRoutesByTo {
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
   '/system/schema': typeof SystemSchemaRoute
+  '/system/security-status': typeof SystemSecurityStatusRoute
   '/system/setup': typeof SystemSetupRoute
   '/system/status': typeof SystemStatusRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
@@ -412,6 +420,7 @@ export interface FileRoutesById {
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
   '/system/schema': typeof SystemSchemaRoute
+  '/system/security-status': typeof SystemSecurityStatusRoute
   '/system/setup': typeof SystemSetupRoute
   '/system/status': typeof SystemStatusRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
@@ -461,6 +470,7 @@ export interface FileRouteTypes {
     | '/modulo/$slug'
     | '/quiz/$id'
     | '/system/schema'
+    | '/system/security-status'
     | '/system/setup'
     | '/system/status'
     | '/trilha/$slug'
@@ -506,6 +516,7 @@ export interface FileRouteTypes {
     | '/modulo/$slug'
     | '/quiz/$id'
     | '/system/schema'
+    | '/system/security-status'
     | '/system/setup'
     | '/system/status'
     | '/trilha/$slug'
@@ -553,6 +564,7 @@ export interface FileRouteTypes {
     | '/modulo/$slug'
     | '/quiz/$id'
     | '/system/schema'
+    | '/system/security-status'
     | '/system/setup'
     | '/system/status'
     | '/trilha/$slug'
@@ -593,6 +605,7 @@ export interface RootRouteChildren {
   ModuloSlugRoute: typeof ModuloSlugRoute
   QuizIdRoute: typeof QuizIdRoute
   SystemSchemaRoute: typeof SystemSchemaRoute
+  SystemSecurityStatusRoute: typeof SystemSecurityStatusRoute
   SystemSetupRoute: typeof SystemSetupRoute
   SystemStatusRoute: typeof SystemStatusRoute
   TrilhaSlugRoute: typeof TrilhaSlugRoute
@@ -780,6 +793,13 @@ declare module '@tanstack/react-router' {
       path: '/system/setup'
       fullPath: '/system/setup'
       preLoaderRoute: typeof SystemSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/system/security-status': {
+      id: '/system/security-status'
+      path: '/system/security-status'
+      fullPath: '/system/security-status'
+      preLoaderRoute: typeof SystemSecurityStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/system/schema': {
@@ -1000,6 +1020,7 @@ const rootRouteChildren: RootRouteChildren = {
   ModuloSlugRoute: ModuloSlugRoute,
   QuizIdRoute: QuizIdRoute,
   SystemSchemaRoute: SystemSchemaRoute,
+  SystemSecurityStatusRoute: SystemSecurityStatusRoute,
   SystemSetupRoute: SystemSetupRoute,
   SystemStatusRoute: SystemStatusRoute,
   TrilhaSlugRoute: TrilhaSlugRoute,
