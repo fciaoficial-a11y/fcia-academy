@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { RequireAuth } from "@/components/auth/RequireAuth";
 import { Users, DollarSign, Award, BookOpen, Activity, Target } from "lucide-react";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { PageHeader } from "@/components/shared/PageHeader";
@@ -7,8 +8,16 @@ import { EXEC_DASHBOARD, ADMIN_RESOURCES } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — FCIA Academy" }, { name: "description", content: "Painel administrativo." }] }),
-  component: AdminHome,
+  component: AdminHomeGated,
 });
+
+function AdminHomeGated() {
+  return (
+    <RequireAuth>
+      <AdminHome />
+    </RequireAuth>
+  );
+}
 
 const ICONS = [Users, DollarSign, Award, BookOpen, Activity, Target];
 
