@@ -27,7 +27,6 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
-import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as BlogRouteImport } from './routes/blog'
@@ -154,11 +153,6 @@ const ConquistasRoute = ConquistasRouteImport.update({
 const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
   id: '/configuracoes',
   path: '/configuracoes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CatalogoRoute = CatalogoRouteImport.update({
@@ -354,7 +348,6 @@ export interface FileRoutesByFullPath {
   '/blog': typeof BlogRouteWithChildren
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
-  '/checkout': typeof CheckoutRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conquistas': typeof ConquistasRoute
   '/contato': typeof ContatoRoute
@@ -410,7 +403,6 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRouteWithChildren
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
-  '/checkout': typeof CheckoutRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conquistas': typeof ConquistasRoute
   '/contato': typeof ContatoRoute
@@ -467,7 +459,6 @@ export interface FileRoutesById {
   '/blog': typeof BlogRouteWithChildren
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
-  '/checkout': typeof CheckoutRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conquistas': typeof ConquistasRoute
   '/contato': typeof ContatoRoute
@@ -526,7 +517,6 @@ export interface FileRouteTypes {
     | '/blog'
     | '/cadastro'
     | '/catalogo'
-    | '/checkout'
     | '/configuracoes'
     | '/conquistas'
     | '/contato'
@@ -582,7 +572,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/cadastro'
     | '/catalogo'
-    | '/checkout'
     | '/configuracoes'
     | '/conquistas'
     | '/contato'
@@ -638,7 +627,6 @@ export interface FileRouteTypes {
     | '/blog'
     | '/cadastro'
     | '/catalogo'
-    | '/checkout'
     | '/configuracoes'
     | '/conquistas'
     | '/contato'
@@ -697,7 +685,6 @@ export interface RootRouteChildren {
   BlogRoute: typeof BlogRouteWithChildren
   CadastroRoute: typeof CadastroRoute
   CatalogoRoute: typeof CatalogoRoute
-  CheckoutRoute: typeof CheckoutRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   ConquistasRoute: typeof ConquistasRoute
   ContatoRoute: typeof ContatoRoute
@@ -851,13 +838,6 @@ declare module '@tanstack/react-router' {
       path: '/configuracoes'
       fullPath: '/configuracoes'
       preLoaderRoute: typeof ConfiguracoesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/catalogo': {
@@ -1232,7 +1212,6 @@ const rootRouteChildren: RootRouteChildren = {
   BlogRoute: BlogRouteWithChildren,
   CadastroRoute: CadastroRoute,
   CatalogoRoute: CatalogoRoute,
-  CheckoutRoute: CheckoutRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
   ConquistasRoute: ConquistasRoute,
   ContatoRoute: ContatoRoute,
