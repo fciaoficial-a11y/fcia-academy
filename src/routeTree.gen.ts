@@ -31,6 +31,7 @@ import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SystemIndexRouteImport } from './routes/system.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as TrilhaSlugRouteImport } from './routes/trilha.$slug'
 import { Route as SystemStatusRouteImport } from './routes/system.status'
@@ -169,6 +170,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SystemIndexRoute = SystemIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SystemRoute,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/',
@@ -356,6 +362,7 @@ export interface FileRoutesByFullPath {
   '/system/status': typeof SystemStatusRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/system/': typeof SystemIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -384,7 +391,6 @@ export interface FileRoutesByTo {
   '/planos': typeof PlanosRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
-  '/system': typeof SystemRouteWithChildren
   '/trilhas': typeof TrilhasRoute
   '/admin/certificados': typeof AdminCertificadosRoute
   '/admin/cursos': typeof AdminCursosRoute
@@ -406,6 +412,7 @@ export interface FileRoutesByTo {
   '/system/status': typeof SystemStatusRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog': typeof BlogIndexRoute
+  '/system': typeof SystemIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -459,6 +466,7 @@ export interface FileRoutesById {
   '/system/status': typeof SystemStatusRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/system/': typeof SystemIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -513,6 +521,7 @@ export interface FileRouteTypes {
     | '/system/status'
     | '/trilha/$slug'
     | '/blog/'
+    | '/system/'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
@@ -541,7 +550,6 @@ export interface FileRouteTypes {
     | '/planos'
     | '/recuperar-senha'
     | '/sobre'
-    | '/system'
     | '/trilhas'
     | '/admin/certificados'
     | '/admin/cursos'
@@ -563,6 +571,7 @@ export interface FileRouteTypes {
     | '/system/status'
     | '/trilha/$slug'
     | '/blog'
+    | '/system'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
@@ -615,6 +624,7 @@ export interface FileRouteTypes {
     | '/system/status'
     | '/trilha/$slug'
     | '/blog/'
+    | '/system/'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
@@ -810,6 +820,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/system/': {
+      id: '/system/'
+      path: '/'
+      fullPath: '/system/'
+      preLoaderRoute: typeof SystemIndexRouteImport
+      parentRoute: typeof SystemRoute
     }
     '/blog/': {
       id: '/blog/'
@@ -1073,6 +1090,7 @@ interface SystemRouteChildren {
   SystemSecurityStatusRoute: typeof SystemSecurityStatusRoute
   SystemSetupRoute: typeof SystemSetupRoute
   SystemStatusRoute: typeof SystemStatusRoute
+  SystemIndexRoute: typeof SystemIndexRoute
 }
 
 const SystemRouteChildren: SystemRouteChildren = {
@@ -1082,6 +1100,7 @@ const SystemRouteChildren: SystemRouteChildren = {
   SystemSecurityStatusRoute: SystemSecurityStatusRoute,
   SystemSetupRoute: SystemSetupRoute,
   SystemStatusRoute: SystemStatusRoute,
+  SystemIndexRoute: SystemIndexRoute,
 }
 
 const SystemRouteWithChildren =
