@@ -56,6 +56,7 @@ import { Route as AdminAiStudioRouteImport } from './routes/admin.ai-studio'
 import { Route as AdminAiStudioIndexRouteImport } from './routes/admin.ai-studio.index'
 import { Route as BlogCategoriaSlugRouteImport } from './routes/blog.categoria.$slug'
 import { Route as BlogAutorSlugRouteImport } from './routes/blog.autor.$slug'
+import { Route as AdminAiStudioPdfToCourseRouteImport } from './routes/admin.ai-studio.pdf-to-course'
 import { Route as AdminAiStudioToolRouteImport } from './routes/admin.ai-studio.$tool'
 
 const TrilhasRoute = TrilhasRouteImport.update({
@@ -293,6 +294,12 @@ const BlogAutorSlugRoute = BlogAutorSlugRouteImport.update({
   path: '/autor/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
+const AdminAiStudioPdfToCourseRoute =
+  AdminAiStudioPdfToCourseRouteImport.update({
+    id: '/pdf-to-course',
+    path: '/pdf-to-course',
+    getParentRoute: () => AdminAiStudioRoute,
+  } as any)
 const AdminAiStudioToolRoute = AdminAiStudioToolRouteImport.update({
   id: '/$tool',
   path: '/$tool',
@@ -345,6 +352,7 @@ export interface FileRoutesByFullPath {
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
+  '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
@@ -393,6 +401,7 @@ export interface FileRoutesByTo {
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
+  '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/admin/ai-studio': typeof AdminAiStudioIndexRoute
@@ -444,6 +453,7 @@ export interface FileRoutesById {
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
+  '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
@@ -496,6 +506,7 @@ export interface FileRouteTypes {
     | '/trilha/$slug'
     | '/blog/'
     | '/admin/ai-studio/$tool'
+    | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
     | '/blog/categoria/$slug'
     | '/admin/ai-studio/'
@@ -544,6 +555,7 @@ export interface FileRouteTypes {
     | '/trilha/$slug'
     | '/blog'
     | '/admin/ai-studio/$tool'
+    | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
     | '/blog/categoria/$slug'
     | '/admin/ai-studio'
@@ -594,6 +606,7 @@ export interface FileRouteTypes {
     | '/trilha/$slug'
     | '/blog/'
     | '/admin/ai-studio/$tool'
+    | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
     | '/blog/categoria/$slug'
     | '/admin/ai-studio/'
@@ -968,6 +981,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogAutorSlugRouteImport
       parentRoute: typeof BlogRoute
     }
+    '/admin/ai-studio/pdf-to-course': {
+      id: '/admin/ai-studio/pdf-to-course'
+      path: '/pdf-to-course'
+      fullPath: '/admin/ai-studio/pdf-to-course'
+      preLoaderRoute: typeof AdminAiStudioPdfToCourseRouteImport
+      parentRoute: typeof AdminAiStudioRoute
+    }
     '/admin/ai-studio/$tool': {
       id: '/admin/ai-studio/$tool'
       path: '/$tool'
@@ -980,11 +1000,13 @@ declare module '@tanstack/react-router' {
 
 interface AdminAiStudioRouteChildren {
   AdminAiStudioToolRoute: typeof AdminAiStudioToolRoute
+  AdminAiStudioPdfToCourseRoute: typeof AdminAiStudioPdfToCourseRoute
   AdminAiStudioIndexRoute: typeof AdminAiStudioIndexRoute
 }
 
 const AdminAiStudioRouteChildren: AdminAiStudioRouteChildren = {
   AdminAiStudioToolRoute: AdminAiStudioToolRoute,
+  AdminAiStudioPdfToCourseRoute: AdminAiStudioPdfToCourseRoute,
   AdminAiStudioIndexRoute: AdminAiStudioIndexRoute,
 }
 
