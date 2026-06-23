@@ -58,6 +58,7 @@ import { Route as BlogCategoriaSlugRouteImport } from './routes/blog.categoria.$
 import { Route as BlogAutorSlugRouteImport } from './routes/blog.autor.$slug'
 import { Route as AdminAiStudioPdfToCourseRouteImport } from './routes/admin.ai-studio.pdf-to-course'
 import { Route as AdminAiStudioToolRouteImport } from './routes/admin.ai-studio.$tool'
+import { Route as AdminAiStudioDraftsIdRouteImport } from './routes/admin.ai-studio.drafts.$id'
 
 const TrilhasRoute = TrilhasRouteImport.update({
   id: '/trilhas',
@@ -305,6 +306,11 @@ const AdminAiStudioToolRoute = AdminAiStudioToolRouteImport.update({
   path: '/$tool',
   getParentRoute: () => AdminAiStudioRoute,
 } as any)
+const AdminAiStudioDraftsIdRoute = AdminAiStudioDraftsIdRouteImport.update({
+  id: '/drafts/$id',
+  path: '/drafts/$id',
+  getParentRoute: () => AdminAiStudioRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -356,6 +362,7 @@ export interface FileRoutesByFullPath {
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
+  '/admin/ai-studio/drafts/$id': typeof AdminAiStudioDraftsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -405,6 +412,7 @@ export interface FileRoutesByTo {
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/admin/ai-studio': typeof AdminAiStudioIndexRoute
+  '/admin/ai-studio/drafts/$id': typeof AdminAiStudioDraftsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -457,6 +465,7 @@ export interface FileRoutesById {
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
+  '/admin/ai-studio/drafts/$id': typeof AdminAiStudioDraftsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -510,6 +519,7 @@ export interface FileRouteTypes {
     | '/blog/autor/$slug'
     | '/blog/categoria/$slug'
     | '/admin/ai-studio/'
+    | '/admin/ai-studio/drafts/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -559,6 +569,7 @@ export interface FileRouteTypes {
     | '/blog/autor/$slug'
     | '/blog/categoria/$slug'
     | '/admin/ai-studio'
+    | '/admin/ai-studio/drafts/$id'
   id:
     | '__root__'
     | '/'
@@ -610,6 +621,7 @@ export interface FileRouteTypes {
     | '/blog/autor/$slug'
     | '/blog/categoria/$slug'
     | '/admin/ai-studio/'
+    | '/admin/ai-studio/drafts/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -995,6 +1007,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAiStudioToolRouteImport
       parentRoute: typeof AdminAiStudioRoute
     }
+    '/admin/ai-studio/drafts/$id': {
+      id: '/admin/ai-studio/drafts/$id'
+      path: '/drafts/$id'
+      fullPath: '/admin/ai-studio/drafts/$id'
+      preLoaderRoute: typeof AdminAiStudioDraftsIdRouteImport
+      parentRoute: typeof AdminAiStudioRoute
+    }
   }
 }
 
@@ -1002,12 +1021,14 @@ interface AdminAiStudioRouteChildren {
   AdminAiStudioToolRoute: typeof AdminAiStudioToolRoute
   AdminAiStudioPdfToCourseRoute: typeof AdminAiStudioPdfToCourseRoute
   AdminAiStudioIndexRoute: typeof AdminAiStudioIndexRoute
+  AdminAiStudioDraftsIdRoute: typeof AdminAiStudioDraftsIdRoute
 }
 
 const AdminAiStudioRouteChildren: AdminAiStudioRouteChildren = {
   AdminAiStudioToolRoute: AdminAiStudioToolRoute,
   AdminAiStudioPdfToCourseRoute: AdminAiStudioPdfToCourseRoute,
   AdminAiStudioIndexRoute: AdminAiStudioIndexRoute,
+  AdminAiStudioDraftsIdRoute: AdminAiStudioDraftsIdRoute,
 }
 
 const AdminAiStudioRouteWithChildren = AdminAiStudioRoute._addFileChildren(
