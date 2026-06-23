@@ -28,6 +28,7 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CertificadosRouteImport } from './routes/certificados'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CadastroRouteImport } from './routes/cadastro'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrilhaSlugRouteImport } from './routes/trilha.$slug'
@@ -142,6 +143,11 @@ const CadastroRoute = CadastroRouteImport.update({
   path: '/cadastro',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -236,6 +242,7 @@ const AdminAiStudioToolRoute = AdminAiStudioToolRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/blog': typeof BlogRoute
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
   '/certificados': typeof CertificadosRoute
@@ -275,6 +282,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/blog': typeof BlogRoute
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
   '/certificados': typeof CertificadosRoute
@@ -314,6 +322,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/blog': typeof BlogRoute
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
   '/certificados': typeof CertificadosRoute
@@ -355,6 +364,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/blog'
     | '/cadastro'
     | '/catalogo'
     | '/certificados'
@@ -394,6 +404,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/blog'
     | '/cadastro'
     | '/catalogo'
     | '/certificados'
@@ -432,6 +443,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/blog'
     | '/cadastro'
     | '/catalogo'
     | '/certificados'
@@ -472,6 +484,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  BlogRoute: typeof BlogRoute
   CadastroRoute: typeof CadastroRoute
   CatalogoRoute: typeof CatalogoRoute
   CertificadosRoute: typeof CertificadosRoute
@@ -633,6 +646,13 @@ declare module '@tanstack/react-router' {
       path: '/cadastro'
       fullPath: '/cadastro'
       preLoaderRoute: typeof CadastroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -803,6 +823,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  BlogRoute: BlogRoute,
   CadastroRoute: CadastroRoute,
   CatalogoRoute: CatalogoRoute,
   CertificadosRoute: CertificadosRoute,
