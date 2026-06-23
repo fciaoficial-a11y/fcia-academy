@@ -26,15 +26,15 @@ const EXPECTED = [
 ];
 
 const MOCK_STATUS: { screen: string; replaced: boolean; note: string }[] = [
-  { screen: "dashboard", replaced: false, note: "Pendente — aguarda schema validado" },
-  { screen: "perfil", replaced: false, note: "Pendente — aguarda profiles + xp_log" },
-  { screen: "trilhas", replaced: false, note: "Pendente — aguarda tracks" },
-  { screen: "cursos", replaced: false, note: "Pendente — aguarda courses" },
-  { screen: "curso/[slug]", replaced: false, note: "Pendente — aguarda courses + modules" },
-  { screen: "quiz", replaced: false, note: "Pendente — aguarda questions + quiz_attempts" },
-  { screen: "certificados", replaced: false, note: "Pendente — aguarda certificates" },
-  { screen: "conquistas", replaced: false, note: "Pendente — aguarda gamification_profile" },
-  { screen: "admin overview", replaced: false, note: "Pendente — aguarda has_role" },
+  { screen: "trilhas", replaced: false, note: "Liberada Sprint 6 — tracks ✅" },
+  { screen: "cursos", replaced: false, note: "Liberada Sprint 6 — courses ✅" },
+  { screen: "curso/[slug]", replaced: false, note: "Liberada Sprint 6 — courses + modules ✅" },
+  { screen: "perfil", replaced: false, note: "Liberada Sprint 6 — profiles ✅ (xp_log ausente, fallback)" },
+  { screen: "certificados", replaced: false, note: "Liberada Sprint 6 — certificates ✅" },
+  { screen: "dashboard", replaced: false, note: "Liberada Sprint 6 — composta de tabelas ✅" },
+  { screen: "quiz", replaced: false, note: "Bloqueada — questions ausente (quiz_attempts ✅)" },
+  { screen: "conquistas", replaced: false, note: "Avaliar mapeamento alternativo: achievements / user_achievements" },
+  { screen: "admin overview", replaced: false, note: "Bloqueada — user_roles ausente, gate fica em getUser()" },
 ];
 
 function SystemStatusPage() {
