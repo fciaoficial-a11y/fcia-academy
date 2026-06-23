@@ -60,7 +60,7 @@ function PublicCertPage() {
   return (
     <StudentShell>
       <PageHeader
-        crumbs={[{ label: "Certificados", to: "/certificados" }, { label: code }]}
+        crumbs={[{ label: "Meus cursos", to: "/meus-cursos" }, { label: code }]}
         eyebrow="Validação pública"
         title="Verificação de Certificado"
         description={`Código ${code}`}

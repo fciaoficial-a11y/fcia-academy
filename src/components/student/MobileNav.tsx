@@ -6,7 +6,7 @@ const ITEMS = [
   { to: "/dashboard", label: "Início", icon: LayoutDashboard },
   { to: "/meus-cursos", label: "Cursos", icon: BookOpen },
   { to: "/minhas-trilhas", label: "Trilhas", icon: Map },
-  { to: "/certificados", label: "Certif.", icon: Award },
+  { to: "/meus-cursos", label: "Certif.", icon: Award },
   { to: "/perfil", label: "Perfil", icon: User },
 ] as const;
 
