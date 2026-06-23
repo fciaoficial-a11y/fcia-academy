@@ -31,6 +31,7 @@ import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as TrilhaSlugRouteImport } from './routes/trilha.$slug'
 import { Route as QuizIdRouteImport } from './routes/quiz.$id'
 import { Route as ModuloSlugRouteImport } from './routes/modulo.$slug'
@@ -158,6 +159,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogRoute,
+} as any)
 const TrilhaSlugRoute = TrilhaSlugRouteImport.update({
   id: '/trilha/$slug',
   path: '/trilha/$slug',
@@ -242,7 +248,7 @@ const AdminAiStudioToolRoute = AdminAiStudioToolRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
   '/certificados': typeof CertificadosRoute
@@ -276,13 +282,13 @@ export interface FileRoutesByFullPath {
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/blog': typeof BlogRoute
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
   '/certificados': typeof CertificadosRoute
@@ -315,6 +321,7 @@ export interface FileRoutesByTo {
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio': typeof AdminAiStudioIndexRoute
 }
@@ -322,7 +329,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
   '/certificados': typeof CertificadosRoute
@@ -356,6 +363,7 @@ export interface FileRoutesById {
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
 }
@@ -398,13 +406,13 @@ export interface FileRouteTypes {
     | '/modulo/$slug'
     | '/quiz/$id'
     | '/trilha/$slug'
+    | '/blog/'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/admin'
-    | '/blog'
     | '/cadastro'
     | '/catalogo'
     | '/certificados'
@@ -437,6 +445,7 @@ export interface FileRouteTypes {
     | '/modulo/$slug'
     | '/quiz/$id'
     | '/trilha/$slug'
+    | '/blog'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio'
   id:
@@ -477,6 +486,7 @@ export interface FileRouteTypes {
     | '/modulo/$slug'
     | '/quiz/$id'
     | '/trilha/$slug'
+    | '/blog/'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/'
   fileRoutesById: FileRoutesById
@@ -484,7 +494,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  BlogRoute: typeof BlogRoute
+  BlogRoute: typeof BlogRouteWithChildren
   CadastroRoute: typeof CadastroRoute
   CatalogoRoute: typeof CatalogoRoute
   CertificadosRoute: typeof CertificadosRoute
@@ -669,6 +679,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/trilha/$slug': {
       id: '/trilha/$slug'
       path: '/trilha/$slug'
@@ -820,10 +837,20 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface BlogRouteChildren {
+  BlogIndexRoute: typeof BlogIndexRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogIndexRoute: BlogIndexRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  BlogRoute: BlogRoute,
+  BlogRoute: BlogRouteWithChildren,
   CadastroRoute: CadastroRoute,
   CatalogoRoute: CatalogoRoute,
   CertificadosRoute: CertificadosRoute,
