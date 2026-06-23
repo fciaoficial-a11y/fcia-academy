@@ -4,9 +4,8 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { hash: "beneficios", label: "Benefícios" },
-  { hash: "metodologia", label: "Metodologia" },
   { hash: "trilhas", label: "Trilhas" },
+  { hash: "beneficios", label: "Por que FCIA" },
   { hash: "faq", label: "FAQ" },
 ] as const;
 
