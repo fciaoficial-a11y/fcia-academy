@@ -50,6 +50,82 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_draft_versions: {
+        Row: {
+          ai_payload: Json
+          author_id: string | null
+          change_kind: string
+          created_at: string
+          draft_id: string
+          id: string
+          version: number
+        }
+        Insert: {
+          ai_payload: Json
+          author_id?: string | null
+          change_kind?: string
+          created_at?: string
+          draft_id: string
+          id?: string
+          version: number
+        }
+        Update: {
+          ai_payload?: Json
+          author_id?: string | null
+          change_kind?: string
+          created_at?: string
+          draft_id?: string
+          id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_draft_versions_draft_id_fkey"
+            columns: ["draft_id"]
+            isOneToOne: false
+            referencedRelation: "ai_course_drafts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_pipeline_events: {
+        Row: {
+          created_at: string
+          draft_id: string | null
+          id: string
+          kind: string
+          message: string | null
+          metadata: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          draft_id?: string | null
+          id?: string
+          kind: string
+          message?: string | null
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          draft_id?: string | null
+          id?: string
+          kind?: string
+          message?: string | null
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_pipeline_events_draft_id_fkey"
+            columns: ["draft_id"]
+            isOneToOne: false
+            referencedRelation: "ai_course_drafts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_exams: {
         Row: {
           course_id: string
@@ -560,6 +636,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      ai_jobs_in_window: {
+        Args: { p_kinds: string[]; p_minutes: number; p_user_id: string }
+        Returns: number
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -567,6 +647,16 @@ export type Database = {
         }
         Returns: boolean
       }
+      publish_course_draft: {
+        Args: {
+          p_draft_id: string
+          p_passing_score: number
+          p_question_count: number
+          p_track_id: string
+        }
+        Returns: Json
+      }
+      unaccent: { Args: { "": string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
