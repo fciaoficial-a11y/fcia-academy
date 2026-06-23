@@ -39,6 +39,7 @@ import { Route as AdminQuestoesRouteImport } from './routes/admin.questoes'
 import { Route as AdminModulosRouteImport } from './routes/admin.modulos'
 import { Route as AdminCursosRouteImport } from './routes/admin.cursos'
 import { Route as AdminCertificadosRouteImport } from './routes/admin.certificados'
+import { Route as AdminAiStudioRouteImport } from './routes/admin.ai-studio'
 
 const TrilhasRoute = TrilhasRouteImport.update({
   id: '/trilhas',
@@ -190,6 +191,11 @@ const AdminCertificadosRoute = AdminCertificadosRouteImport.update({
   path: '/certificados',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAiStudioRoute = AdminAiStudioRouteImport.update({
+  id: '/ai-studio',
+  path: '/ai-studio',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -210,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
+  '/admin/ai-studio': typeof AdminAiStudioRoute
   '/admin/certificados': typeof AdminCertificadosRoute
   '/admin/cursos': typeof AdminCursosRoute
   '/admin/modulos': typeof AdminModulosRoute
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
+  '/admin/ai-studio': typeof AdminAiStudioRoute
   '/admin/certificados': typeof AdminCertificadosRoute
   '/admin/cursos': typeof AdminCursosRoute
   '/admin/modulos': typeof AdminModulosRoute
@@ -275,6 +283,7 @@ export interface FileRoutesById {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
+  '/admin/ai-studio': typeof AdminAiStudioRoute
   '/admin/certificados': typeof AdminCertificadosRoute
   '/admin/cursos': typeof AdminCursosRoute
   '/admin/modulos': typeof AdminModulosRoute
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/sobre'
     | '/trilhas'
+    | '/admin/ai-studio'
     | '/admin/certificados'
     | '/admin/cursos'
     | '/admin/modulos'
@@ -341,6 +351,7 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/sobre'
     | '/trilhas'
+    | '/admin/ai-studio'
     | '/admin/certificados'
     | '/admin/cursos'
     | '/admin/modulos'
@@ -373,6 +384,7 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/sobre'
     | '/trilhas'
+    | '/admin/ai-studio'
     | '/admin/certificados'
     | '/admin/cursos'
     | '/admin/modulos'
@@ -626,10 +638,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCertificadosRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/ai-studio': {
+      id: '/admin/ai-studio'
+      path: '/ai-studio'
+      fullPath: '/admin/ai-studio'
+      preLoaderRoute: typeof AdminAiStudioRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminAiStudioRoute: typeof AdminAiStudioRoute
   AdminCertificadosRoute: typeof AdminCertificadosRoute
   AdminCursosRoute: typeof AdminCursosRoute
   AdminModulosRoute: typeof AdminModulosRoute
@@ -639,6 +659,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAiStudioRoute: AdminAiStudioRoute,
   AdminCertificadosRoute: AdminCertificadosRoute,
   AdminCursosRoute: AdminCursosRoute,
   AdminModulosRoute: AdminModulosRoute,
