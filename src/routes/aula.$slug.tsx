@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { CoursePlayer } from "@/components/learning/CoursePlayer";
 import { ModuleSidebar } from "@/components/learning/ModuleSidebar";
 import { ProgressSystem } from "@/components/learning/ProgressSystem";
-import { MODULES } from "@/lib/mock-data";
+import { MODULES, type Lesson } from "@/lib/mock-data";
 import { FileDown, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/aula/$slug")({
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/aula/$slug")({
 
 function LessonPage() {
   const { lesson, mod, next } = Route.useLoaderData();
-  const completedLessons = mod.lessons.filter((l) => l.completed).length;
+  const completedLessons = mod.lessons.filter((l: Lesson) => l.completed).length;
   return (
     <StudentShell>
       <PageHeader crumbs={[{ label: "Módulo", to: "/modulo/$slug" }, { label: lesson.title }]} eyebrow={mod.title} title={lesson.title} description={`${lesson.type.toUpperCase()} · ${lesson.durationMin} min`} />
