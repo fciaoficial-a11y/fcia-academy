@@ -6,7 +6,7 @@ import {
   isSupabaseConfigured,
   SUPABASE_URL,
   SUPABASE_PROJECT_REF,
-} from "@/integrations/supabase/client";
+} from "@/integrations/supabase/legacy";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/system/status")({
