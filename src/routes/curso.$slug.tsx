@@ -38,7 +38,7 @@ function CourseDetail() {
             <span className="inline-flex items-center gap-1"><Star className="h-3.5 w-3.5 text-primary" />{course.rating} ({course.students.toLocaleString("pt-BR")} alunos)</span>
           </div>
           <div className="flex items-center gap-3 rounded-2xl border border-border/40 bg-background/40 p-4">
-            <div className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-primary to-accent text-primary-foreground font-bold">{course.instructor.split(" ").map(n=>n[0]).slice(0,2).join("")}</div>
+            <div className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-primary to-accent text-primary-foreground font-bold">{course.instructor.split(" ").map((n: string) => n[0]).slice(0,2).join("")}</div>
             <div><p className="text-sm font-semibold text-foreground">{course.instructor}</p><p className="text-xs text-muted-foreground">{course.instructorRole}</p></div>
           </div>
           <div>
