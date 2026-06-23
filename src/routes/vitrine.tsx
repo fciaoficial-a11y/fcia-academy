@@ -164,29 +164,36 @@ function EmptyState({ label }: { label: string }) {
   );
 }
 
-function CourseCard({ course, enrolled, userId }: { course: CourseRow; enrolled: boolean; userId: string | undefined }) {
-  const qc = useQueryClient();
-  const navigate = useNavigate();
-  const enrollM = useMutation({
-    mutationFn: () => {
-      if (!userId) throw new Error("auth");
-      return enrollInCourse(course.id, userId);
-    },
-    onSuccess: () => {
-      toast.success("Matrícula realizada");
-      qc.invalidateQueries({ queryKey: enrollmentsKey(userId ?? "anon") });
-      navigate({ to: "/curso/$slug", params: { slug: course.slug } });
-    },
-    onError: (e: Error) => toast.error(e.message || "Falha ao matricular"),
-  });
+function formatPrice(cents: number | undefined, currency: string | undefined) {
+  if (!cents) return null;
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: currency || "BRL" }).format(cents / 100);
+}
+
+function CourseCard({
+  course,
+  enrollment,
+  userId,
+}: {
+  course: CourseRow;
+  enrollment: EnrollmentWithCourse | null;
+  userId: string | undefined;
+}) {
+  const isActive = enrollment?.accessStatus === "active";
+  const isPending = enrollment?.accessStatus === "pending";
+  const price = formatPrice(course.price_cents, course.currency);
 
   return (
     <article className="flex h-full flex-col rounded-2xl border border-border/60 bg-card/60 p-5 backdrop-blur-xl">
       <div className="flex items-start justify-between gap-3">
         <Badge variant="secondary" className="text-[10px] uppercase tracking-wider">Curso</Badge>
-        {enrolled && (
+        {isActive && (
           <span className="inline-flex items-center gap-1 text-[10px] text-primary">
             <CheckCircle2 className="h-3 w-3" /> Matriculado
+          </span>
+        )}
+        {isPending && (
+          <span className="inline-flex items-center gap-1 text-[10px] text-amber-500">
+            Aguardando pagamento
           </span>
         )}
       </div>
@@ -198,23 +205,30 @@ function CourseCard({ course, enrolled, userId }: { course: CourseRow; enrolled:
         )}
         <span className="inline-flex items-center gap-1"><BookOpen className="h-3 w-3" /> Módulos</span>
       </div>
+      {price && <p className="mt-3 font-mono text-lg font-semibold text-foreground">{price}</p>}
       <div className="mt-auto flex gap-2 pt-4">
         <Button asChild variant="outline" size="sm" className="flex-1">
           <Link to="/curso/$slug" params={{ slug: course.slug }}>Ver curso</Link>
         </Button>
-        {enrolled ? (
+        {isActive ? (
           <Button asChild size="sm" className="flex-1">
-            <Link to="/curso/$slug" params={{ slug: course.slug }}>Acessar curso</Link>
+            <Link to="/curso/$slug" params={{ slug: course.slug }}>Acessar</Link>
+          </Button>
+        ) : isPending ? (
+          <Button asChild size="sm" className="flex-1">
+            <Link to="/checkout/$courseId" params={{ courseId: course.id }}>Concluir pagamento</Link>
           </Button>
         ) : !userId ? (
           <Button asChild size="sm" className="flex-1">
-            <Link to="/cadastro" search={{ next: `/curso/${course.slug}` }}>
+            <Link to="/cadastro" search={{ next: `/checkout/${course.id}` }}>
               <ShoppingBag className="mr-1 h-3.5 w-3.5" /> Matricular
             </Link>
           </Button>
         ) : (
-          <Button size="sm" className="flex-1" disabled={enrollM.isPending} onClick={() => enrollM.mutate()}>
-            {enrollM.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Matricular"}
+          <Button asChild size="sm" className="flex-1">
+            <Link to="/checkout/$courseId" params={{ courseId: course.id }}>
+              <ShoppingBag className="mr-1 h-3.5 w-3.5" /> Matricular
+            </Link>
           </Button>
         )}
       </div>
