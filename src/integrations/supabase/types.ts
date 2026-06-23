@@ -14,16 +14,200 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ai_course_drafts: {
+        Row: {
+          ai_payload: Json | null
+          course_id: string | null
+          created_at: string
+          created_by: string
+          id: string
+          pdf_path: string
+          raw_extracted_text: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          ai_payload?: Json | null
+          course_id?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          pdf_path: string
+          raw_extracted_text?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          ai_payload?: Json | null
+          course_id?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          pdf_path?: string
+          raw_extracted_text?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      course_exams: {
+        Row: {
+          course_id: string
+          created_at: string
+          id: string
+          passing_score: number
+          published: boolean
+          question_count: number
+          shuffle_seed_strategy: string
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          id?: string
+          passing_score?: number
+          published?: boolean
+          question_count?: number
+          shuffle_seed_strategy?: string
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          id?: string
+          passing_score?: number
+          published?: boolean
+          question_count?: number
+          shuffle_seed_strategy?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      exam_attempts: {
+        Row: {
+          answers: Json | null
+          course_id: string
+          created_at: string
+          finished_at: string | null
+          id: string
+          passed: boolean
+          question_ids: string[] | null
+          score: number | null
+          started_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          answers?: Json | null
+          course_id: string
+          created_at?: string
+          finished_at?: string | null
+          id?: string
+          passed?: boolean
+          question_ids?: string[] | null
+          score?: number | null
+          started_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          answers?: Json | null
+          course_id?: string
+          created_at?: string
+          finished_at?: string | null
+          id?: string
+          passed?: boolean
+          question_ids?: string[] | null
+          score?: number | null
+          started_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      issued_certificates: {
+        Row: {
+          attempt_id: string
+          code: string
+          course_id: string
+          created_at: string
+          hours_load: number | null
+          id: string
+          issued_at: string
+          qr_payload: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempt_id: string
+          code: string
+          course_id: string
+          created_at?: string
+          hours_load?: number | null
+          id?: string
+          issued_at?: string
+          qr_payload: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempt_id?: string
+          code?: string
+          course_id?: string
+          created_at?: string
+          hours_load?: number | null
+          id?: string
+          issued_at?: string
+          qr_payload?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "issued_certificates_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "exam_attempts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +334,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
