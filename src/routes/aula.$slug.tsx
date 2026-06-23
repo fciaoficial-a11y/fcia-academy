@@ -1,7 +1,7 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { MODULES } from "@/lib/mock-data";
+import { MODULES, type Lesson } from "@/lib/mock-data";
 import { Play, FileDown, ArrowRight, CheckCircle2, Circle } from "lucide-react";
 
 export const Route = createFileRoute("/aula/$slug")({
@@ -63,7 +63,7 @@ function LessonPage() {
           <section className="rounded-3xl border border-border/60 bg-card/60 p-5 backdrop-blur-xl">
             <h3 className="font-display text-base font-semibold text-foreground">Aulas do módulo</h3>
             <ul className="mt-3 space-y-1">
-              {mod.lessons.map((l) => {
+              {mod.lessons.map((l: Lesson) => {
                 const active = l.slug === lesson.slug;
                 return (
                   <li key={l.slug}>
