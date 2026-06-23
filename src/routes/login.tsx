@@ -1,5 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState, type FormEvent } from "react";
 import { AuthShell, AuthInput, AuthSubmit } from "@/components/auth/AuthShell";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Entrar — FCIA Academy" }, { name: "description", content: "Acesse sua conta na FCIA Academy." }] }),
@@ -7,19 +9,39 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
+  const { signIn, configured } = useAuth();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (!configured) { setError("Supabase não configurado. Acesse /system/setup."); return; }
+    setError(null); setLoading(true);
+    const { error } = await signIn(email, password);
+    setLoading(false);
+    if (error) setError(error);
+    else navigate({ to: "/dashboard" });
+  }
+
   return (
     <AuthShell
       title="Entrar na sua conta"
       subtitle="Bem-vindo de volta. Continue de onde parou."
       footer={<>Não tem conta? <Link to="/cadastro" className="text-primary hover:underline">Cadastre-se</Link></>}
     >
-      <AuthInput label="E-mail" type="email" placeholder="voce@email.com" />
-      <AuthInput label="Senha" type="password" placeholder="••••••••" />
-      <div className="flex items-center justify-between text-xs">
-        <label className="inline-flex items-center gap-2 text-muted-foreground"><input type="checkbox" className="h-3.5 w-3.5 rounded border-input" /> Lembrar de mim</label>
-        <Link to="/recuperar-senha" className="text-primary hover:underline">Esqueci a senha</Link>
-      </div>
-      <AuthSubmit>Entrar</AuthSubmit>
+      <form onSubmit={onSubmit} className="space-y-4">
+        <AuthInput label="E-mail" type="email" placeholder="voce@email.com" value={email} onChange={(v) => setEmail(v)} />
+        <AuthInput label="Senha" type="password" placeholder="••••••••" value={password} onChange={(v) => setPassword(v)} />
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-muted-foreground">{loading ? "Entrando…" : ""}</span>
+          <Link to="/recuperar-senha" className="text-primary hover:underline">Esqueci a senha</Link>
+        </div>
+        {error && <p className="text-xs text-destructive">{error}</p>}
+        <AuthSubmit disabled={loading}>Entrar</AuthSubmit>
+      </form>
     </AuthShell>
   );
 }
