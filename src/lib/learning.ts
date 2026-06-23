@@ -200,6 +200,7 @@ export const myEnrollmentsQO = (userId: string | undefined) =>
             unitLabel: "aula" as const,
             lastLessonId: r.last_lesson_id ?? null,
             progress: Math.round((done / lessonIds.length) * 100),
+            accessStatus: (r.access_status ?? "active") as "active" | "pending",
           };
         }
         const ids = modulesByCourse.get(r.course_id) ?? [];
@@ -214,6 +215,7 @@ export const myEnrollmentsQO = (userId: string | undefined) =>
           unitLabel: "módulo" as const,
           lastLessonId: r.last_lesson_id ?? null,
           progress: ids.length === 0 ? 0 : Math.round((done / ids.length) * 100),
+          accessStatus: (r.access_status ?? "active") as "active" | "pending",
         };
       });
     },
