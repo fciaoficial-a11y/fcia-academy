@@ -25,6 +25,12 @@ const EXPECTED: DomainGroup[] = [
   { domain: "IA", tables: ["ai_jobs"] },
 ];
 
+const ALTERNATIVES: { domain: string; expected: string; candidate: string; note: string }[] = [
+  { domain: "Gamificação", expected: "gamification_profile", candidate: "user_achievements", note: "Tabela real presente no banco" },
+  { domain: "Gamificação", expected: "xp_log", candidate: "achievements", note: "Tabela real presente no banco" },
+  { domain: "Matrículas", expected: "enrollments", candidate: "payments", note: "Tabela real presente no banco" },
+];
+
 type Probe = { status: "found" | "missing" | "rls" | "pending"; count: number | null; message: string };
 
 async function probe(table: string): Promise<Probe> {
