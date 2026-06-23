@@ -62,6 +62,7 @@ import { Route as BlogCategoriaSlugRouteImport } from './routes/blog.categoria.$
 import { Route as BlogAutorSlugRouteImport } from './routes/blog.autor.$slug'
 import { Route as AdminAiStudioPdfToCourseRouteImport } from './routes/admin.ai-studio.pdf-to-course'
 import { Route as AdminAiStudioToolRouteImport } from './routes/admin.ai-studio.$tool'
+import { Route as AuthenticatedCheckoutCourseIdRouteImport } from './routes/_authenticated.checkout.$courseId'
 import { Route as ApiPublicWebhooksMercadoPagoRouteImport } from './routes/api/public/webhooks/mercado-pago'
 import { Route as AdminAiStudioDraftsIdRouteImport } from './routes/admin.ai-studio.drafts.$id'
 
@@ -330,6 +331,12 @@ const AdminAiStudioToolRoute = AdminAiStudioToolRouteImport.update({
   path: '/$tool',
   getParentRoute: () => AdminAiStudioRoute,
 } as any)
+const AuthenticatedCheckoutCourseIdRoute =
+  AuthenticatedCheckoutCourseIdRouteImport.update({
+    id: '/checkout/$courseId',
+    path: '/checkout/$courseId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const ApiPublicWebhooksMercadoPagoRoute =
   ApiPublicWebhooksMercadoPagoRouteImport.update({
     id: '/api/public/webhooks/mercado-pago',
@@ -389,6 +396,7 @@ export interface FileRoutesByFullPath {
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/system/': typeof SystemIndexRoute
+  '/checkout/$courseId': typeof AuthenticatedCheckoutCourseIdRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -442,6 +450,7 @@ export interface FileRoutesByTo {
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog': typeof BlogIndexRoute
   '/system': typeof SystemIndexRoute
+  '/checkout/$courseId': typeof AuthenticatedCheckoutCourseIdRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -500,6 +509,7 @@ export interface FileRoutesById {
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/system/': typeof SystemIndexRoute
+  '/_authenticated/checkout/$courseId': typeof AuthenticatedCheckoutCourseIdRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -558,6 +568,7 @@ export interface FileRouteTypes {
     | '/trilha/$slug'
     | '/blog/'
     | '/system/'
+    | '/checkout/$courseId'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
@@ -611,6 +622,7 @@ export interface FileRouteTypes {
     | '/trilha/$slug'
     | '/blog'
     | '/system'
+    | '/checkout/$courseId'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
@@ -668,6 +680,7 @@ export interface FileRouteTypes {
     | '/trilha/$slug'
     | '/blog/'
     | '/system/'
+    | '/_authenticated/checkout/$courseId'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
@@ -1085,6 +1098,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAiStudioToolRouteImport
       parentRoute: typeof AdminAiStudioRoute
     }
+    '/_authenticated/checkout/$courseId': {
+      id: '/_authenticated/checkout/$courseId'
+      path: '/checkout/$courseId'
+      fullPath: '/checkout/$courseId'
+      preLoaderRoute: typeof AuthenticatedCheckoutCourseIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/api/public/webhooks/mercado-pago': {
       id: '/api/public/webhooks/mercado-pago'
       path: '/api/public/webhooks/mercado-pago'
@@ -1104,10 +1124,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedMeusCursosRoute: typeof AuthenticatedMeusCursosRoute
+  AuthenticatedCheckoutCourseIdRoute: typeof AuthenticatedCheckoutCourseIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedMeusCursosRoute: AuthenticatedMeusCursosRoute,
+  AuthenticatedCheckoutCourseIdRoute: AuthenticatedCheckoutCourseIdRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

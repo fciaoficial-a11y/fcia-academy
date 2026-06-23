@@ -34,6 +34,8 @@ export interface CourseRow {
   hours_load: number | null;
   order_index: number;
   track_id: string | null;
+  price_cents?: number;
+  currency?: string;
 }
 
 export interface ModuleRow {
@@ -84,7 +86,7 @@ export const coursesQO = () =>
     queryFn: async (): Promise<CourseRow[]> => {
       const { data, error } = await supabase
         .from("courses")
-        .select("id, slug, title, description, hours_load, order_index, track_id")
+        .select("id, slug, title, description, hours_load, order_index, track_id, price_cents, currency")
         .order("order_index", { ascending: true });
       if (error) throw new Error(error.message);
       return data ?? [];
