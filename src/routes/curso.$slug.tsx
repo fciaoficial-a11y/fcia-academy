@@ -1,142 +1,196 @@
-import { createFileRoute, notFound, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { CheckCircle2, Circle, Clock, Loader2, BookOpen } from "lucide-react";
+import { toast } from "sonner";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { COURSES, MODULES } from "@/lib/mock-data";
-import { Clock, BookOpen, Star, Award, Play, CheckCircle2, Circle } from "lucide-react";
-import { coursesQuery, modulesQuery, normalize } from "@/lib/supabase-queries";
-import { DataState, RealDataSection } from "@/components/data/DataState";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  courseBySlugQO,
+  courseProgressQO,
+  enrollInCourse,
+  enrollmentsKey,
+  myEnrollmentsQO,
+  progressKey,
+  toggleModuleCompletion,
+  type ModuleRow,
+} from "@/lib/learning";
 
 export const Route = createFileRoute("/curso/$slug")({
-  head: ({ params }) => {
-    const c = COURSES.find((x) => x.slug === params.slug);
-    return { meta: [
-      { title: c ? `${c.title} — FCIA Academy` : "Curso — FCIA Academy" },
-      { name: "description", content: c?.description ?? "Curso da FCIA Academy." },
-    ] };
-  },
-  loader: ({ params }) => {
-    const course = COURSES.find((x) => x.slug === params.slug);
-    if (!course) throw notFound();
-    return { course };
-  },
-  notFoundComponent: () => <StudentShell><p className="text-muted-foreground">Curso não encontrado.</p></StudentShell>,
-  errorComponent: ({ error }) => <StudentShell><p className="text-destructive">Erro: {error.message}</p></StudentShell>,
+  head: ({ params }) => ({
+    meta: [
+      { title: `Curso ${params.slug} — FCIA Academy` },
+      { name: "description", content: "Detalhe do curso e módulos." },
+    ],
+  }),
+  notFoundComponent: () => (
+    <StudentShell>
+      <p className="text-muted-foreground">Curso não encontrado.</p>
+    </StudentShell>
+  ),
+  errorComponent: ({ error }) => (
+    <StudentShell>
+      <p className="text-destructive">Erro: {error.message}</p>
+    </StudentShell>
+  ),
   component: CourseDetail,
 });
 
 function CourseDetail() {
-  const { course } = Route.useLoaderData();
-  const modules = MODULES.filter((m) => m.courseSlug === course.slug);
-  const Icon = course.icon;
-  const allCourses = useQuery(coursesQuery());
-  const realCourse = allCourses.data?.rows.find((r) => {
-    const n = normalize(r);
-    return n.slug === course.slug || n.title.toLowerCase() === course.title.toLowerCase();
-  });
-  const realCourseId = realCourse ? (normalize(realCourse).id) : undefined;
-  const mods = useQuery(modulesQuery(realCourseId));
+  const { slug } = Route.useParams();
+  const { user } = useAuth();
+  const data = useQuery(courseBySlugQO(slug));
+  const enrollments = useQuery(myEnrollmentsQO(user?.id));
+
+  if (data.isLoading) {
+    return (
+      <StudentShell>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="h-4 w-4 animate-spin" /> Carregando…
+        </div>
+      </StudentShell>
+    );
+  }
+  if (data.error)
+    return (
+      <StudentShell>
+        <p className="text-destructive">Erro: {(data.error as Error).message}</p>
+      </StudentShell>
+    );
+  if (!data.data) throw notFound();
+
+  const { course, modules } = data.data;
+  const isEnrolled = (enrollments.data ?? []).some((e) => e.course_id === course.id);
+
   return (
     <StudentShell>
-      <PageHeader crumbs={[{ label: "Catálogo", to: "/catalogo" }, { label: course.title }]} eyebrow={course.category} title={course.title} description={course.description} />
+      <PageHeader
+        crumbs={[{ label: "Catálogo", to: "/catalogo" }, { label: course.title }]}
+        eyebrow="Curso"
+        title={course.title}
+        description={course.description ?? undefined}
+      />
+      <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+        {course.hours_load != null && (
+          <span className="inline-flex items-center gap-1">
+            <Clock className="h-3 w-3" /> {course.hours_load}h
+          </span>
+        )}
+        <span className="inline-flex items-center gap-1">
+          <BookOpen className="h-3 w-3" /> {modules.length} módulos
+        </span>
+      </div>
 
-      <RealDataSection title="Curso no banco" source={realCourse ? `courses · 1 match` : "courses"}>
-        <DataState
-          loading={allCourses.isLoading}
-          error={allCourses.error as Error | null}
-          data={realCourse ? [realCourse] : []}
-          configured={allCourses.data?.configured ?? true}
-          emptyTitle="Curso não encontrado no Supabase"
-          emptyHint="Renderização abaixo usa o mock curado."
-        >
-          {(data) => {
-            const n = normalize(data[0]);
-            return (
-              <dl className="grid gap-2 text-xs">
-                <div className="flex justify-between"><dt className="text-muted-foreground">id</dt><dd className="font-mono">{n.id}</dd></div>
-                <div className="flex justify-between"><dt className="text-muted-foreground">title</dt><dd>{n.title}</dd></div>
-                {n.level && <div className="flex justify-between"><dt className="text-muted-foreground">level</dt><dd>{n.level}</dd></div>}
-              </dl>
-            );
-          }}
-        </DataState>
-      </RealDataSection>
+      {!user ? (
+        <Button asChild>
+          <Link to="/login">Entrar para matricular</Link>
+        </Button>
+      ) : !isEnrolled ? (
+        <EnrollCTA courseId={course.id} userId={user.id} />
+      ) : null}
 
-      <RealDataSection title="Módulos do banco" source={`modules · ${mods.data?.count ?? 0} linhas`}>
-        <DataState
-          loading={mods.isLoading}
-          error={mods.error as Error | null}
-          data={mods.data?.rows}
-          configured={mods.data?.configured ?? true}
-          emptyTitle="Sem módulos vinculados"
-          emptyHint="Módulos abaixo usam o mock curado."
-        >
-          {(data) => (
-            <ul className="space-y-2">
-              {data.map((r, i) => {
-                const n = normalize(r, String(i));
-                return (
-                  <li key={n.id} className="rounded-xl border border-border/60 bg-card/60 p-3 text-sm">
-                    <span className="font-mono text-xs text-muted-foreground mr-2">{String(i + 1).padStart(2, "0")}</span>
-                    {n.title}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </DataState>
-      </RealDataSection>
-
-      <section className="relative grid gap-6 overflow-hidden rounded-3xl border border-border/60 bg-card/60 p-6 backdrop-blur-xl lg:grid-cols-[1.5fr_1fr]">
-        <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
-        <div className="space-y-4">
-          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-            <span className="inline-flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{course.hours}h</span>
-            <span className="inline-flex items-center gap-1"><BookOpen className="h-3.5 w-3.5" />{course.modules} módulos · {course.lessons} aulas</span>
-            <span className="inline-flex items-center gap-1"><Star className="h-3.5 w-3.5 text-primary" />{course.rating} ({course.students.toLocaleString("pt-BR")} alunos)</span>
-          </div>
-          <div className="flex items-center gap-3 rounded-2xl border border-border/40 bg-background/40 p-4">
-            <div className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-primary to-accent text-primary-foreground font-bold">{course.instructor.split(" ").map((n: string) => n[0]).slice(0,2).join("")}</div>
-            <div><p className="text-sm font-semibold text-foreground">{course.instructor}</p><p className="text-xs text-muted-foreground">{course.instructorRole}</p></div>
-          </div>
-          <div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
-              <div className="h-full rounded-full bg-gradient-to-r from-primary to-accent" style={{ width: `${course.progress}%` }} />
-            </div>
-            <span className="mt-1 block text-xs text-muted-foreground">{course.progress}% concluído</span>
-          </div>
-        </div>
-        <div className="relative flex flex-col gap-3 rounded-2xl border border-border/40 bg-background/40 p-5">
-          <span className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent text-primary-foreground"><Icon className="h-6 w-6" /></span>
-          <p className="text-sm text-muted-foreground">Ao concluir o curso e o quiz com nota mínima de 70%, seu certificado é emitido automaticamente.</p>
-          <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-5 py-2.5 text-sm font-medium text-primary-foreground ring-glow">
-            <Play className="h-4 w-4" /> Continuar curso
-          </button>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground"><Award className="h-3.5 w-3.5 text-primary" /> Certificado validável incluso</div>
-        </div>
+      <section className="space-y-2">
+        <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          Módulos
+        </h2>
+        {modules.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Este curso ainda não tem módulos.</p>
+        ) : isEnrolled && user ? (
+          <ModuleList courseId={course.id} modules={modules} userId={user.id} />
+        ) : (
+          <ul className="divide-y divide-border/60 rounded-xl border border-border/60 bg-card/40">
+            {modules.map((m) => (
+              <li key={m.id} className="flex items-center gap-3 px-4 py-3 text-sm">
+                <Circle className="h-4 w-4 text-muted-foreground" />
+                <span>{m.title}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
-      <section className="space-y-3">
-        <h2 className="font-display text-lg font-semibold text-foreground">Módulos</h2>
-        <ul className="space-y-2">
-          {modules.map((m, i) => (
-            <li key={m.slug}>
-              <Link to="/modulo/$slug" params={{ slug: m.slug }} className="block rounded-2xl border border-border/60 bg-card/60 p-5 backdrop-blur-xl transition-colors hover:bg-secondary/40">
-                <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 sm:flex sm:items-center sm:justify-between">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-secondary text-foreground font-mono text-sm">{String(i+1).padStart(2,"0")}</span>
-                    <div className="min-w-0">
-                      <p className="truncate font-medium text-foreground">{m.title}</p>
-                      <p className="truncate text-xs text-muted-foreground">{m.summary} · {m.lessons.length} aulas · {m.durationMin} min</p>
-                    </div>
-                  </div>
-                  <span className="shrink-0">{m.completed ? <CheckCircle2 className="h-5 w-5 text-primary" /> : <Circle className="h-5 w-5 text-muted-foreground" />}</span>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {isEnrolled && (
+        <div className="flex gap-2">
+          <Button asChild variant="outline">
+            <Link to="/meus-cursos">Voltar aos meus cursos</Link>
+          </Button>
+          <Button asChild>
+            <Link to="/curso/$slug/prova" params={{ slug }}>
+              Ir para prova
+            </Link>
+          </Button>
+        </div>
+      )}
     </StudentShell>
+  );
+}
+
+function EnrollCTA({ courseId, userId }: { courseId: string; userId: string }) {
+  const qc = useQueryClient();
+  const m = useMutation({
+    mutationFn: () => enrollInCourse(courseId, userId),
+    onSuccess: () => {
+      toast.success("Matrícula realizada");
+      qc.invalidateQueries({ queryKey: enrollmentsKey(userId) });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+  return (
+    <Button onClick={() => m.mutate()} disabled={m.isPending}>
+      {m.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+      Matricular neste curso
+    </Button>
+  );
+}
+
+function ModuleList({
+  courseId,
+  modules,
+  userId,
+}: {
+  courseId: string;
+  modules: ModuleRow[];
+  userId: string;
+}) {
+  const qc = useQueryClient();
+  const progress = useQuery(courseProgressQO(userId, courseId));
+  const completed = useMemo(() => progress.data ?? new Set<string>(), [progress.data]);
+
+  const toggle = useMutation({
+    mutationFn: (m: { moduleId: string; done: boolean }) =>
+      toggleModuleCompletion(m.moduleId, userId, m.done),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: progressKey(userId, courseId) });
+      qc.invalidateQueries({ queryKey: enrollmentsKey(userId) });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  return (
+    <ul className="divide-y divide-border/60 rounded-xl border border-border/60 bg-card/40">
+      {modules.map((m) => {
+        const done = completed.has(m.id);
+        return (
+          <li key={m.id} className="flex items-center gap-3 px-4 py-3 text-sm">
+            <button
+              type="button"
+              onClick={() => toggle.mutate({ moduleId: m.id, done })}
+              disabled={toggle.isPending}
+              className="grid h-6 w-6 place-items-center rounded-full hover:bg-secondary/60"
+              aria-label={done ? "Marcar como pendente" : "Marcar como concluído"}
+            >
+              {done ? (
+                <CheckCircle2 className="h-5 w-5 text-primary" />
+              ) : (
+                <Circle className="h-5 w-5 text-muted-foreground" />
+              )}
+            </button>
+            <span className={done ? "text-muted-foreground line-through" : ""}>{m.title}</span>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

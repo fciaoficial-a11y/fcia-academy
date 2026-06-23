@@ -8,7 +8,7 @@ const ITEMS = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/meus-cursos", label: "Meus cursos", icon: BookOpen },
   { to: "/minhas-trilhas", label: "Minhas trilhas", icon: Map },
-  { to: "/certificados", label: "Certificados", icon: Award },
+  { to: "/meus-cursos", label: "Certificados", icon: Award },
   { to: "/perfil", label: "Perfil", icon: User },
   { to: "/notificacoes", label: "Notificações", icon: Bell },
   { to: "/configuracoes", label: "Configurações", icon: Settings },
