@@ -33,6 +33,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as TrilhaSlugRouteImport } from './routes/trilha.$slug'
+import { Route as SystemStatusRouteImport } from './routes/system.status'
 import { Route as SystemSetupRouteImport } from './routes/system.setup'
 import { Route as SystemSchemaRouteImport } from './routes/system.schema'
 import { Route as QuizIdRouteImport } from './routes/quiz.$id'
@@ -172,6 +173,11 @@ const BlogIndexRoute = BlogIndexRouteImport.update({
 const TrilhaSlugRoute = TrilhaSlugRouteImport.update({
   id: '/trilha/$slug',
   path: '/trilha/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SystemStatusRoute = SystemStatusRouteImport.update({
+  id: '/system/status',
+  path: '/system/status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SystemSetupRoute = SystemSetupRouteImport.update({
@@ -314,6 +320,7 @@ export interface FileRoutesByFullPath {
   '/quiz/$id': typeof QuizIdRoute
   '/system/schema': typeof SystemSchemaRoute
   '/system/setup': typeof SystemSetupRoute
+  '/system/status': typeof SystemStatusRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
@@ -358,6 +365,7 @@ export interface FileRoutesByTo {
   '/quiz/$id': typeof QuizIdRoute
   '/system/schema': typeof SystemSchemaRoute
   '/system/setup': typeof SystemSetupRoute
+  '/system/status': typeof SystemStatusRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
@@ -405,6 +413,7 @@ export interface FileRoutesById {
   '/quiz/$id': typeof QuizIdRoute
   '/system/schema': typeof SystemSchemaRoute
   '/system/setup': typeof SystemSetupRoute
+  '/system/status': typeof SystemStatusRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
@@ -453,6 +462,7 @@ export interface FileRouteTypes {
     | '/quiz/$id'
     | '/system/schema'
     | '/system/setup'
+    | '/system/status'
     | '/trilha/$slug'
     | '/blog/'
     | '/admin/ai-studio/$tool'
@@ -497,6 +507,7 @@ export interface FileRouteTypes {
     | '/quiz/$id'
     | '/system/schema'
     | '/system/setup'
+    | '/system/status'
     | '/trilha/$slug'
     | '/blog'
     | '/admin/ai-studio/$tool'
@@ -543,6 +554,7 @@ export interface FileRouteTypes {
     | '/quiz/$id'
     | '/system/schema'
     | '/system/setup'
+    | '/system/status'
     | '/trilha/$slug'
     | '/blog/'
     | '/admin/ai-studio/$tool'
@@ -582,6 +594,7 @@ export interface RootRouteChildren {
   QuizIdRoute: typeof QuizIdRoute
   SystemSchemaRoute: typeof SystemSchemaRoute
   SystemSetupRoute: typeof SystemSetupRoute
+  SystemStatusRoute: typeof SystemStatusRoute
   TrilhaSlugRoute: typeof TrilhaSlugRoute
 }
 
@@ -753,6 +766,13 @@ declare module '@tanstack/react-router' {
       path: '/trilha/$slug'
       fullPath: '/trilha/$slug'
       preLoaderRoute: typeof TrilhaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/system/status': {
+      id: '/system/status'
+      path: '/system/status'
+      fullPath: '/system/status'
+      preLoaderRoute: typeof SystemStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/system/setup': {
@@ -981,6 +1001,7 @@ const rootRouteChildren: RootRouteChildren = {
   QuizIdRoute: QuizIdRoute,
   SystemSchemaRoute: SystemSchemaRoute,
   SystemSetupRoute: SystemSetupRoute,
+  SystemStatusRoute: SystemStatusRoute,
   TrilhaSlugRoute: TrilhaSlugRoute,
 }
 export const routeTree = rootRouteImport
