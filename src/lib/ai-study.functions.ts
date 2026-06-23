@@ -146,12 +146,16 @@ export const generateCourseDraft = createServerFn({ method: "POST" })
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+    await assertWithinQuota(supabaseAdmin, userId);
+
     const { data: draft, error: dErr } = await supabaseAdmin
       .from("ai_course_drafts")
       .select("id, pdf_path, status")
       .eq("id", data.draftId)
       .maybeSingle();
     if (dErr || !draft) throw new Error("Draft não encontrado");
+
+    await logEvent(supabaseAdmin, draft.id, userId, "generate", "started");
 
     await supabaseAdmin
       .from("ai_course_drafts")
@@ -238,6 +242,11 @@ export const generateCourseDraft = createServerFn({ method: "POST" })
       .update({ ai_payload: payload as any, status: "ready_for_review" })
       .eq("id", draft.id);
     if (updErr) throw new Error(updErr.message);
+
+    await logEvent(supabaseAdmin, draft.id, userId, "generate", "completed", {
+      modules: payload.modules.length,
+      questions: payload.questionBank.length,
+    });
 
     return { draftId: draft.id, payload };
   });
