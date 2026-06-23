@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { CheckCircle2, Circle, Clock, Loader2, BookOpen, PlayCircle } from "lucide-react";
 import { toast } from "sonner";
@@ -27,6 +27,10 @@ export const Route = createFileRoute("/curso/$slug")({
       { name: "description", content: "Detalhe do curso e módulos." },
     ],
   }),
+  loader: async ({ context, params }) => {
+    const data = await context.queryClient.ensureQueryData(courseBySlugQO(params.slug));
+    if (!data) throw notFound();
+  },
   notFoundComponent: () => (
     <StudentShell>
       <p className="text-muted-foreground">Curso não encontrado.</p>
@@ -43,24 +47,9 @@ export const Route = createFileRoute("/curso/$slug")({
 function CourseDetail() {
   const { slug } = Route.useParams();
   const { user } = useAuth();
-  const data = useQuery(courseBySlugQO(slug));
+  const data = useSuspenseQuery(courseBySlugQO(slug));
   const enrollments = useQuery(myEnrollmentsQO(user?.id));
 
-  if (data.isLoading) {
-    return (
-      <StudentShell>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" /> Carregando…
-        </div>
-      </StudentShell>
-    );
-  }
-  if (data.error)
-    return (
-      <StudentShell>
-        <p className="text-destructive">Erro: {(data.error as Error).message}</p>
-      </StudentShell>
-    );
   if (!data.data) throw notFound();
 
   const { course, modules } = data.data;
