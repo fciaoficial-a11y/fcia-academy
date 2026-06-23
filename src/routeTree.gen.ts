@@ -22,6 +22,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CertificadosRouteImport } from './routes/certificados'
@@ -108,6 +109,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const ContatoRoute = ContatoRouteImport.update({
   id: '/contato',
   path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConquistasRoute = ConquistasRouteImport.update({
+  id: '/conquistas',
+  path: '/conquistas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
@@ -229,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/certificados': typeof CertificadosRoute
   '/checkout': typeof CheckoutRoute
   '/configuracoes': typeof ConfiguracoesRoute
+  '/conquistas': typeof ConquistasRoute
   '/contato': typeof ContatoRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
@@ -266,6 +273,7 @@ export interface FileRoutesByTo {
   '/certificados': typeof CertificadosRoute
   '/checkout': typeof CheckoutRoute
   '/configuracoes': typeof ConfiguracoesRoute
+  '/conquistas': typeof ConquistasRoute
   '/contato': typeof ContatoRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
@@ -303,6 +311,7 @@ export interface FileRoutesById {
   '/certificados': typeof CertificadosRoute
   '/checkout': typeof CheckoutRoute
   '/configuracoes': typeof ConfiguracoesRoute
+  '/conquistas': typeof ConquistasRoute
   '/contato': typeof ContatoRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
@@ -342,6 +351,7 @@ export interface FileRouteTypes {
     | '/certificados'
     | '/checkout'
     | '/configuracoes'
+    | '/conquistas'
     | '/contato'
     | '/dashboard'
     | '/faq'
@@ -379,6 +389,7 @@ export interface FileRouteTypes {
     | '/certificados'
     | '/checkout'
     | '/configuracoes'
+    | '/conquistas'
     | '/contato'
     | '/dashboard'
     | '/faq'
@@ -415,6 +426,7 @@ export interface FileRouteTypes {
     | '/certificados'
     | '/checkout'
     | '/configuracoes'
+    | '/conquistas'
     | '/contato'
     | '/dashboard'
     | '/faq'
@@ -453,6 +465,7 @@ export interface RootRouteChildren {
   CertificadosRoute: typeof CertificadosRoute
   CheckoutRoute: typeof CheckoutRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
+  ConquistasRoute: typeof ConquistasRoute
   ContatoRoute: typeof ContatoRoute
   DashboardRoute: typeof DashboardRoute
   FaqRoute: typeof FaqRoute
@@ -565,6 +578,13 @@ declare module '@tanstack/react-router' {
       path: '/contato'
       fullPath: '/contato'
       preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conquistas': {
+      id: '/conquistas'
+      path: '/conquistas'
+      fullPath: '/conquistas'
+      preLoaderRoute: typeof ConquistasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/configuracoes': {
@@ -768,6 +788,7 @@ const rootRouteChildren: RootRouteChildren = {
   CertificadosRoute: CertificadosRoute,
   CheckoutRoute: CheckoutRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
+  ConquistasRoute: ConquistasRoute,
   ContatoRoute: ContatoRoute,
   DashboardRoute: DashboardRoute,
   FaqRoute: FaqRoute,
