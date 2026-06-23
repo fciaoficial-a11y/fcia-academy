@@ -1,14 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight, Sparkles, Zap, Award, Target,
-  ShieldCheck, Check, ChevronDown, Store,
+  Check, ChevronDown, Store,
 } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
-import { TrackCard } from "@/components/cards/TrackCard";
 import { TestimonialCard } from "@/components/social/TestimonialCard";
-import {
-  TRACKS, TESTIMONIALS, FAQS,
-} from "@/lib/mock-data";
+import { TESTIMONIALS } from "@/lib/mock-data";
+
+const FAQ_CONVERSION = [
+  { q: "Como funciona a compra?", a: "Você escolhe o curso na vitrine, paga uma única vez (PIX ou cartão) e o acesso é liberado em minutos." },
+  { q: "É compra individual mesmo, sem assinatura?", a: "Sim. Cada curso é vendido separadamente. Sem mensalidade, sem renovação automática, sem amarras." },
+  { q: "Por quanto tempo tenho acesso?", a: "Acesso vitalício. O curso fica disponível na sua conta para sempre, incluindo atualizações." },
+  { q: "Como recebo o certificado?", a: "Ao concluir o curso e o quiz final com 70% ou mais, o certificado é emitido automaticamente com código público de validação." },
+  { q: "E se eu não gostar?", a: "Você tem 7 dias para pedir reembolso integral. Sem burocracia, sem pergunta." },
+  { q: "Como funciona a vitrine?", a: "É o catálogo completo de cursos e trilhas FCIA. Filtre por área, nível e preço — compre só o que faz sentido para você." },
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -31,24 +37,48 @@ function Index() {
           <Sparkles className="h-3 w-3 text-primary" /> Sem assinatura · acesso vitalício
         </span>
         <h1 className="mt-6 max-w-4xl font-display text-5xl font-semibold tracking-tight text-foreground sm:text-6xl lg:text-7xl">
-          Pague só pelo curso que vai <span className="text-gradient">mudar sua carreira</span>.
+          Cursos de tecnologia que você <span className="text-gradient">aplica na segunda-feira</span>.
         </h1>
         <p className="mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">
-          Cursos premium de tecnologia aplicada, vendidos individualmente. Escolha, compre e comece em minutos — direto na vitrine.
+          Compre só o curso que vai mudar sua carreira. Acesso vitalício, certificado validável, zero assinatura.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link to="/vitrine" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-7 py-3.5 text-sm font-semibold text-primary-foreground ring-glow transition-transform hover:-translate-y-0.5">
             Explorar vitrine <ArrowRight className="h-4 w-4" />
           </Link>
-          <Link to="/" hash="trilhas" className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-6 py-3 text-sm font-medium text-foreground backdrop-blur transition-colors hover:bg-secondary/60">
-            Cursos em destaque
+          <Link to="/" hash="vitrine" className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-6 py-3 text-sm font-medium text-foreground backdrop-blur transition-colors hover:bg-secondary/60">
+            Ver cursos em destaque
           </Link>
         </div>
         <p className="mt-3 text-[11px] text-muted-foreground">Pagamento único · acesso vitalício · 7 dias de garantia</p>
       </section>
 
+      {/* DIFERENCIAIS */}
+      <section id="beneficios" className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 scroll-mt-24">
+        <header className="mx-auto mb-10 max-w-2xl text-center">
+          <span className="eyebrow text-primary">Por que FCIA</span>
+          <h2 className="mt-2 font-display text-3xl font-semibold text-foreground sm:text-4xl">Conteúdo denso. Resultado real.</h2>
+        </header>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {[
+            { icon: Target, title: "Aplicado de verdade", desc: "Projetos reais que vão direto para o seu portfólio e o seu trabalho." },
+            { icon: Zap, title: "Direto ao ponto", desc: "Sem enrolação. Cada aula entrega uma habilidade prática que você usa hoje." },
+            { icon: Award, title: "Certificado validável", desc: "Emissão automática com código público — compatível com LinkedIn e RH." },
+          ].map(({ icon: Icon, title, desc }) => (
+            <article key={title} className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 p-6 backdrop-blur-xl transition-transform hover:-translate-y-0.5">
+              <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/10 blur-2xl" aria-hidden />
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent text-primary-foreground">
+                <Icon className="h-5 w-5" />
+              </span>
+              <h3 className="mt-4 font-display text-lg font-semibold text-foreground">{title}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       {/* VITRINE — BLOCO DOMINANTE */}
-      <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
+      <section id="vitrine" className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 scroll-mt-24">
         <div className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card/70 to-accent/10 p-8 backdrop-blur-xl ring-glow sm:p-14">
           <div className="absolute inset-0 tech-grid opacity-20" aria-hidden />
           <div className="relative grid items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
@@ -60,7 +90,7 @@ function Index() {
                 Escolha o curso. <span className="text-gradient">Compre. Comece agora.</span>
               </h2>
               <p className="mt-4 max-w-xl text-sm text-muted-foreground sm:text-base">
-                Catálogo completo de cursos e trilhas, com preço por item, acesso vitalício e certificado validável. Sem mensalidade, sem amarras.
+                Catálogo completo de cursos e trilhas. Preço por item, acesso vitalício, certificado validável. Sem mensalidade, sem amarras.
               </p>
               <ul className="mt-5 grid gap-2 text-sm text-foreground sm:grid-cols-2">
                 {["Compra por curso individual", "Acesso vitalício", "Certificado validável", "Pagamento via PIX"].map((l) => (
@@ -91,44 +121,6 @@ function Index() {
         </div>
       </section>
 
-      {/* BENEFÍCIOS */}
-      <section id="beneficios" className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 scroll-mt-24">
-        <header className="mx-auto mb-10 max-w-2xl text-center">
-          <span className="eyebrow text-primary">Por que FCIA</span>
-          <h2 className="mt-2 font-display text-3xl font-semibold text-foreground sm:text-4xl">Conteúdo denso. Resultado real.</h2>
-        </header>
-        <div className="grid gap-4 sm:grid-cols-3">
-          {[
-            { icon: Target, title: "Aplicado de verdade", desc: "Projetos reais, código que vai parar no seu portfólio." },
-            { icon: Zap, title: "Direto ao ponto", desc: "Sem enrolação. Cada aula entrega uma habilidade prática." },
-            { icon: Award, title: "Certificado validável", desc: "Emissão automática com código público — compatível com LinkedIn." },
-          ].map(({ icon: Icon, title, desc }) => (
-            <article key={title} className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 p-6 backdrop-blur-xl transition-transform hover:-translate-y-0.5">
-              <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/10 blur-2xl" aria-hidden />
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent text-primary-foreground">
-                <Icon className="h-5 w-5" />
-              </span>
-              <h3 className="mt-4 font-display text-lg font-semibold text-foreground">{title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* TRILHAS EM DESTAQUE */}
-      <section id="trilhas" className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 scroll-mt-24">
-        <div className="mb-6 flex items-end justify-between gap-4">
-          <div>
-            <span className="eyebrow text-primary">Em destaque</span>
-            <h2 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">Mais procurados agora</h2>
-          </div>
-          <Link to="/vitrine" className="text-sm text-primary hover:underline">Ver vitrine completa →</Link>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {TRACKS.slice(0, 3).map((t) => <TrackCard key={t.slug} track={t} />)}
-        </div>
-      </section>
-
       {/* PROVA SOCIAL — DEPOIMENTOS */}
       <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
         <header className="mx-auto mb-10 max-w-2xl text-center">
@@ -146,10 +138,10 @@ function Index() {
       <section id="faq" className="mx-auto max-w-3xl px-4 pb-20 sm:px-6 scroll-mt-24">
         <header className="mb-8 text-center">
           <span className="eyebrow text-primary">FAQ</span>
-          <h2 className="mt-2 font-display text-3xl font-semibold text-foreground sm:text-4xl">Perguntas frequentes</h2>
+          <h2 className="mt-2 font-display text-3xl font-semibold text-foreground sm:text-4xl">Antes de comprar, tira-dúvidas</h2>
         </header>
         <div className="space-y-2">
-          {FAQS.map((f, i) => (
+          {FAQ_CONVERSION.map((f, i) => (
             <details key={i} className="group rounded-2xl border border-border/60 bg-card/60 p-4 backdrop-blur-xl">
               <summary className="flex cursor-pointer items-center justify-between gap-3 text-sm font-medium text-foreground">
                 {f.q}
@@ -161,19 +153,22 @@ function Index() {
         </div>
       </section>
 
-      {/* GARANTIA */}
-      <section className="mx-auto max-w-5xl px-4 pb-16 sm:px-6">
-        <div className="flex flex-col items-center gap-3 rounded-3xl border border-border/60 bg-card/60 p-8 text-center backdrop-blur-xl sm:flex-row sm:text-left">
-          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-primary to-accent text-primary-foreground ring-glow">
-            <ShieldCheck className="h-7 w-7" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <h3 className="font-display text-lg font-semibold text-foreground">7 dias de garantia. Risco zero.</h3>
-            <p className="text-sm text-muted-foreground">Não gostou? Devolvemos 100% do valor. Sem pergunta, sem burocracia.</p>
+      {/* CTA FINAL */}
+      <section className="mx-auto max-w-5xl px-4 pb-20 sm:px-6">
+        <div className="relative overflow-hidden rounded-3xl border border-primary/40 bg-gradient-to-br from-primary/15 via-card/70 to-accent/15 p-10 text-center backdrop-blur-xl ring-glow sm:p-14">
+          <div className="absolute inset-0 tech-grid opacity-20" aria-hidden />
+          <div className="relative">
+            <span className="eyebrow text-primary">Sua próxima skill começa hoje</span>
+            <h2 className="mt-3 font-display text-3xl font-semibold text-foreground sm:text-5xl">
+              Escolha seu próximo curso e <span className="text-gradient">comece agora</span>.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground sm:text-base">
+              Pagamento único. Acesso vitalício. 7 dias de garantia incondicional.
+            </p>
+            <Link to="/vitrine" className="mt-7 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-8 py-4 text-base font-semibold text-primary-foreground ring-glow transition-transform hover:-translate-y-0.5">
+              Ir para a vitrine <ArrowRight className="h-5 w-5" />
+            </Link>
           </div>
-          <Link to="/vitrine" className="shrink-0 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-5 py-2.5 text-sm font-semibold text-primary-foreground ring-glow">
-            Ir para a vitrine <ArrowRight className="h-4 w-4" />
-          </Link>
         </div>
       </section>
     </AppShell>
