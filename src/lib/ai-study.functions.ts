@@ -20,6 +20,44 @@ async function assertAdmin(supabase: any, userId: string) {
   if (!data) throw new Error("Forbidden: admin role required");
 }
 
+const GENERATION_LIMIT_PER_HOUR = 10;
+
+async function logEvent(
+  admin: any,
+  draftId: string | null,
+  userId: string,
+  kind: string,
+  message: string,
+  metadata?: Record<string, unknown>,
+) {
+  try {
+    await admin.from("ai_pipeline_events").insert({
+      draft_id: draftId,
+      user_id: userId,
+      kind,
+      message,
+      metadata: metadata ?? null,
+    });
+  } catch {
+    // auditoria nunca pode quebrar o pipeline
+  }
+}
+
+async function assertWithinQuota(admin: any, userId: string) {
+  const { data, error } = await admin.rpc("ai_jobs_in_window", {
+    p_user_id: userId,
+    p_kinds: ["generate", "regenerate"],
+    p_minutes: 60,
+  });
+  if (error) return; // se quota falhar, não bloqueia (auditoria já registra)
+  const count = typeof data === "number" ? data : Number(data ?? 0);
+  if (count >= GENERATION_LIMIT_PER_HOUR) {
+    throw new Error(
+      `Limite de ${GENERATION_LIMIT_PER_HOUR} gerações por hora atingido. Aguarde antes de tentar novamente.`,
+    );
+  }
+}
+
 function base64ToBytes(b64: string): Uint8Array {
   const clean = b64.includes(",") ? b64.split(",")[1] : b64;
   const bin = atob(clean);
