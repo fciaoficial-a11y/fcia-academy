@@ -41,6 +41,7 @@ import { Route as AdminCursosRouteImport } from './routes/admin.cursos'
 import { Route as AdminCertificadosRouteImport } from './routes/admin.certificados'
 import { Route as AdminAiStudioRouteImport } from './routes/admin.ai-studio'
 import { Route as AdminAiStudioIndexRouteImport } from './routes/admin.ai-studio.index'
+import { Route as AdminAiStudioToolRouteImport } from './routes/admin.ai-studio.$tool'
 
 const TrilhasRoute = TrilhasRouteImport.update({
   id: '/trilhas',
@@ -202,6 +203,11 @@ const AdminAiStudioIndexRoute = AdminAiStudioIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminAiStudioRoute,
 } as any)
+const AdminAiStudioToolRoute = AdminAiStudioToolRouteImport.update({
+  id: '/$tool',
+  path: '/$tool',
+  getParentRoute: () => AdminAiStudioRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -235,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
+  '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
 }
 export interface FileRoutesByTo {
@@ -268,6 +275,7 @@ export interface FileRoutesByTo {
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
+  '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio': typeof AdminAiStudioIndexRoute
 }
 export interface FileRoutesById {
@@ -303,6 +311,7 @@ export interface FileRoutesById {
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
+  '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
 }
 export interface FileRouteTypes {
@@ -339,6 +348,7 @@ export interface FileRouteTypes {
     | '/modulo/$slug'
     | '/quiz/$id'
     | '/trilha/$slug'
+    | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -372,6 +382,7 @@ export interface FileRouteTypes {
     | '/modulo/$slug'
     | '/quiz/$id'
     | '/trilha/$slug'
+    | '/admin/ai-studio/$tool'
     | '/admin/ai-studio'
   id:
     | '__root__'
@@ -406,6 +417,7 @@ export interface FileRouteTypes {
     | '/modulo/$slug'
     | '/quiz/$id'
     | '/trilha/$slug'
+    | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/'
   fileRoutesById: FileRoutesById
 }
@@ -662,14 +674,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAiStudioIndexRouteImport
       parentRoute: typeof AdminAiStudioRoute
     }
+    '/admin/ai-studio/$tool': {
+      id: '/admin/ai-studio/$tool'
+      path: '/$tool'
+      fullPath: '/admin/ai-studio/$tool'
+      preLoaderRoute: typeof AdminAiStudioToolRouteImport
+      parentRoute: typeof AdminAiStudioRoute
+    }
   }
 }
 
 interface AdminAiStudioRouteChildren {
+  AdminAiStudioToolRoute: typeof AdminAiStudioToolRoute
   AdminAiStudioIndexRoute: typeof AdminAiStudioIndexRoute
 }
 
 const AdminAiStudioRouteChildren: AdminAiStudioRouteChildren = {
+  AdminAiStudioToolRoute: AdminAiStudioToolRoute,
   AdminAiStudioIndexRoute: AdminAiStudioIndexRoute,
 }
 
