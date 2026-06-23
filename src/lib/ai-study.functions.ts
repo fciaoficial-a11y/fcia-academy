@@ -380,3 +380,230 @@ export const publishCourseDraft = createServerFn({ method: "POST" })
       questionCount,
     };
   });
+
+// =====================================================
+// FASE 4 — Prova do aluno (server-side scoring)
+// =====================================================
+
+const StartExamInput = z.object({ courseId: z.string().uuid() });
+const SubmitExamInput = z.object({
+  attemptId: z.string().uuid(),
+  answers: z.array(z.object({ questionId: z.string().uuid(), selectedIndex: z.number().int().min(0).max(3) })),
+});
+const CourseIdInput = z.object({ courseId: z.string().uuid() });
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+export const startExamAttempt = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => StartExamInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context as any;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // matrícula
+    const { data: enr } = await supabase
+      .from("enrollments")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("course_id", data.courseId)
+      .maybeSingle();
+    if (!enr) throw new Error("Você não está matriculado neste curso");
+
+    // prova liberada
+    const { data: exam } = await supabaseAdmin
+      .from("course_exams")
+      .select("question_count, passing_score, published")
+      .eq("course_id", data.courseId)
+      .maybeSingle();
+    if (!exam || !exam.published) throw new Error("Prova não disponível");
+
+    // bloqueio após aprovação
+    const { data: approved } = await supabaseAdmin
+      .from("exam_attempts")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("course_id", data.courseId)
+      .eq("passed", true)
+      .maybeSingle();
+    if (approved) throw new Error("Você já foi aprovado neste curso");
+
+    // sorteio
+    const { data: pool, error: qErr } = await supabaseAdmin
+      .from("questions")
+      .select("id, stem, options")
+      .eq("course_id", data.courseId);
+    if (qErr) throw new Error(qErr.message);
+    if (!pool || pool.length === 0) throw new Error("Curso sem questões cadastradas");
+
+    const n = Math.min(exam.question_count ?? 10, pool.length);
+    const picked = shuffle(pool).slice(0, n);
+    const questionIds = picked.map((q) => q.id);
+
+    // cria tentativa (RLS student insert)
+    const { data: attempt, error: aErr } = await supabase
+      .from("exam_attempts")
+      .insert({
+        user_id: userId,
+        course_id: data.courseId,
+        question_ids: questionIds,
+        passed: false,
+      })
+      .select("id, started_at")
+      .single();
+    if (aErr || !attempt) throw new Error(aErr?.message ?? "Falha ao criar tentativa");
+
+    return {
+      attemptId: attempt.id,
+      startedAt: attempt.started_at,
+      passingScore: exam.passing_score ?? 70,
+      questions: picked.map((q) => ({ id: q.id, stem: q.stem, options: q.options })),
+    };
+  });
+
+export const submitExamAttempt = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => SubmitExamInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { userId } = context as any;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: attempt, error: aErr } = await supabaseAdmin
+      .from("exam_attempts")
+      .select("id, user_id, course_id, question_ids, finished_at, passed")
+      .eq("id", data.attemptId)
+      .maybeSingle();
+    if (aErr || !attempt) throw new Error("Tentativa não encontrada");
+    if (attempt.user_id !== userId) throw new Error("Forbidden");
+    if (attempt.finished_at) throw new Error("Tentativa já finalizada");
+
+    // bloqueio se já aprovado em outra tentativa
+    const { data: prior } = await supabaseAdmin
+      .from("exam_attempts")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("course_id", attempt.course_id)
+      .eq("passed", true)
+      .maybeSingle();
+    if (prior) throw new Error("Você já foi aprovado neste curso");
+
+    const ids: string[] = attempt.question_ids ?? [];
+    const { data: qs, error: qErr } = await supabaseAdmin
+      .from("questions")
+      .select("id, correct_index, explanation, stem, options")
+      .in("id", ids);
+    if (qErr || !qs) throw new Error("Falha ao carregar questões");
+
+    const byId = new Map(qs.map((q) => [q.id, q]));
+    const answerMap = new Map(data.answers.map((a) => [a.questionId, a.selectedIndex]));
+
+    let correct = 0;
+    const results = ids.map((qid) => {
+      const q = byId.get(qid);
+      const sel = answerMap.get(qid);
+      const ok = q && sel === q.correct_index;
+      if (ok) correct++;
+      return {
+        questionId: qid,
+        stem: q?.stem ?? "",
+        options: q?.options ?? [],
+        selectedIndex: sel ?? -1,
+        correctIndex: q?.correct_index ?? -1,
+        correct: !!ok,
+        explanation: q?.explanation ?? "",
+      };
+    });
+
+    const { data: exam } = await supabaseAdmin
+      .from("course_exams")
+      .select("passing_score")
+      .eq("course_id", attempt.course_id)
+      .maybeSingle();
+    const passingScore = exam?.passing_score ?? 70;
+    const score = Number(((correct / ids.length) * 100).toFixed(2));
+    const passed = score >= passingScore;
+
+    const { error: uErr } = await supabaseAdmin
+      .from("exam_attempts")
+      .update({
+        score,
+        passed,
+        finished_at: new Date().toISOString(),
+        answers: results as any,
+      })
+      .eq("id", attempt.id);
+    if (uErr) throw new Error(uErr.message);
+
+    let certificate: { code: string; id: string } | null = null;
+    if (passed) {
+      const { data: course } = await supabaseAdmin
+        .from("courses")
+        .select("hours_load")
+        .eq("id", attempt.course_id)
+        .maybeSingle();
+      const code = `FCIA-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+      const qr_payload = JSON.stringify({ code, userId, courseId: attempt.course_id, attemptId: attempt.id });
+      const { data: cert, error: cErr } = await supabaseAdmin
+        .from("issued_certificates")
+        .upsert(
+          {
+            user_id: userId,
+            course_id: attempt.course_id,
+            attempt_id: attempt.id,
+            code,
+            qr_payload,
+            hours_load: course?.hours_load ?? null,
+          },
+          { onConflict: "user_id,course_id" },
+        )
+        .select("id, code")
+        .single();
+      if (!cErr && cert) certificate = { id: cert.id, code: cert.code };
+    }
+
+    return {
+      score,
+      passed,
+      passingScore,
+      correct,
+      total: ids.length,
+      results,
+      certificate,
+    };
+  });
+
+export const listMyAttempts = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => CourseIdInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context as any;
+    const { data: rows, error } = await supabase
+      .from("exam_attempts")
+      .select("id, started_at, finished_at, score, passed")
+      .eq("user_id", userId)
+      .eq("course_id", data.courseId)
+      .order("started_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const getMyCertificate = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => CourseIdInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context as any;
+    const { data: cert } = await supabase
+      .from("issued_certificates")
+      .select("id, code, qr_payload, issued_at, hours_load")
+      .eq("user_id", userId)
+      .eq("course_id", data.courseId)
+      .maybeSingle();
+    return cert ?? null;
+  });
