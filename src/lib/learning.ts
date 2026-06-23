@@ -70,6 +70,7 @@ export interface EnrollmentWithCourse {
   unitLabel: "aula" | "módulo";
   lastLessonId: string | null;
   progress: number; // 0-100
+  accessStatus?: "active" | "pending";
 }
 
 export const coursesKey = ["learning", "courses"] as const;
@@ -145,7 +146,7 @@ export const myEnrollmentsQO = (userId: string | undefined) =>
       if (!userId) return [];
       const { data: enrolls, error } = await supabase
         .from("enrollments")
-        .select("id, course_id, enrolled_at, last_lesson_id, course:courses(id, slug, title, description, hours_load, order_index, track_id)")
+        .select("id, course_id, enrolled_at, last_lesson_id, access_status, course:courses(id, slug, title, description, hours_load, order_index, track_id, price_cents, currency)")
         .eq("user_id", userId)
         .order("enrolled_at", { ascending: false });
       if (error) throw new Error(error.message);
