@@ -316,6 +316,9 @@ export type Database = {
           id: string
           issued_at: string
           qr_payload: string
+          revoked_at: string | null
+          revoked_reason: string | null
+          status: string
           updated_at: string
           user_id: string
         }
@@ -328,6 +331,9 @@ export type Database = {
           id?: string
           issued_at?: string
           qr_payload: string
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          status?: string
           updated_at?: string
           user_id: string
         }
@@ -340,6 +346,9 @@ export type Database = {
           id?: string
           issued_at?: string
           qr_payload?: string
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          status?: string
           updated_at?: string
           user_id?: string
         }
