@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -52,19 +51,6 @@ function AdminQuestions() {
     { key: "module", label: "Módulo", render: (r) => pick(r, ["module_slug", "module_id", "moduleId", "module"]) },
     { key: "prompt", label: "Enunciado / alternativas", render: (r) => <span className="line-clamp-2 text-foreground">{summarizeAlternatives(r)}</span> },
     { key: "explanation", label: "Explicação", render: (r) => <span className="line-clamp-1 text-muted-foreground">{pick(r, ["explanation", "rationale", "feedback"])}</span> },
-    {
-      key: "preview",
-      label: "Preview",
-      render: (r) => {
-        const id = r["id"] ?? r["quiz_id"];
-        if (!id) return "—";
-        return (
-          <Link to="/quiz/$id" params={{ id: String(id) }} className="text-xs text-primary hover:underline">
-            ver no quiz
-          </Link>
-        );
-      },
-    },
   ];
 
   return (

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrilhasRouteImport } from './routes/trilhas'
+import { Route as SystemRouteImport } from './routes/system'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
 import { Route as PlanosRouteImport } from './routes/planos'
@@ -30,6 +31,7 @@ import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SystemIndexRouteImport } from './routes/system.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as TrilhaSlugRouteImport } from './routes/trilha.$slug'
 import { Route as SystemStatusRouteImport } from './routes/system.status'
@@ -38,7 +40,6 @@ import { Route as SystemSecurityStatusRouteImport } from './routes/system.securi
 import { Route as SystemSchemaRouteImport } from './routes/system.schema'
 import { Route as SystemOpsStatusRouteImport } from './routes/system.ops-status'
 import { Route as SystemLaunchStatusRouteImport } from './routes/system.launch-status'
-import { Route as QuizIdRouteImport } from './routes/quiz.$id'
 import { Route as ModuloSlugRouteImport } from './routes/modulo.$slug'
 import { Route as InstrutorSlugRouteImport } from './routes/instrutor.$slug'
 import { Route as CursoSlugRouteImport } from './routes/curso.$slug'
@@ -63,6 +64,11 @@ import { Route as AdminAiStudioDraftsIdRouteImport } from './routes/admin.ai-stu
 const TrilhasRoute = TrilhasRouteImport.update({
   id: '/trilhas',
   path: '/trilhas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SystemRoute = SystemRouteImport.update({
+  id: '/system',
+  path: '/system',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SobreRoute = SobreRouteImport.update({
@@ -165,6 +171,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SystemIndexRoute = SystemIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SystemRoute,
+} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -176,39 +187,34 @@ const TrilhaSlugRoute = TrilhaSlugRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const SystemStatusRoute = SystemStatusRouteImport.update({
-  id: '/system/status',
-  path: '/system/status',
-  getParentRoute: () => rootRouteImport,
+  id: '/status',
+  path: '/status',
+  getParentRoute: () => SystemRoute,
 } as any)
 const SystemSetupRoute = SystemSetupRouteImport.update({
-  id: '/system/setup',
-  path: '/system/setup',
-  getParentRoute: () => rootRouteImport,
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => SystemRoute,
 } as any)
 const SystemSecurityStatusRoute = SystemSecurityStatusRouteImport.update({
-  id: '/system/security-status',
-  path: '/system/security-status',
-  getParentRoute: () => rootRouteImport,
+  id: '/security-status',
+  path: '/security-status',
+  getParentRoute: () => SystemRoute,
 } as any)
 const SystemSchemaRoute = SystemSchemaRouteImport.update({
-  id: '/system/schema',
-  path: '/system/schema',
-  getParentRoute: () => rootRouteImport,
+  id: '/schema',
+  path: '/schema',
+  getParentRoute: () => SystemRoute,
 } as any)
 const SystemOpsStatusRoute = SystemOpsStatusRouteImport.update({
-  id: '/system/ops-status',
-  path: '/system/ops-status',
-  getParentRoute: () => rootRouteImport,
+  id: '/ops-status',
+  path: '/ops-status',
+  getParentRoute: () => SystemRoute,
 } as any)
 const SystemLaunchStatusRoute = SystemLaunchStatusRouteImport.update({
-  id: '/system/launch-status',
-  path: '/system/launch-status',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuizIdRoute = QuizIdRouteImport.update({
-  id: '/quiz/$id',
-  path: '/quiz/$id',
-  getParentRoute: () => rootRouteImport,
+  id: '/launch-status',
+  path: '/launch-status',
+  getParentRoute: () => SystemRoute,
 } as any)
 const ModuloSlugRoute = ModuloSlugRouteImport.update({
   id: '/modulo/$slug',
@@ -333,6 +339,7 @@ export interface FileRoutesByFullPath {
   '/planos': typeof PlanosRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
+  '/system': typeof SystemRouteWithChildren
   '/trilhas': typeof TrilhasRoute
   '/admin/ai-studio': typeof AdminAiStudioRouteWithChildren
   '/admin/certificados': typeof AdminCertificadosRoute
@@ -347,7 +354,6 @@ export interface FileRoutesByFullPath {
   '/curso/$slug': typeof CursoSlugRouteWithChildren
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
-  '/quiz/$id': typeof QuizIdRoute
   '/system/launch-status': typeof SystemLaunchStatusRoute
   '/system/ops-status': typeof SystemOpsStatusRoute
   '/system/schema': typeof SystemSchemaRoute
@@ -356,6 +362,7 @@ export interface FileRoutesByFullPath {
   '/system/status': typeof SystemStatusRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/system/': typeof SystemIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -397,7 +404,6 @@ export interface FileRoutesByTo {
   '/curso/$slug': typeof CursoSlugRouteWithChildren
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
-  '/quiz/$id': typeof QuizIdRoute
   '/system/launch-status': typeof SystemLaunchStatusRoute
   '/system/ops-status': typeof SystemOpsStatusRoute
   '/system/schema': typeof SystemSchemaRoute
@@ -406,6 +412,7 @@ export interface FileRoutesByTo {
   '/system/status': typeof SystemStatusRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog': typeof BlogIndexRoute
+  '/system': typeof SystemIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -436,6 +443,7 @@ export interface FileRoutesById {
   '/planos': typeof PlanosRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
+  '/system': typeof SystemRouteWithChildren
   '/trilhas': typeof TrilhasRoute
   '/admin/ai-studio': typeof AdminAiStudioRouteWithChildren
   '/admin/certificados': typeof AdminCertificadosRoute
@@ -450,7 +458,6 @@ export interface FileRoutesById {
   '/curso/$slug': typeof CursoSlugRouteWithChildren
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
-  '/quiz/$id': typeof QuizIdRoute
   '/system/launch-status': typeof SystemLaunchStatusRoute
   '/system/ops-status': typeof SystemOpsStatusRoute
   '/system/schema': typeof SystemSchemaRoute
@@ -459,6 +466,7 @@ export interface FileRoutesById {
   '/system/status': typeof SystemStatusRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/system/': typeof SystemIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -490,6 +498,7 @@ export interface FileRouteTypes {
     | '/planos'
     | '/recuperar-senha'
     | '/sobre'
+    | '/system'
     | '/trilhas'
     | '/admin/ai-studio'
     | '/admin/certificados'
@@ -504,7 +513,6 @@ export interface FileRouteTypes {
     | '/curso/$slug'
     | '/instrutor/$slug'
     | '/modulo/$slug'
-    | '/quiz/$id'
     | '/system/launch-status'
     | '/system/ops-status'
     | '/system/schema'
@@ -513,6 +521,7 @@ export interface FileRouteTypes {
     | '/system/status'
     | '/trilha/$slug'
     | '/blog/'
+    | '/system/'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
@@ -554,7 +563,6 @@ export interface FileRouteTypes {
     | '/curso/$slug'
     | '/instrutor/$slug'
     | '/modulo/$slug'
-    | '/quiz/$id'
     | '/system/launch-status'
     | '/system/ops-status'
     | '/system/schema'
@@ -563,6 +571,7 @@ export interface FileRouteTypes {
     | '/system/status'
     | '/trilha/$slug'
     | '/blog'
+    | '/system'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
@@ -592,6 +601,7 @@ export interface FileRouteTypes {
     | '/planos'
     | '/recuperar-senha'
     | '/sobre'
+    | '/system'
     | '/trilhas'
     | '/admin/ai-studio'
     | '/admin/certificados'
@@ -606,7 +616,6 @@ export interface FileRouteTypes {
     | '/curso/$slug'
     | '/instrutor/$slug'
     | '/modulo/$slug'
-    | '/quiz/$id'
     | '/system/launch-status'
     | '/system/ops-status'
     | '/system/schema'
@@ -615,6 +624,7 @@ export interface FileRouteTypes {
     | '/system/status'
     | '/trilha/$slug'
     | '/blog/'
+    | '/system/'
     | '/admin/ai-studio/$tool'
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
@@ -645,19 +655,13 @@ export interface RootRouteChildren {
   PlanosRoute: typeof PlanosRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
   SobreRoute: typeof SobreRoute
+  SystemRoute: typeof SystemRouteWithChildren
   TrilhasRoute: typeof TrilhasRoute
   AulaSlugRoute: typeof AulaSlugRoute
   CertificadoCodeRoute: typeof CertificadoCodeRoute
   CursoSlugRoute: typeof CursoSlugRouteWithChildren
   InstrutorSlugRoute: typeof InstrutorSlugRoute
   ModuloSlugRoute: typeof ModuloSlugRoute
-  QuizIdRoute: typeof QuizIdRoute
-  SystemLaunchStatusRoute: typeof SystemLaunchStatusRoute
-  SystemOpsStatusRoute: typeof SystemOpsStatusRoute
-  SystemSchemaRoute: typeof SystemSchemaRoute
-  SystemSecurityStatusRoute: typeof SystemSecurityStatusRoute
-  SystemSetupRoute: typeof SystemSetupRoute
-  SystemStatusRoute: typeof SystemStatusRoute
   TrilhaSlugRoute: typeof TrilhaSlugRoute
 }
 
@@ -668,6 +672,13 @@ declare module '@tanstack/react-router' {
       path: '/trilhas'
       fullPath: '/trilhas'
       preLoaderRoute: typeof TrilhasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/system': {
+      id: '/system'
+      path: '/system'
+      fullPath: '/system'
+      preLoaderRoute: typeof SystemRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sobre': {
@@ -810,6 +821,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/system/': {
+      id: '/system/'
+      path: '/'
+      fullPath: '/system/'
+      preLoaderRoute: typeof SystemIndexRouteImport
+      parentRoute: typeof SystemRoute
+    }
     '/blog/': {
       id: '/blog/'
       path: '/'
@@ -826,52 +844,45 @@ declare module '@tanstack/react-router' {
     }
     '/system/status': {
       id: '/system/status'
-      path: '/system/status'
+      path: '/status'
       fullPath: '/system/status'
       preLoaderRoute: typeof SystemStatusRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SystemRoute
     }
     '/system/setup': {
       id: '/system/setup'
-      path: '/system/setup'
+      path: '/setup'
       fullPath: '/system/setup'
       preLoaderRoute: typeof SystemSetupRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SystemRoute
     }
     '/system/security-status': {
       id: '/system/security-status'
-      path: '/system/security-status'
+      path: '/security-status'
       fullPath: '/system/security-status'
       preLoaderRoute: typeof SystemSecurityStatusRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SystemRoute
     }
     '/system/schema': {
       id: '/system/schema'
-      path: '/system/schema'
+      path: '/schema'
       fullPath: '/system/schema'
       preLoaderRoute: typeof SystemSchemaRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SystemRoute
     }
     '/system/ops-status': {
       id: '/system/ops-status'
-      path: '/system/ops-status'
+      path: '/ops-status'
       fullPath: '/system/ops-status'
       preLoaderRoute: typeof SystemOpsStatusRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SystemRoute
     }
     '/system/launch-status': {
       id: '/system/launch-status'
-      path: '/system/launch-status'
+      path: '/launch-status'
       fullPath: '/system/launch-status'
       preLoaderRoute: typeof SystemLaunchStatusRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quiz/$id': {
-      id: '/quiz/$id'
-      path: '/quiz/$id'
-      fullPath: '/quiz/$id'
-      preLoaderRoute: typeof QuizIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SystemRoute
     }
     '/modulo/$slug': {
       id: '/modulo/$slug'
@@ -1072,6 +1083,29 @@ const BlogRouteChildren: BlogRouteChildren = {
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
+interface SystemRouteChildren {
+  SystemLaunchStatusRoute: typeof SystemLaunchStatusRoute
+  SystemOpsStatusRoute: typeof SystemOpsStatusRoute
+  SystemSchemaRoute: typeof SystemSchemaRoute
+  SystemSecurityStatusRoute: typeof SystemSecurityStatusRoute
+  SystemSetupRoute: typeof SystemSetupRoute
+  SystemStatusRoute: typeof SystemStatusRoute
+  SystemIndexRoute: typeof SystemIndexRoute
+}
+
+const SystemRouteChildren: SystemRouteChildren = {
+  SystemLaunchStatusRoute: SystemLaunchStatusRoute,
+  SystemOpsStatusRoute: SystemOpsStatusRoute,
+  SystemSchemaRoute: SystemSchemaRoute,
+  SystemSecurityStatusRoute: SystemSecurityStatusRoute,
+  SystemSetupRoute: SystemSetupRoute,
+  SystemStatusRoute: SystemStatusRoute,
+  SystemIndexRoute: SystemIndexRoute,
+}
+
+const SystemRouteWithChildren =
+  SystemRoute._addFileChildren(SystemRouteChildren)
+
 interface CursoSlugRouteChildren {
   CursoSlugProvaRoute: typeof CursoSlugProvaRoute
 }
@@ -1105,19 +1139,13 @@ const rootRouteChildren: RootRouteChildren = {
   PlanosRoute: PlanosRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
   SobreRoute: SobreRoute,
+  SystemRoute: SystemRouteWithChildren,
   TrilhasRoute: TrilhasRoute,
   AulaSlugRoute: AulaSlugRoute,
   CertificadoCodeRoute: CertificadoCodeRoute,
   CursoSlugRoute: CursoSlugRouteWithChildren,
   InstrutorSlugRoute: InstrutorSlugRoute,
   ModuloSlugRoute: ModuloSlugRoute,
-  QuizIdRoute: QuizIdRoute,
-  SystemLaunchStatusRoute: SystemLaunchStatusRoute,
-  SystemOpsStatusRoute: SystemOpsStatusRoute,
-  SystemSchemaRoute: SystemSchemaRoute,
-  SystemSecurityStatusRoute: SystemSecurityStatusRoute,
-  SystemSetupRoute: SystemSetupRoute,
-  SystemStatusRoute: SystemStatusRoute,
   TrilhaSlugRoute: TrilhaSlugRoute,
 }
 export const routeTree = rootRouteImport

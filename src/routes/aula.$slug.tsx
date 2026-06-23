@@ -68,7 +68,6 @@ function LessonPage() {
           />
 
           <div className="flex flex-wrap gap-2">
-            <Link to="/quiz/$id" params={{ id: "q-react-hooks" }} className="rounded-full bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground">Fazer quiz</Link>
             {next && (
               <Link to="/aula/$slug" params={{ slug: next.slug }} className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2 text-sm font-medium text-primary-foreground ring-glow">
                 Próxima aula <ArrowRight className="h-4 w-4" />
