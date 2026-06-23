@@ -37,6 +37,7 @@ import { Route as SystemStatusRouteImport } from './routes/system.status'
 import { Route as SystemSetupRouteImport } from './routes/system.setup'
 import { Route as SystemSecurityStatusRouteImport } from './routes/system.security-status'
 import { Route as SystemSchemaRouteImport } from './routes/system.schema'
+import { Route as SystemOpsStatusRouteImport } from './routes/system.ops-status'
 import { Route as QuizIdRouteImport } from './routes/quiz.$id'
 import { Route as ModuloSlugRouteImport } from './routes/modulo.$slug'
 import { Route as InstrutorSlugRouteImport } from './routes/instrutor.$slug'
@@ -196,6 +197,11 @@ const SystemSchemaRoute = SystemSchemaRouteImport.update({
   path: '/system/schema',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SystemOpsStatusRoute = SystemOpsStatusRouteImport.update({
+  id: '/system/ops-status',
+  path: '/system/ops-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuizIdRoute = QuizIdRouteImport.update({
   id: '/quiz/$id',
   path: '/quiz/$id',
@@ -324,6 +330,7 @@ export interface FileRoutesByFullPath {
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
+  '/system/ops-status': typeof SystemOpsStatusRoute
   '/system/schema': typeof SystemSchemaRoute
   '/system/security-status': typeof SystemSecurityStatusRoute
   '/system/setup': typeof SystemSetupRoute
@@ -370,6 +377,7 @@ export interface FileRoutesByTo {
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
+  '/system/ops-status': typeof SystemOpsStatusRoute
   '/system/schema': typeof SystemSchemaRoute
   '/system/security-status': typeof SystemSecurityStatusRoute
   '/system/setup': typeof SystemSetupRoute
@@ -419,6 +427,7 @@ export interface FileRoutesById {
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
+  '/system/ops-status': typeof SystemOpsStatusRoute
   '/system/schema': typeof SystemSchemaRoute
   '/system/security-status': typeof SystemSecurityStatusRoute
   '/system/setup': typeof SystemSetupRoute
@@ -469,6 +478,7 @@ export interface FileRouteTypes {
     | '/instrutor/$slug'
     | '/modulo/$slug'
     | '/quiz/$id'
+    | '/system/ops-status'
     | '/system/schema'
     | '/system/security-status'
     | '/system/setup'
@@ -515,6 +525,7 @@ export interface FileRouteTypes {
     | '/instrutor/$slug'
     | '/modulo/$slug'
     | '/quiz/$id'
+    | '/system/ops-status'
     | '/system/schema'
     | '/system/security-status'
     | '/system/setup'
@@ -563,6 +574,7 @@ export interface FileRouteTypes {
     | '/instrutor/$slug'
     | '/modulo/$slug'
     | '/quiz/$id'
+    | '/system/ops-status'
     | '/system/schema'
     | '/system/security-status'
     | '/system/setup'
@@ -604,6 +616,7 @@ export interface RootRouteChildren {
   InstrutorSlugRoute: typeof InstrutorSlugRoute
   ModuloSlugRoute: typeof ModuloSlugRoute
   QuizIdRoute: typeof QuizIdRoute
+  SystemOpsStatusRoute: typeof SystemOpsStatusRoute
   SystemSchemaRoute: typeof SystemSchemaRoute
   SystemSecurityStatusRoute: typeof SystemSecurityStatusRoute
   SystemSetupRoute: typeof SystemSetupRoute
@@ -807,6 +820,13 @@ declare module '@tanstack/react-router' {
       path: '/system/schema'
       fullPath: '/system/schema'
       preLoaderRoute: typeof SystemSchemaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/system/ops-status': {
+      id: '/system/ops-status'
+      path: '/system/ops-status'
+      fullPath: '/system/ops-status'
+      preLoaderRoute: typeof SystemOpsStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/quiz/$id': {
@@ -1019,6 +1039,7 @@ const rootRouteChildren: RootRouteChildren = {
   InstrutorSlugRoute: InstrutorSlugRoute,
   ModuloSlugRoute: ModuloSlugRoute,
   QuizIdRoute: QuizIdRoute,
+  SystemOpsStatusRoute: SystemOpsStatusRoute,
   SystemSchemaRoute: SystemSchemaRoute,
   SystemSecurityStatusRoute: SystemSecurityStatusRoute,
   SystemSetupRoute: SystemSetupRoute,
