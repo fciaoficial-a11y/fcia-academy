@@ -33,6 +33,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as TrilhaSlugRouteImport } from './routes/trilha.$slug'
+import { Route as SystemSetupRouteImport } from './routes/system.setup'
 import { Route as QuizIdRouteImport } from './routes/quiz.$id'
 import { Route as ModuloSlugRouteImport } from './routes/modulo.$slug'
 import { Route as InstrutorSlugRouteImport } from './routes/instrutor.$slug'
@@ -172,6 +173,11 @@ const TrilhaSlugRoute = TrilhaSlugRouteImport.update({
   path: '/trilha/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SystemSetupRoute = SystemSetupRouteImport.update({
+  id: '/system/setup',
+  path: '/system/setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuizIdRoute = QuizIdRouteImport.update({
   id: '/quiz/$id',
   path: '/quiz/$id',
@@ -300,6 +306,7 @@ export interface FileRoutesByFullPath {
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
+  '/system/setup': typeof SystemSetupRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
@@ -342,6 +349,7 @@ export interface FileRoutesByTo {
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
+  '/system/setup': typeof SystemSetupRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
@@ -387,6 +395,7 @@ export interface FileRoutesById {
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
+  '/system/setup': typeof SystemSetupRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
@@ -433,6 +442,7 @@ export interface FileRouteTypes {
     | '/instrutor/$slug'
     | '/modulo/$slug'
     | '/quiz/$id'
+    | '/system/setup'
     | '/trilha/$slug'
     | '/blog/'
     | '/admin/ai-studio/$tool'
@@ -475,6 +485,7 @@ export interface FileRouteTypes {
     | '/instrutor/$slug'
     | '/modulo/$slug'
     | '/quiz/$id'
+    | '/system/setup'
     | '/trilha/$slug'
     | '/blog'
     | '/admin/ai-studio/$tool'
@@ -519,6 +530,7 @@ export interface FileRouteTypes {
     | '/instrutor/$slug'
     | '/modulo/$slug'
     | '/quiz/$id'
+    | '/system/setup'
     | '/trilha/$slug'
     | '/blog/'
     | '/admin/ai-studio/$tool'
@@ -556,6 +568,7 @@ export interface RootRouteChildren {
   InstrutorSlugRoute: typeof InstrutorSlugRoute
   ModuloSlugRoute: typeof ModuloSlugRoute
   QuizIdRoute: typeof QuizIdRoute
+  SystemSetupRoute: typeof SystemSetupRoute
   TrilhaSlugRoute: typeof TrilhaSlugRoute
 }
 
@@ -727,6 +740,13 @@ declare module '@tanstack/react-router' {
       path: '/trilha/$slug'
       fullPath: '/trilha/$slug'
       preLoaderRoute: typeof TrilhaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/system/setup': {
+      id: '/system/setup'
+      path: '/system/setup'
+      fullPath: '/system/setup'
+      preLoaderRoute: typeof SystemSetupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/quiz/$id': {
@@ -939,6 +959,7 @@ const rootRouteChildren: RootRouteChildren = {
   InstrutorSlugRoute: InstrutorSlugRoute,
   ModuloSlugRoute: ModuloSlugRoute,
   QuizIdRoute: QuizIdRoute,
+  SystemSetupRoute: SystemSetupRoute,
   TrilhaSlugRoute: TrilhaSlugRoute,
 }
 export const routeTree = rootRouteImport
