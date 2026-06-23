@@ -4,12 +4,11 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { to: "/trilhas", label: "Trilhas" },
-  { to: "/catalogo", label: "Catálogo" },
-  { to: "/planos", label: "Planos" },
-  { to: "/blog", label: "Blog" },
-  { to: "/sobre", label: "Sobre" },
-  { to: "/contato", label: "Contato" },
+  { hash: "trilhas", label: "Trilhas" },
+  { hash: "beneficios", label: "Benefícios" },
+  { hash: "metodologia", label: "Metodologia" },
+  { hash: "planos", label: "Planos" },
+  { hash: "faq", label: "FAQ" },
 ] as const;
 
 export function SiteHeader({ className }: { className?: string }) {
@@ -29,9 +28,8 @@ export function SiteHeader({ className }: { className?: string }) {
 
         <nav className="hidden items-center gap-1 md:flex">
           {NAV.map((item) => (
-            <Link key={item.to} to={item.to}
-              className="rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
-              activeProps={{ className: "rounded-full px-3 py-1.5 text-sm bg-secondary text-foreground ring-1 ring-inset ring-primary/30" }}>
+            <Link key={item.hash} to="/" hash={item.hash}
+              className="rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground">
               {item.label}
             </Link>
           ))}
@@ -51,8 +49,8 @@ export function SiteHeader({ className }: { className?: string }) {
         <div className="border-t border-border/60 px-4 py-3 md:hidden">
           <ul className="flex flex-col gap-1">
             {NAV.map((item) => (
-              <li key={item.to}>
-                <Link to={item.to} onClick={() => setOpen(false)} className="block rounded-xl px-3 py-2 text-sm text-foreground hover:bg-secondary/60">{item.label}</Link>
+              <li key={item.hash}>
+                <Link to="/" hash={item.hash} onClick={() => setOpen(false)} className="block rounded-xl px-3 py-2 text-sm text-foreground hover:bg-secondary/60">{item.label}</Link>
               </li>
             ))}
             <li className="mt-2 flex gap-2 border-t border-border/60 pt-3">
