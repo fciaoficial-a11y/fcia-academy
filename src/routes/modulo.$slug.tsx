@@ -1,7 +1,6 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { QuizCard } from "@/components/cards/QuizCard";
 import { MODULES, type Lesson } from "@/lib/mock-data";
 import { CheckCircle2, Circle, Play } from "lucide-react";
 
@@ -45,7 +44,6 @@ function ModuleDetail() {
           ))}
         </ul>
       </section>
-      <QuizCard id="q-react-hooks" title={`Quiz · ${mod.title}`} questions={3} passing={70} />
     </StudentShell>
   );
 }
