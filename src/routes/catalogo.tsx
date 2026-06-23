@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/app/AppShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { SearchInput } from "@/components/shared/SearchInput";
@@ -24,12 +24,18 @@ export const Route = createFileRoute("/catalogo")({
       { name: "description", content: "Cursos publicados disponíveis para matrícula." },
     ],
   }),
+  loader: ({ context }) => {
+    void context.queryClient.ensureQueryData(coursesQO());
+  },
+  errorComponent: ({ error }) => (
+    <p className="p-6 text-sm text-destructive">Erro: {error.message}</p>
+  ),
   component: CatalogPage,
 });
 
 function CatalogPage() {
   const [search, setSearch] = useState("");
-  const courses = useQuery(coursesQO());
+  const courses = useSuspenseQuery(coursesQO());
   const { user } = useAuth();
   const enrollments = useQuery(myEnrollmentsQO(user?.id));
   const enrolledIds = useMemo(
@@ -64,13 +70,7 @@ function CatalogPage() {
           }
         />
 
-        {courses.isLoading ? (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin" /> Carregando cursos…
-          </div>
-        ) : courses.error ? (
-          <p className="text-sm text-destructive">Erro: {(courses.error as Error).message}</p>
-        ) : filtered.length === 0 ? (
+        {filtered.length === 0 ? (
           <EmptyState />
         ) : (
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
