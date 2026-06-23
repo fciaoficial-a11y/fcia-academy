@@ -84,7 +84,7 @@ function MyCourses() {
 }
 
 function EnrollmentCard({ enrollment }: { enrollment: EnrollmentWithCourse }) {
-  const { course, progress, completedModules, totalModules } = enrollment;
+  const { course, progress, completedUnits, totalUnits, unitLabel } = enrollment;
   const listAttempts = useServerFn(listMyAttempts);
   const getCert = useServerFn(getMyCertificate);
   const attempts = useQuery({
@@ -119,7 +119,7 @@ function EnrollmentCard({ enrollment }: { enrollment: EnrollmentWithCourse }) {
           />
         </div>
         <p className="mt-1 text-[11px] text-muted-foreground">
-          {completedModules}/{totalModules} módulos · {progress}%
+          {completedUnits}/{totalUnits} {unitLabel}{totalUnits === 1 ? "" : "s"} · {progress}%
         </p>
       </div>
       <div className="mt-auto flex flex-wrap gap-2 pt-4">
