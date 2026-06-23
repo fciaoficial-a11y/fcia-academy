@@ -431,3 +431,236 @@ export const AI_STUDIO_TOOLS: AIStudioTool[] = [
     outputLabel: "Pré-visualização",
   },
 ];
+
+// ===== Sprint 4: Monetização & Conversão =====
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  role: string;
+  company: string;
+  quote: string;
+  initials: string;
+  rating: number;
+}
+
+export const TESTIMONIALS: Testimonial[] = [
+  { id: "t1", name: "Marina Souza", role: "Frontend Engineer", company: "Nubank", initials: "MS", rating: 5,
+    quote: "A FCIA mudou minha rotina de estudos. A trilha de Frontend Moderno me preparou para uma promoção em 3 meses." },
+  { id: "t2", name: "Diego Lima", role: "Tech Lead", company: "iFood", initials: "DL", rating: 5,
+    quote: "Os certificados são reconhecidos pelo meu time. Já indiquei a plataforma para 12 colegas." },
+  { id: "t3", name: "Aline Pires", role: "Design Systems Lead", company: "Globo", initials: "AP", rating: 5,
+    quote: "O AI Studio acelerou em 4x a produção de conteúdo do meu squad de educação interna." },
+  { id: "t4", name: "Caio Mendes", role: "Group Product Manager", company: "Mercado Livre", initials: "CM", rating: 5,
+    quote: "Conteúdo denso, gamificação que engaja e suporte humano. Pago Pro sem pensar duas vezes." },
+];
+
+export interface SuccessCase {
+  id: string;
+  company: string;
+  logo: string;
+  metric: string;
+  label: string;
+  story: string;
+}
+
+export const SUCCESS_CASES: SuccessCase[] = [
+  { id: "s1", company: "Banco Atlas", logo: "BA", metric: "92%", label: "conclusão de trilhas", story: "Onboarding técnico cortado de 12 para 4 semanas." },
+  { id: "s2", company: "Lumen Health", logo: "LH", metric: "3.4x", label: "engajamento", story: "Equipe de dados certificada em SQL e dashboards em 60 dias." },
+  { id: "s3", company: "Norte Pay", logo: "NP", metric: "+47%", label: "satisfação interna", story: "Trilha de Liderança Técnica adotada por 100% dos staff." },
+];
+
+export interface StudentReview {
+  id: string;
+  course: string;
+  name: string;
+  initials: string;
+  rating: number;
+  comment: string;
+  at: string;
+}
+
+export const STUDENT_REVIEWS: StudentReview[] = [
+  { id: "r1", course: "React Fundamentos", name: "Helena Costa", initials: "HC", rating: 5, comment: "Didática impecável, exercícios práticos e mentoria que faz diferença.", at: "há 2 semanas" },
+  { id: "r2", course: "SQL do zero ao avançado", name: "Rafael Nunes", initials: "RN", rating: 5, comment: "Saí do básico para resolver problemas reais em produção.", at: "há 1 mês" },
+  { id: "r3", course: "Design Tokens na prática", name: "Bruna Tavares", initials: "BT", rating: 4, comment: "Excelente para times que querem padronizar.", at: "há 3 semanas" },
+  { id: "r4", course: "Discovery de Produto", name: "Pedro Alves", initials: "PA", rating: 5, comment: "Mudou minha forma de conduzir entrevistas com clientes.", at: "há 1 semana" },
+];
+
+export interface Instructor {
+  slug: string;
+  name: string;
+  initials: string;
+  role: string;
+  bio: string;
+  students: number;
+  courses: number;
+  rating: number;
+  reviews: number;
+  socials: { linkedin?: string; twitter?: string; site?: string };
+  certifications: string[];
+}
+
+export const INSTRUCTORS: Instructor[] = [
+  { slug: "marina-souza", name: "Marina Souza", initials: "MS", role: "Staff Engineer · React",
+    bio: "10 anos construindo produtos de larga escala. Autora do livro 'React em Profundidade'.",
+    students: 12420, courses: 4, rating: 4.9, reviews: 1840,
+    socials: { linkedin: "marinasouza", twitter: "marinadev" },
+    certifications: ["AWS Solutions Architect", "GoogleCloud Professional"] },
+  { slug: "diego-lima", name: "Diego Lima", initials: "DL", role: "Tech Lead · TypeScript",
+    bio: "Especialista em tipagem avançada e arquitetura de sistemas distribuídos.",
+    students: 8210, courses: 3, rating: 4.8, reviews: 1120,
+    socials: { linkedin: "diegolima" },
+    certifications: ["TypeScript Mentor"] },
+  { slug: "aline-pires", name: "Aline Pires", initials: "AP", role: "Design Systems Lead",
+    bio: "Construiu design systems em Globo, iFood e startups B2B.",
+    students: 5430, courses: 2, rating: 4.9, reviews: 620,
+    socials: { linkedin: "alinepires", site: "alinepires.design" },
+    certifications: ["Figma Advanced", "Tokens Studio Pro"] },
+];
+
+export interface PlanFull {
+  slug: "free" | "pro" | "premium" | "enterprise";
+  name: string;
+  price: string;
+  priceHint: string;
+  description: string;
+  highlighted?: boolean;
+  features: string[];
+  notIncluded?: string[];
+  cta: string;
+}
+
+export const PLANS_FULL: PlanFull[] = [
+  { slug: "free", name: "Free", price: "R$ 0", priceHint: "para sempre",
+    description: "Ideal para experimentar a plataforma.",
+    features: ["3 cursos abertos", "Comunidade", "Acesso ao app mobile"],
+    notIncluded: ["Certificados", "Trilhas guiadas", "AI Studio"],
+    cta: "Começar grátis" },
+  { slug: "pro", name: "Pro", price: "R$ 49", priceHint: "/mês",
+    description: "Para quem quer evoluir todo mês.",
+    features: ["Todas as trilhas e cursos", "Certificados validáveis", "Gamificação completa", "AI Studio (limitado)", "Suporte prioritário"],
+    cta: "Assinar Pro", highlighted: true },
+  { slug: "premium", name: "Premium", price: "R$ 119", priceHint: "/mês",
+    description: "Mentoria humana e experiência completa.",
+    features: ["Tudo do Pro", "Mentoria 1:1 mensal", "Code reviews ilimitados", "AI Studio ilimitado", "Acesso antecipado a lançamentos"],
+    cta: "Assinar Premium" },
+  { slug: "enterprise", name: "Enterprise", price: "Sob consulta", priceHint: "anual",
+    description: "Times e empresas em escala.",
+    features: ["Turmas privadas e SSO", "Relatórios executivos", "AI Studio ilimitado", "Onboarding e CSM dedicado", "SLA contratual"],
+    cta: "Falar com vendas" },
+];
+
+export interface BlogCategory {
+  slug: string;
+  name: string;
+  description: string;
+  count: number;
+}
+
+export const BLOG_CATEGORIES: BlogCategory[] = [
+  { slug: "engenharia", name: "Engenharia", description: "Boas práticas, arquitetura e padrões.", count: 18 },
+  { slug: "carreira", name: "Carreira", description: "Crescimento, senioridade e mentoria.", count: 12 },
+  { slug: "ia-educacao", name: "IA na Educação", description: "Como a IA acelera o aprendizado.", count: 9 },
+  { slug: "produto", name: "Produto", description: "Discovery, métricas e delivery.", count: 7 },
+];
+
+export interface BlogAuthor {
+  slug: string;
+  name: string;
+  initials: string;
+  role: string;
+  bio: string;
+  posts: number;
+}
+
+export const BLOG_AUTHORS: BlogAuthor[] = [
+  { slug: "marina-souza", name: "Marina Souza", initials: "MS", role: "Staff Engineer", bio: "Escrevo sobre React, performance e DX.", posts: 14 },
+  { slug: "aline-pires", name: "Aline Pires", initials: "AP", role: "Design Systems Lead", bio: "Design tokens, Figma e governança.", posts: 9 },
+  { slug: "diego-lima", name: "Diego Lima", initials: "DL", role: "Tech Lead", bio: "TypeScript, arquitetura e mentoria.", posts: 11 },
+];
+
+export interface BlogPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  authorSlug: string;
+  publishedAt: string;
+  readingMin: number;
+  featured?: boolean;
+}
+
+export const BLOG_POSTS: BlogPost[] = [
+  { slug: "design-tokens-na-pratica", title: "Design Tokens na prática: do Figma ao código",
+    excerpt: "Como estruturar tokens semânticos que sobrevivem a redesigns.",
+    category: "engenharia", authorSlug: "aline-pires", publishedAt: "2025-10-12", readingMin: 8, featured: true },
+  { slug: "ia-acelera-aprendizado", title: "Como a IA acelera o aprendizado técnico",
+    excerpt: "Tutores personalizados, quizzes adaptativos e novos formatos.",
+    category: "ia-educacao", authorSlug: "marina-souza", publishedAt: "2025-10-04", readingMin: 6 },
+  { slug: "caminho-staff", title: "O caminho até Staff Engineer",
+    excerpt: "Influência, escopo e o que muda quando você passa de senior para staff.",
+    category: "carreira", authorSlug: "diego-lima", publishedAt: "2025-09-22", readingMin: 11 },
+  { slug: "typescript-generics", title: "Generics em TypeScript sem dor",
+    excerpt: "Mentais para usar generics com clareza e ergonomia.",
+    category: "engenharia", authorSlug: "diego-lima", publishedAt: "2025-09-10", readingMin: 7 },
+  { slug: "discovery-rapido", title: "Discovery em 5 dias: o atalho realista",
+    excerpt: "Adaptando design sprints para times pequenos.",
+    category: "produto", authorSlug: "marina-souza", publishedAt: "2025-08-29", readingMin: 9 },
+];
+
+export interface AchievementCategory {
+  slug: "cursos" | "trilhas" | "xp" | "certificacoes" | "eventos";
+  name: string;
+  description: string;
+}
+
+export const ACHIEVEMENT_CATEGORIES: AchievementCategory[] = [
+  { slug: "cursos", name: "Cursos", description: "Conquistas por aulas e cursos concluídos." },
+  { slug: "trilhas", name: "Trilhas", description: "Marcos ao completar trilhas de aprendizagem." },
+  { slug: "xp", name: "XP", description: "Marcos de XP acumulado." },
+  { slug: "certificacoes", name: "Certificações", description: "Selo por cada certificado emitido." },
+  { slug: "eventos", name: "Eventos especiais", description: "Conquistas sazonais e desafios." },
+];
+
+export interface CategorizedAchievement {
+  id: string;
+  category: AchievementCategory["slug"];
+  title: string;
+  description: string;
+  xp: number;
+  unlocked: boolean;
+  rarity: "comum" | "raro" | "épico" | "lendário";
+}
+
+export const CATEGORIZED_ACHIEVEMENTS: CategorizedAchievement[] = [
+  { id: "ca1", category: "cursos", title: "Primeiro Curso", description: "Conclua seu primeiro curso", xp: 200, unlocked: true, rarity: "comum" },
+  { id: "ca2", category: "cursos", title: "Maratonista", description: "Conclua 10 cursos", xp: 800, unlocked: false, rarity: "raro" },
+  { id: "ca3", category: "trilhas", title: "Pioneiro", description: "Conclua sua primeira trilha", xp: 500, unlocked: false, rarity: "raro" },
+  { id: "ca4", category: "trilhas", title: "Tri-tracker", description: "Conclua 3 trilhas", xp: 1500, unlocked: false, rarity: "épico" },
+  { id: "ca5", category: "xp", title: "100 XP", description: "Acumule 100 XP", xp: 0, unlocked: true, rarity: "comum" },
+  { id: "ca6", category: "xp", title: "500 XP", description: "Acumule 500 XP", xp: 0, unlocked: true, rarity: "comum" },
+  { id: "ca7", category: "xp", title: "1.000 XP", description: "Acumule 1.000 XP", xp: 0, unlocked: true, rarity: "raro" },
+  { id: "ca8", category: "xp", title: "10.000 XP", description: "Acumule 10.000 XP", xp: 0, unlocked: false, rarity: "lendário" },
+  { id: "ca9", category: "certificacoes", title: "Primeiro Certificado", description: "Emita seu primeiro certificado", xp: 300, unlocked: true, rarity: "raro" },
+  { id: "ca10", category: "certificacoes", title: "Coleção +5", description: "Emita 5 certificados", xp: 1200, unlocked: false, rarity: "épico" },
+  { id: "ca11", category: "eventos", title: "Black Friday Scholar", description: "Conclua o desafio sazonal", xp: 1000, unlocked: false, rarity: "lendário" },
+  { id: "ca12", category: "eventos", title: "Aniversário FCIA", description: "Participe do evento anual", xp: 250, unlocked: false, rarity: "épico" },
+];
+
+export const EXEC_DASHBOARD = {
+  kpis: [
+    { label: "Alunos ativos", value: "12.430", delta: "+8,4%", trend: "up" as const },
+    { label: "Vendas (MRR)", value: "R$ 412k", delta: "+12,1%", trend: "up" as const },
+    { label: "Certificados emitidos", value: "9.812", delta: "+312", trend: "up" as const },
+    { label: "Cursos publicados", value: "84", delta: "+6", trend: "up" as const },
+    { label: "Retenção mensal", value: "87%", delta: "+2pp", trend: "up" as const },
+    { label: "Conclusão média", value: "67%", delta: "-1pp", trend: "down" as const },
+  ],
+  topCourses: [
+    { name: "React Fundamentos", students: 8421, completion: 71 },
+    { name: "SQL do zero ao avançado", students: 9410, completion: 64 },
+    { name: "TypeScript Pro", students: 5210, completion: 58 },
+    { name: "Design Tokens na prática", students: 3120, completion: 82 },
+  ],
+};
