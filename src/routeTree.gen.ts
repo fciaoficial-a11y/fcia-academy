@@ -12,10 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrilhasRouteImport } from './routes/trilhas'
 import { Route as SystemRouteImport } from './routes/system'
 import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
 import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as PlanoRouteImport } from './routes/plano'
 import { Route as PerfilRouteImport } from './routes/perfil'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotificacoesRouteImport } from './routes/notificacoes'
 import { Route as MinhasTrilhasRouteImport } from './routes/minhas-trilhas'
 import { Route as MeusCursosRouteImport } from './routes/meus-cursos'
@@ -76,6 +78,11 @@ const SobreRoute = SobreRouteImport.update({
   path: '/sobre',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
   id: '/recuperar-senha',
   path: '/recuperar-senha',
@@ -94,6 +101,11 @@ const PlanoRoute = PlanoRouteImport.update({
 const PerfilRoute = PerfilRouteImport.update({
   id: '/perfil',
   path: '/perfil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificacoesRoute = NotificacoesRouteImport.update({
@@ -334,10 +346,12 @@ export interface FileRoutesByFullPath {
   '/meus-cursos': typeof MeusCursosRoute
   '/minhas-trilhas': typeof MinhasTrilhasRoute
   '/notificacoes': typeof NotificacoesRoute
+  '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
   '/plano': typeof PlanoRoute
   '/planos': typeof PlanosRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/system': typeof SystemRouteWithChildren
   '/trilhas': typeof TrilhasRoute
@@ -386,10 +400,12 @@ export interface FileRoutesByTo {
   '/meus-cursos': typeof MeusCursosRoute
   '/minhas-trilhas': typeof MinhasTrilhasRoute
   '/notificacoes': typeof NotificacoesRoute
+  '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
   '/plano': typeof PlanoRoute
   '/planos': typeof PlanosRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
   '/admin/certificados': typeof AdminCertificadosRoute
@@ -438,10 +454,12 @@ export interface FileRoutesById {
   '/meus-cursos': typeof MeusCursosRoute
   '/minhas-trilhas': typeof MinhasTrilhasRoute
   '/notificacoes': typeof NotificacoesRoute
+  '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
   '/plano': typeof PlanoRoute
   '/planos': typeof PlanosRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/system': typeof SystemRouteWithChildren
   '/trilhas': typeof TrilhasRoute
@@ -493,10 +511,12 @@ export interface FileRouteTypes {
     | '/meus-cursos'
     | '/minhas-trilhas'
     | '/notificacoes'
+    | '/onboarding'
     | '/perfil'
     | '/plano'
     | '/planos'
     | '/recuperar-senha'
+    | '/reset-password'
     | '/sobre'
     | '/system'
     | '/trilhas'
@@ -545,10 +565,12 @@ export interface FileRouteTypes {
     | '/meus-cursos'
     | '/minhas-trilhas'
     | '/notificacoes'
+    | '/onboarding'
     | '/perfil'
     | '/plano'
     | '/planos'
     | '/recuperar-senha'
+    | '/reset-password'
     | '/sobre'
     | '/trilhas'
     | '/admin/certificados'
@@ -596,10 +618,12 @@ export interface FileRouteTypes {
     | '/meus-cursos'
     | '/minhas-trilhas'
     | '/notificacoes'
+    | '/onboarding'
     | '/perfil'
     | '/plano'
     | '/planos'
     | '/recuperar-senha'
+    | '/reset-password'
     | '/sobre'
     | '/system'
     | '/trilhas'
@@ -650,10 +674,12 @@ export interface RootRouteChildren {
   MeusCursosRoute: typeof MeusCursosRoute
   MinhasTrilhasRoute: typeof MinhasTrilhasRoute
   NotificacoesRoute: typeof NotificacoesRoute
+  OnboardingRoute: typeof OnboardingRoute
   PerfilRoute: typeof PerfilRoute
   PlanoRoute: typeof PlanoRoute
   PlanosRoute: typeof PlanosRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SobreRoute: typeof SobreRoute
   SystemRoute: typeof SystemRouteWithChildren
   TrilhasRoute: typeof TrilhasRoute
@@ -688,6 +714,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SobreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/recuperar-senha': {
       id: '/recuperar-senha'
       path: '/recuperar-senha'
@@ -714,6 +747,13 @@ declare module '@tanstack/react-router' {
       path: '/perfil'
       fullPath: '/perfil'
       preLoaderRoute: typeof PerfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notificacoes': {
@@ -1134,10 +1174,12 @@ const rootRouteChildren: RootRouteChildren = {
   MeusCursosRoute: MeusCursosRoute,
   MinhasTrilhasRoute: MinhasTrilhasRoute,
   NotificacoesRoute: NotificacoesRoute,
+  OnboardingRoute: OnboardingRoute,
   PerfilRoute: PerfilRoute,
   PlanoRoute: PlanoRoute,
   PlanosRoute: PlanosRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SobreRoute: SobreRoute,
   SystemRoute: SystemRouteWithChildren,
   TrilhasRoute: TrilhasRoute,
