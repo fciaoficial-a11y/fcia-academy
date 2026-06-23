@@ -656,7 +656,6 @@ export type Database = {
         }
         Returns: Json
       }
-      unaccent: { Args: { "": string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
