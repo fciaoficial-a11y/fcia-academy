@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Sparkles, Wand2, RotateCcw, Copy } from "lucide-react";
+import { toast } from "sonner";
+import { Sparkles, Wand2, RotateCcw, Copy, Save, CheckCircle2 } from "lucide-react";
 import type { AIStudioTool as Tool } from "@/lib/mock-data";
 
 interface AIStudioToolProps {
@@ -130,7 +131,7 @@ export function AIStudioTool({ tool }: AIStudioToolProps) {
         <header className="flex items-center justify-between">
           <h3 className="font-display text-base font-semibold text-foreground">{tool.outputLabel}</h3>
           {generated && (
-            <button type="button" className="inline-flex items-center gap-1 text-xs text-primary">
+            <button type="button" onClick={() => { navigator.clipboard?.writeText(output.join("\n")); toast.success("Copiado para a área de transferência."); }} className="inline-flex items-center gap-1 text-xs text-primary">
               <Copy className="h-3.5 w-3.5" /> Copiar
             </button>
           )}
@@ -140,6 +141,7 @@ export function AIStudioTool({ tool }: AIStudioToolProps) {
             Preencha o briefing e clique em <strong>Gerar rascunho</strong> para visualizar uma prévia.
           </p>
         ) : (
+          <>
           <ul className="space-y-2">
             {output.map((line, i) => (
               <li key={i} className="rounded-xl border border-border/40 bg-background/40 p-3 text-sm text-foreground">
@@ -147,6 +149,33 @@ export function AIStudioTool({ tool }: AIStudioToolProps) {
               </li>
             ))}
           </ul>
+          <div className="flex flex-wrap gap-2 pt-3">
+            <button
+              type="button"
+              onClick={() => {
+                try {
+                  const key = `fcia.ai-draft.${tool.slug}`;
+                  const drafts = JSON.parse(localStorage.getItem(key) ?? "[]") as unknown[];
+                  drafts.unshift({ at: new Date().toISOString(), output });
+                  localStorage.setItem(key, JSON.stringify(drafts.slice(0, 20)));
+                  toast.success("Rascunho salvo localmente.");
+                } catch {
+                  toast.error("Falha ao salvar rascunho.");
+                }
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-medium text-foreground"
+            >
+              <Save className="h-3.5 w-3.5" /> Salvar rascunho
+            </button>
+            <button
+              type="button"
+              onClick={() => toast.info("Aprovação registrada — publicação manual obrigatória.")}
+              className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-3 py-1.5 text-xs font-medium text-primary-foreground"
+            >
+              <CheckCircle2 className="h-3.5 w-3.5" /> Aprovar (sem publicar)
+            </button>
+          </div>
+          </>
         )}
       </aside>
     </section>
