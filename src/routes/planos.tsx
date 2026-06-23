@@ -67,7 +67,6 @@ function PlansPage() {
               </ul>
               <Link
                 to={p.slug === "enterprise" ? "/contato" : "/checkout"}
-                search={p.slug === "enterprise" ? undefined : { plan: p.slug }}
                 className={cn(
                   "mt-7 block w-full rounded-full px-4 py-2.5 text-center text-sm font-medium transition-transform hover:-translate-y-0.5",
                   p.highlighted ? "bg-gradient-to-r from-primary to-accent text-primary-foreground ring-glow" : "border border-border bg-card/50 text-foreground",

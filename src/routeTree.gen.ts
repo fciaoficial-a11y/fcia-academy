@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrilhasRouteImport } from './routes/trilhas'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
+import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as PlanoRouteImport } from './routes/plano'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as NotificacoesRouteImport } from './routes/notificacoes'
@@ -56,6 +57,11 @@ const SobreRoute = SobreRouteImport.update({
 const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
   id: '/recuperar-senha',
   path: '/recuperar-senha',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanosRoute = PlanosRouteImport.update({
+  id: '/planos',
+  path: '/planos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlanoRoute = PlanoRouteImport.update({
@@ -225,6 +231,7 @@ export interface FileRoutesByFullPath {
   '/notificacoes': typeof NotificacoesRoute
   '/perfil': typeof PerfilRoute
   '/plano': typeof PlanoRoute
+  '/planos': typeof PlanosRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
@@ -260,6 +267,7 @@ export interface FileRoutesByTo {
   '/notificacoes': typeof NotificacoesRoute
   '/perfil': typeof PerfilRoute
   '/plano': typeof PlanoRoute
+  '/planos': typeof PlanosRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
@@ -295,6 +303,7 @@ export interface FileRoutesById {
   '/notificacoes': typeof NotificacoesRoute
   '/perfil': typeof PerfilRoute
   '/plano': typeof PlanoRoute
+  '/planos': typeof PlanosRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
@@ -332,6 +341,7 @@ export interface FileRouteTypes {
     | '/notificacoes'
     | '/perfil'
     | '/plano'
+    | '/planos'
     | '/recuperar-senha'
     | '/sobre'
     | '/trilhas'
@@ -367,6 +377,7 @@ export interface FileRouteTypes {
     | '/notificacoes'
     | '/perfil'
     | '/plano'
+    | '/planos'
     | '/recuperar-senha'
     | '/sobre'
     | '/trilhas'
@@ -401,6 +412,7 @@ export interface FileRouteTypes {
     | '/notificacoes'
     | '/perfil'
     | '/plano'
+    | '/planos'
     | '/recuperar-senha'
     | '/sobre'
     | '/trilhas'
@@ -437,6 +449,7 @@ export interface RootRouteChildren {
   NotificacoesRoute: typeof NotificacoesRoute
   PerfilRoute: typeof PerfilRoute
   PlanoRoute: typeof PlanoRoute
+  PlanosRoute: typeof PlanosRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
   SobreRoute: typeof SobreRoute
   TrilhasRoute: typeof TrilhasRoute
@@ -469,6 +482,13 @@ declare module '@tanstack/react-router' {
       path: '/recuperar-senha'
       fullPath: '/recuperar-senha'
       preLoaderRoute: typeof RecuperarSenhaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planos': {
+      id: '/planos'
+      path: '/planos'
+      fullPath: '/planos'
+      preLoaderRoute: typeof PlanosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/plano': {
@@ -736,6 +756,7 @@ const rootRouteChildren: RootRouteChildren = {
   NotificacoesRoute: NotificacoesRoute,
   PerfilRoute: PerfilRoute,
   PlanoRoute: PlanoRoute,
+  PlanosRoute: PlanosRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
   SobreRoute: SobreRoute,
   TrilhasRoute: TrilhasRoute,
