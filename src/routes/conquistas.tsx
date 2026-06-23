@@ -1,9 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Award, BookOpen, Calendar, Map, Trophy, Zap, Lock } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { ACHIEVEMENT_CATEGORIES, CATEGORIZED_ACHIEVEMENTS } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
+import { achievementsQuery, userAchievementsQuery, normalize } from "@/lib/supabase-queries";
+import { DataState, RealDataSection } from "@/components/data/DataState";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/conquistas")({
   head: () => ({
@@ -32,6 +36,12 @@ const RARITY_STYLE = {
 
 function AchievementsHub() {
   const totalUnlocked = CATEGORIZED_ACHIEVEMENTS.filter((a) => a.unlocked).length;
+  const { user } = useAuth();
+  const ach = useQuery(achievementsQuery());
+  const userAch = useQuery(userAchievementsQuery(user?.id));
+  const unlockedIds = new Set(
+    (userAch.data?.rows ?? []).map((r) => String(r.achievement_id ?? r.achievementId ?? r.id ?? "")),
+  );
 
   return (
     <StudentShell>
@@ -40,6 +50,54 @@ function AchievementsHub() {
         title="Central de conquistas"
         description="Acompanhe sua trajetória através de marcos, badges e desafios especiais."
       />
+
+      <RealDataSection title="Achievements (Supabase)" source="achievements + user_achievements">
+        <DataState
+          loading={ach.isLoading}
+          error={(ach.error as Error) ?? null}
+          data={ach.data?.rows}
+          configured={ach.data?.configured ?? true}
+          emptyTitle="Nenhuma conquista cadastrada"
+          emptyHint="Tabela achievements está acessível mas vazia."
+        >
+          {(rows) => (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {rows.map((row, i) => {
+                const n = normalize(row, `ach-${i}`);
+                const unlocked = unlockedIds.has(n.id);
+                return (
+                  <article
+                    key={n.id}
+                    className={cn(
+                      "rounded-2xl border border-border/60 p-4 backdrop-blur-xl",
+                      unlocked ? "bg-card/60" : "bg-card/30",
+                    )}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span
+                        className={cn(
+                          "grid h-11 w-11 shrink-0 place-items-center rounded-xl",
+                          unlocked
+                            ? "bg-gradient-to-br from-primary to-accent text-primary-foreground"
+                            : "bg-secondary text-muted-foreground",
+                        )}
+                      >
+                        {unlocked ? <Trophy className="h-5 w-5" /> : <Lock className="h-4 w-4" />}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <h4 className="truncate text-sm font-semibold text-foreground">{n.title}</h4>
+                        {n.description && (
+                          <p className="mt-0.5 text-xs text-muted-foreground line-clamp-2">{n.description}</p>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </DataState>
+      </RealDataSection>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat icon={Trophy} label="Desbloqueadas" value={`${totalUnlocked}/${CATEGORIZED_ACHIEVEMENTS.length}`} />

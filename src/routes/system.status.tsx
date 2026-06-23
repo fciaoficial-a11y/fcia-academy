@@ -33,7 +33,7 @@ const MOCK_STATUS: { screen: string; replaced: boolean; note: string }[] = [
   { screen: "certificados", replaced: true, note: "Sprint 6 ✅ — certificates + fallback mock" },
   { screen: "dashboard", replaced: true, note: "Sprint 6 ✅ — resumo real (tracks/courses/certificates)" },
   { screen: "quiz", replaced: false, note: "Bloqueada — questions ausente (quiz_attempts ✅)" },
-  { screen: "conquistas", replaced: false, note: "Avaliar mapeamento alternativo: achievements / user_achievements" },
+  { screen: "conquistas", replaced: true, note: "Sprint 7 ✅ — achievements + user_achievements + fallback mock" },
   { screen: "admin overview", replaced: false, note: "Bloqueada — user_roles ausente, gate fica em getUser()" },
 ];
 
