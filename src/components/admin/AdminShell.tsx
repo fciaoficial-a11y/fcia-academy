@@ -6,7 +6,14 @@ import {
 import { cn } from "@/lib/utils";
 import { SearchInput } from "@/components/shared/SearchInput";
 
-const ITEMS = [
+type AdminNavItem = {
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+};
+
+const ITEMS: AdminNavItem[] = [
   { to: "/admin", label: "Visão geral", icon: LayoutDashboard, exact: true },
   { to: "/admin/trilhas", label: "Trilhas", icon: Map },
   { to: "/admin/cursos", label: "Cursos", icon: BookOpen },
@@ -15,7 +22,7 @@ const ITEMS = [
   { to: "/admin/certificados", label: "Certificados", icon: Award },
   { to: "/admin/usuarios", label: "Usuários", icon: Users },
   { to: "/admin/ai-studio", label: "AI Studio", icon: Sparkles },
-] as const;
+];
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
