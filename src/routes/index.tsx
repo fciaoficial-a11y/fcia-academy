@@ -77,7 +77,7 @@ function Index() {
       </section>
 
       {/* BENEFÍCIOS */}
-      <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
+      <section id="beneficios" className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 scroll-mt-24">
         <header className="mx-auto mb-10 max-w-2xl text-center">
           <span className="eyebrow text-primary">Benefícios</span>
           <h2 className="mt-2 font-display text-3xl font-semibold text-foreground sm:text-4xl">Tudo o que falta nos cursos tradicionais</h2>
@@ -105,7 +105,7 @@ function Index() {
       </section>
 
       {/* METODOLOGIA FCIA */}
-      <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
+      <section id="metodologia" className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 scroll-mt-24">
         <div className="rounded-3xl border border-border/60 bg-card/60 p-8 backdrop-blur-xl sm:p-12">
           <header className="mx-auto mb-10 max-w-2xl text-center">
             <span className="eyebrow text-primary">Metodologia FCIA</span>
@@ -128,7 +128,7 @@ function Index() {
       </section>
 
       {/* TRILHAS EM DESTAQUE */}
-      <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
+      <section id="trilhas" className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 scroll-mt-24">
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
             <span className="eyebrow text-primary">Em destaque</span>
@@ -193,7 +193,7 @@ function Index() {
       </section>
 
       {/* PLANOS PREVIEW */}
-      <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
+      <section id="planos" className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 scroll-mt-24">
         <header className="mx-auto mb-10 max-w-2xl text-center">
           <span className="eyebrow text-primary">Planos</span>
           <h2 className="mt-2 font-display text-3xl font-semibold text-foreground sm:text-4xl">Escolha o ritmo que cabe na sua jornada</h2>
@@ -220,7 +220,7 @@ function Index() {
       </section>
 
       {/* FAQ */}
-      <section className="mx-auto max-w-3xl px-4 pb-20 sm:px-6">
+      <section id="faq" className="mx-auto max-w-3xl px-4 pb-20 sm:px-6 scroll-mt-24">
         <header className="mb-8 text-center">
           <span className="eyebrow text-primary">FAQ</span>
           <h2 className="mt-2 font-display text-3xl font-semibold text-foreground sm:text-4xl">Perguntas frequentes</h2>
