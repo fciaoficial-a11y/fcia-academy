@@ -327,125 +327,43 @@ export const publishCourseDraft = createServerFn({ method: "POST" })
 
     const { data: draft, error: dErr } = await supabaseAdmin
       .from("ai_course_drafts")
-      .select("id, status, ai_payload, course_id")
+      .select("id, status, ai_payload")
       .eq("id", data.draftId)
       .maybeSingle();
     if (dErr || !draft) throw new Error("Draft não encontrado");
     if (draft.status === "published") throw new Error("Draft já publicado");
     if (!draft.ai_payload) throw new Error("Draft ainda não está pronto para revisão");
 
+    // Persistir overrides antes da publicação — snapshot é registrado pelo trigger.
     const merged = { ...(draft.ai_payload as any), ...(data.overrides ?? {}) };
     const payload = PayloadShape.parse(merged);
-
-    // unique slug
-    let baseSlug = slugify(payload.title);
-    let slug = baseSlug;
-    for (let i = 2; i < 50; i++) {
-      const { data: hit } = await supabaseAdmin
-        .from("courses")
-        .select("id")
-        .eq("slug", slug)
-        .maybeSingle();
-      if (!hit) break;
-      slug = `${baseSlug}-${i}`;
+    if (data.overrides) {
+      const { error: upErr } = await supabaseAdmin
+        .from("ai_course_drafts")
+        .update({ ai_payload: payload as any })
+        .eq("id", draft.id);
+      if (upErr) throw new Error(`Falha ao salvar overrides: ${upErr.message}`);
     }
 
-    // 1) course
-    const { data: course, error: cErr } = await supabaseAdmin
-      .from("courses")
-      .insert({
-        slug,
-        title: payload.title,
-        description: payload.description,
-        hours_load: payload.hoursLoad,
-        track_id: data.trackId ?? null,
-        order_index: 0,
-      })
-      .select("id, slug")
-      .single();
-    if (cErr || !course) throw new Error(`Falha ao criar curso: ${cErr?.message}`);
-
-    const rollback = async (msg: string) => {
-      await supabaseAdmin.from("courses").delete().eq("id", course.id);
-      throw new Error(msg);
-    };
-
-    // 2) modules
-    const moduleRows = payload.modules.map((m, idx) => ({
-      course_id: course.id,
-      slug: `${slugify(m.title)}-${idx + 1}`,
-      title: m.title,
-      content: [m.summary, m.content, ...(m.exercises ?? []).map((e) => `- ${e}`)]
-        .filter(Boolean)
-        .join("\n\n"),
-      order_index: idx,
-    }));
-    const { data: insertedModules, error: mErr } = await supabaseAdmin
-      .from("modules")
-      .insert(moduleRows)
-      .select("id, order_index");
-    if (mErr || !insertedModules) await rollback(`Falha ao criar módulos: ${mErr?.message}`);
-
-    // 2b) one default lesson per module — granularidade mínima
-    const lessonRows = (insertedModules ?? []).map((m: any) => {
-      const src = payload.modules[m.order_index];
-      return {
-        module_id: m.id,
-        slug: "introducao",
-        title: src?.title ?? "Aula 1",
-        content: [src?.summary, src?.content, ...(src?.exercises ?? []).map((e: string) => `- ${e}`)]
-          .filter(Boolean)
-          .join("\n\n"),
-        order_index: 0,
-      };
+    // Publicação atômica via RPC server-side (admin verificado dentro da função).
+    const { data: result, error: rpcErr } = await supabase.rpc("publish_course_draft", {
+      p_draft_id: draft.id,
+      p_track_id: data.trackId ?? null,
+      p_passing_score: data.passingScore ?? 70,
+      p_question_count: data.questionCount ?? 10,
     });
-    if (lessonRows.length > 0) {
-      const { error: lErr } = await supabaseAdmin.from("lessons").insert(lessonRows);
-      if (lErr) await rollback(`Falha ao criar aulas: ${lErr.message}`);
+    if (rpcErr) {
+      await logEvent(supabaseAdmin, draft.id, userId, "publish_error", rpcErr.message);
+      throw new Error(`Falha na publicação: ${rpcErr.message}`);
     }
-
-    // 3) questions
-    const questionRows = payload.questionBank.map((q) => ({
-      course_id: course.id,
-      stem: q.stem,
-      options: q.options as any,
-      correct_index: q.correctIndex,
-      explanation: q.explanation,
-    }));
-    const { error: qErr } = await supabaseAdmin.from("questions").insert(questionRows);
-    if (qErr) await rollback(`Falha ao criar questões: ${qErr.message}`);
-
-    // 4) exam config
-    const questionCount = Math.min(data.questionCount ?? 10, payload.questionBank.length);
-    const { error: eErr } = await supabaseAdmin.from("course_exams").insert({
-      course_id: course.id,
-      passing_score: data.passingScore ?? 70,
-      question_count: questionCount,
-      shuffle_seed_strategy: "random",
-      published: true,
-    });
-    if (eErr) await rollback(`Falha ao criar prova: ${eErr.message}`);
-
-    // 5) update draft → published (certificate template lives inside ai_payload)
-    const finalPayload = { ...payload, certificateTemplate: payload.certificateTemplate };
-    const { error: updErr } = await supabaseAdmin
-      .from("ai_course_drafts")
-      .update({
-        status: "published",
-        course_id: course.id,
-        ai_payload: finalPayload as any,
-      })
-      .eq("id", draft.id);
-    if (updErr) await rollback(`Falha ao atualizar draft: ${updErr.message}`);
-
-    return {
-      ok: true,
-      courseId: course.id,
-      slug: course.slug,
-      modules: moduleRows.length,
-      questions: questionRows.length,
-      passingScore: data.passingScore ?? 70,
-      questionCount,
+    return result as {
+      ok: boolean;
+      courseId: string;
+      slug: string;
+      modules: number;
+      questions: number;
+      passingScore: number;
+      questionCount: number;
     };
   });
 
