@@ -54,6 +54,7 @@ import { Route as AdminCursosRouteImport } from './routes/admin.cursos'
 import { Route as AdminCertificadosRouteImport } from './routes/admin.certificados'
 import { Route as AdminAiStudioRouteImport } from './routes/admin.ai-studio'
 import { Route as AdminAiStudioIndexRouteImport } from './routes/admin.ai-studio.index'
+import { Route as CursoSlugProvaRouteImport } from './routes/curso.$slug.prova'
 import { Route as BlogCategoriaSlugRouteImport } from './routes/blog.categoria.$slug'
 import { Route as BlogAutorSlugRouteImport } from './routes/blog.autor.$slug'
 import { Route as AdminAiStudioPdfToCourseRouteImport } from './routes/admin.ai-studio.pdf-to-course'
@@ -285,6 +286,11 @@ const AdminAiStudioIndexRoute = AdminAiStudioIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminAiStudioRoute,
 } as any)
+const CursoSlugProvaRoute = CursoSlugProvaRouteImport.update({
+  id: '/prova',
+  path: '/prova',
+  getParentRoute: () => CursoSlugRoute,
+} as any)
 const BlogCategoriaSlugRoute = BlogCategoriaSlugRouteImport.update({
   id: '/categoria/$slug',
   path: '/categoria/$slug',
@@ -345,7 +351,7 @@ export interface FileRoutesByFullPath {
   '/aula/$slug': typeof AulaSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/certificado/$id': typeof CertificadoIdRoute
-  '/curso/$slug': typeof CursoSlugRoute
+  '/curso/$slug': typeof CursoSlugRouteWithChildren
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
@@ -361,6 +367,7 @@ export interface FileRoutesByFullPath {
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
+  '/curso/$slug/prova': typeof CursoSlugProvaRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
   '/admin/ai-studio/drafts/$id': typeof AdminAiStudioDraftsIdRoute
 }
@@ -395,7 +402,7 @@ export interface FileRoutesByTo {
   '/aula/$slug': typeof AulaSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/certificado/$id': typeof CertificadoIdRoute
-  '/curso/$slug': typeof CursoSlugRoute
+  '/curso/$slug': typeof CursoSlugRouteWithChildren
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
@@ -411,6 +418,7 @@ export interface FileRoutesByTo {
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
+  '/curso/$slug/prova': typeof CursoSlugProvaRoute
   '/admin/ai-studio': typeof AdminAiStudioIndexRoute
   '/admin/ai-studio/drafts/$id': typeof AdminAiStudioDraftsIdRoute
 }
@@ -448,7 +456,7 @@ export interface FileRoutesById {
   '/aula/$slug': typeof AulaSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/certificado/$id': typeof CertificadoIdRoute
-  '/curso/$slug': typeof CursoSlugRoute
+  '/curso/$slug': typeof CursoSlugRouteWithChildren
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
@@ -464,6 +472,7 @@ export interface FileRoutesById {
   '/admin/ai-studio/pdf-to-course': typeof AdminAiStudioPdfToCourseRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
+  '/curso/$slug/prova': typeof CursoSlugProvaRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
   '/admin/ai-studio/drafts/$id': typeof AdminAiStudioDraftsIdRoute
 }
@@ -518,6 +527,7 @@ export interface FileRouteTypes {
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
     | '/blog/categoria/$slug'
+    | '/curso/$slug/prova'
     | '/admin/ai-studio/'
     | '/admin/ai-studio/drafts/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -568,6 +578,7 @@ export interface FileRouteTypes {
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
     | '/blog/categoria/$slug'
+    | '/curso/$slug/prova'
     | '/admin/ai-studio'
     | '/admin/ai-studio/drafts/$id'
   id:
@@ -620,6 +631,7 @@ export interface FileRouteTypes {
     | '/admin/ai-studio/pdf-to-course'
     | '/blog/autor/$slug'
     | '/blog/categoria/$slug'
+    | '/curso/$slug/prova'
     | '/admin/ai-studio/'
     | '/admin/ai-studio/drafts/$id'
   fileRoutesById: FileRoutesById
@@ -649,7 +661,7 @@ export interface RootRouteChildren {
   TrilhasRoute: typeof TrilhasRoute
   AulaSlugRoute: typeof AulaSlugRoute
   CertificadoIdRoute: typeof CertificadoIdRoute
-  CursoSlugRoute: typeof CursoSlugRoute
+  CursoSlugRoute: typeof CursoSlugRouteWithChildren
   InstrutorSlugRoute: typeof InstrutorSlugRoute
   ModuloSlugRoute: typeof ModuloSlugRoute
   QuizIdRoute: typeof QuizIdRoute
@@ -979,6 +991,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAiStudioIndexRouteImport
       parentRoute: typeof AdminAiStudioRoute
     }
+    '/curso/$slug/prova': {
+      id: '/curso/$slug/prova'
+      path: '/prova'
+      fullPath: '/curso/$slug/prova'
+      preLoaderRoute: typeof CursoSlugProvaRouteImport
+      parentRoute: typeof CursoSlugRoute
+    }
     '/blog/categoria/$slug': {
       id: '/blog/categoria/$slug'
       path: '/categoria/$slug'
@@ -1073,6 +1092,18 @@ const BlogRouteChildren: BlogRouteChildren = {
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
+interface CursoSlugRouteChildren {
+  CursoSlugProvaRoute: typeof CursoSlugProvaRoute
+}
+
+const CursoSlugRouteChildren: CursoSlugRouteChildren = {
+  CursoSlugProvaRoute: CursoSlugProvaRoute,
+}
+
+const CursoSlugRouteWithChildren = CursoSlugRoute._addFileChildren(
+  CursoSlugRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
@@ -1098,7 +1129,7 @@ const rootRouteChildren: RootRouteChildren = {
   TrilhasRoute: TrilhasRoute,
   AulaSlugRoute: AulaSlugRoute,
   CertificadoIdRoute: CertificadoIdRoute,
-  CursoSlugRoute: CursoSlugRoute,
+  CursoSlugRoute: CursoSlugRouteWithChildren,
   InstrutorSlugRoute: InstrutorSlugRoute,
   ModuloSlugRoute: ModuloSlugRoute,
   QuizIdRoute: QuizIdRoute,
