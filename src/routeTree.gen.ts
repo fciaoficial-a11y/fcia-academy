@@ -43,6 +43,7 @@ import { Route as QuizIdRouteImport } from './routes/quiz.$id'
 import { Route as ModuloSlugRouteImport } from './routes/modulo.$slug'
 import { Route as InstrutorSlugRouteImport } from './routes/instrutor.$slug'
 import { Route as CursoSlugRouteImport } from './routes/curso.$slug'
+import { Route as CertificadoCodeRouteImport } from './routes/certificado.$code'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AulaSlugRouteImport } from './routes/aula.$slug'
 import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
@@ -230,6 +231,11 @@ const CursoSlugRoute = CursoSlugRouteImport.update({
   path: '/curso/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CertificadoCodeRoute = CertificadoCodeRouteImport.update({
+  id: '/certificado/$code',
+  path: '/certificado/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -344,6 +350,7 @@ export interface FileRoutesByFullPath {
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/aula/$slug': typeof AulaSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/certificado/$code': typeof CertificadoCodeRoute
   '/curso/$slug': typeof CursoSlugRouteWithChildren
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
@@ -394,6 +401,7 @@ export interface FileRoutesByTo {
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/aula/$slug': typeof AulaSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/certificado/$code': typeof CertificadoCodeRoute
   '/curso/$slug': typeof CursoSlugRouteWithChildren
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
@@ -447,6 +455,7 @@ export interface FileRoutesById {
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/aula/$slug': typeof AulaSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/certificado/$code': typeof CertificadoCodeRoute
   '/curso/$slug': typeof CursoSlugRouteWithChildren
   '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
@@ -501,6 +510,7 @@ export interface FileRouteTypes {
     | '/admin/usuarios'
     | '/aula/$slug'
     | '/blog/$slug'
+    | '/certificado/$code'
     | '/curso/$slug'
     | '/instrutor/$slug'
     | '/modulo/$slug'
@@ -551,6 +561,7 @@ export interface FileRouteTypes {
     | '/admin/usuarios'
     | '/aula/$slug'
     | '/blog/$slug'
+    | '/certificado/$code'
     | '/curso/$slug'
     | '/instrutor/$slug'
     | '/modulo/$slug'
@@ -603,6 +614,7 @@ export interface FileRouteTypes {
     | '/admin/usuarios'
     | '/aula/$slug'
     | '/blog/$slug'
+    | '/certificado/$code'
     | '/curso/$slug'
     | '/instrutor/$slug'
     | '/modulo/$slug'
@@ -648,6 +660,7 @@ export interface RootRouteChildren {
   SobreRoute: typeof SobreRoute
   TrilhasRoute: typeof TrilhasRoute
   AulaSlugRoute: typeof AulaSlugRoute
+  CertificadoCodeRoute: typeof CertificadoCodeRoute
   CursoSlugRoute: typeof CursoSlugRouteWithChildren
   InstrutorSlugRoute: typeof InstrutorSlugRoute
   ModuloSlugRoute: typeof ModuloSlugRoute
@@ -901,6 +914,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CursoSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/certificado/$code': {
+      id: '/certificado/$code'
+      path: '/certificado/$code'
+      fullPath: '/certificado/$code'
+      preLoaderRoute: typeof CertificadoCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/$slug'
@@ -1108,6 +1128,7 @@ const rootRouteChildren: RootRouteChildren = {
   SobreRoute: SobreRoute,
   TrilhasRoute: TrilhasRoute,
   AulaSlugRoute: AulaSlugRoute,
+  CertificadoCodeRoute: CertificadoCodeRoute,
   CursoSlugRoute: CursoSlugRouteWithChildren,
   InstrutorSlugRoute: InstrutorSlugRoute,
   ModuloSlugRoute: ModuloSlugRoute,
