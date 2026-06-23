@@ -602,7 +602,7 @@ export const getCertificateByCode = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: cert, error } = await supabaseAdmin
       .from("issued_certificates")
-      .select("id, code, issued_at, hours_load, user_id, course_id")
+      .select("id, code, issued_at, hours_load, user_id, course_id, status, revoked_at, revoked_reason")
       .eq("code", data.code)
       .maybeSingle();
     if (error || !cert) return { valid: false as const };
@@ -619,6 +619,9 @@ export const getCertificateByCode = createServerFn({ method: "POST" })
       courseName: course?.title ?? "Curso FCIA",
       issuedAt: cert.issued_at,
       hoursLoad: cert.hours_load ?? course?.hours_load ?? null,
+      status: (cert as any).status ?? "active",
+      revokedAt: (cert as any).revoked_at ?? null,
+      revokedReason: (cert as any).revoked_reason ?? null,
     };
   });
 
