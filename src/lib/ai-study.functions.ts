@@ -621,3 +621,176 @@ export const getCertificateByCode = createServerFn({ method: "POST" })
       hoursLoad: cert.hours_load ?? course?.hours_load ?? null,
     };
   });
+
+// =====================================================
+// SPRINT D — Hardening: versões, auditoria e regeração seletiva
+// =====================================================
+
+export const listDraftVersions = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ draftId: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context as any;
+    await assertAdmin(supabase, userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin
+      .from("ai_draft_versions")
+      .select("id, version, change_kind, author_id, created_at")
+      .eq("draft_id", data.draftId)
+      .order("version", { ascending: false })
+      .limit(50);
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const listPipelineEvents = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ draftId: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context as any;
+    await assertAdmin(supabase, userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin
+      .from("ai_pipeline_events")
+      .select("id, kind, message, metadata, user_id, created_at")
+      .eq("draft_id", data.draftId)
+      .order("created_at", { ascending: false })
+      .limit(50);
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+const RegenSectionInput = z.object({
+  draftId: z.string().uuid(),
+  section: z.enum(["questions", "modules", "description", "titles", "certificate"]),
+  hint: z.string().max(500).optional(),
+});
+
+export const regenerateDraftSection = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => RegenSectionInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context as any;
+    await assertAdmin(supabase, userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await assertWithinQuota(supabaseAdmin, userId);
+
+    const { data: draft, error: dErr } = await supabaseAdmin
+      .from("ai_course_drafts")
+      .select("id, status, ai_payload, raw_extracted_text")
+      .eq("id", data.draftId)
+      .maybeSingle();
+    if (dErr || !draft) throw new Error("Draft não encontrado");
+    if (draft.status === "published") throw new Error("Draft já publicado");
+    if (!draft.ai_payload) throw new Error("Gere o draft inicial antes de regenerar partes");
+
+    const apiKey = process.env.LOVABLE_API_KEY;
+    if (!apiKey) throw new Error("LOVABLE_API_KEY ausente");
+    const { generateText, Output } = await import("ai");
+    const { createLovableAiGatewayProvider } = await import("./ai-gateway.server");
+    const gateway = createLovableAiGatewayProvider(apiKey);
+
+    await logEvent(supabaseAdmin, draft.id, userId, "regenerate", `started:${data.section}`);
+
+    const current = draft.ai_payload as any;
+    const baseContext = (draft.raw_extracted_text ?? "").slice(0, 30_000);
+    const hint = data.hint ? `\n\nInstrução adicional: ${data.hint}` : "";
+
+    let patch: Record<string, unknown> = {};
+    try {
+      if (data.section === "questions") {
+        const schema = z.object({
+          questionBank: z.array(
+            z.object({
+              stem: z.string(),
+              options: z.array(z.string()).length(4),
+              correctIndex: z.number().int().min(0).max(3),
+              explanation: z.string(),
+            }),
+          ).min(10).max(20),
+        });
+        const { output } = await generateText({
+          model: gateway("google/gemini-3-flash-preview"),
+          output: Output.object({ schema }),
+          system: "Você é um designer instrucional sênior. Gere uma nova bateria de questões PT-BR para o curso a seguir, mantendo coerência com módulos e objetivos.",
+          prompt: `Curso: ${current.title}\nObjetivos: ${(current.objectives ?? []).join("; ")}\nMódulos: ${(current.modules ?? []).map((m: any) => m.title).join("; ")}\n\nMaterial original (resumo):\n${baseContext}${hint}`,
+        });
+        patch = output as Record<string, unknown>;
+      } else if (data.section === "modules") {
+        const schema = z.object({
+          modules: z.array(
+            z.object({
+              title: z.string(),
+              summary: z.string(),
+              content: z.string(),
+              exercises: z.array(z.string()),
+            }),
+          ).min(2).max(8),
+        });
+        const { output } = await generateText({
+          model: gateway("google/gemini-3-flash-preview"),
+          output: Output.object({ schema }),
+          system: "Reescreva os módulos do curso mantendo o tema, sendo mais didático e objetivo. PT-BR.",
+          prompt: `Curso: ${current.title}\nDescrição: ${current.description}\nMódulos atuais: ${JSON.stringify(current.modules ?? []).slice(0, 6000)}\n\nMaterial original (resumo):\n${baseContext}${hint}`,
+        });
+        patch = output as Record<string, unknown>;
+      } else if (data.section === "description") {
+        const schema = z.object({ description: z.string().min(40) });
+        const { output } = await generateText({
+          model: gateway("google/gemini-3-flash-preview"),
+          output: Output.object({ schema }),
+          system: "Reescreva apenas a descrição do curso de forma clara e atrativa. PT-BR.",
+          prompt: `Curso: ${current.title}\nDescrição atual: ${current.description}${hint}`,
+        });
+        patch = output as Record<string, unknown>;
+      } else if (data.section === "titles") {
+        const schema = z.object({
+          title: z.string(),
+          modules: z.array(z.object({ title: z.string() })),
+        });
+        const { output } = await generateText({
+          model: gateway("google/gemini-3-flash-preview"),
+          output: Output.object({ schema }),
+          system: "Reescreva apenas os títulos do curso e dos módulos, mantendo a ordem. PT-BR.",
+          prompt: `Curso atual: ${current.title}\nMódulos atuais: ${(current.modules ?? []).map((m: any) => m.title).join("; ")}${hint}`,
+        });
+        const out = output as { title: string; modules: { title: string }[] };
+        const newModules = (current.modules ?? []).map((m: any, idx: number) => ({
+          ...m,
+          title: out.modules[idx]?.title ?? m.title,
+        }));
+        patch = { title: out.title, modules: newModules };
+      } else if (data.section === "certificate") {
+        const schema = z.object({
+          certificateTemplate: z.object({
+            heading: z.string(),
+            body: z.string(),
+            signature: z.string(),
+          }),
+        });
+        const { output } = await generateText({
+          model: gateway("google/gemini-3-flash-preview"),
+          output: Output.object({ schema }),
+          system: "Reescreva o template do certificado mantendo o tom formal. PT-BR.",
+          prompt: `Curso: ${current.title}${hint}`,
+        });
+        patch = output as Record<string, unknown>;
+      }
+    } catch (e: any) {
+      await logEvent(supabaseAdmin, draft.id, userId, "regenerate_error", String(e?.message ?? e));
+      const msg = String(e?.message ?? e);
+      if (msg.includes("429")) throw new Error("Limite de uso da IA atingido. Tente novamente em instantes.");
+      if (msg.includes("402")) throw new Error("Créditos da IA esgotados.");
+      throw new Error(`Falha na regeração: ${msg}`);
+    }
+
+    const nextPayload = { ...current, ...patch };
+    const { error: upErr } = await supabaseAdmin
+      .from("ai_course_drafts")
+      .update({ ai_payload: nextPayload, status: "ready_for_review" })
+      .eq("id", draft.id);
+    if (upErr) throw new Error(upErr.message);
+
+    await logEvent(supabaseAdmin, draft.id, userId, "regenerate", `completed:${data.section}`);
+    return { ok: true, section: data.section };
+  });
