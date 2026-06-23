@@ -30,19 +30,33 @@ export function AuthShell({ title, subtitle, children, footer }: {
   );
 }
 
-export function AuthInput({ label, type = "text", placeholder }: { label: string; type?: string; placeholder?: string }) {
+export function AuthInput({
+  label, type = "text", placeholder, value, onChange,
+}: {
+  label: string; type?: string; placeholder?: string;
+  value?: string; onChange?: (v: string) => void;
+}) {
   return (
     <label className="block space-y-1.5">
       <span className="text-xs font-medium text-foreground">{label}</span>
-      <input type={type} placeholder={placeholder}
-        className="h-11 w-full rounded-xl border border-input bg-background/60 px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring/40" />
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange ? (e) => onChange(e.target.value) : undefined}
+        className="h-11 w-full rounded-xl border border-input bg-background/60 px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring/40"
+      />
     </label>
   );
 }
 
-export function AuthSubmit({ children }: { children: ReactNode }) {
+export function AuthSubmit({ children, disabled }: { children: ReactNode; disabled?: boolean }) {
   return (
-    <button type="button" className="w-full rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2.5 text-sm font-medium text-primary-foreground ring-glow transition-transform hover:-translate-y-0.5">
+    <button
+      type="submit"
+      disabled={disabled}
+      className="w-full rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2.5 text-sm font-medium text-primary-foreground ring-glow transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+    >
       {children}
     </button>
   );
