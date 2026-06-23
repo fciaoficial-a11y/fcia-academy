@@ -13,7 +13,24 @@ import { toast } from "sonner";
 
 type Question = { id: string; stem: string; options: string[] };
 type StartResult = { attemptId: string; passingScore: number; questions: Question[] };
-type SubmitResult = Awaited<ReturnType<typeof submitExamAttempt>>;
+type ResultRow = {
+  questionId: string;
+  stem: string;
+  options: string[];
+  selectedIndex: number;
+  correctIndex: number;
+  correct: boolean;
+  explanation: string;
+};
+type SubmitResult = {
+  score: number;
+  passed: boolean;
+  passingScore: number;
+  correct: number;
+  total: number;
+  results: ResultRow[];
+  certificate: { id: string; code: string } | null;
+};
 
 export function ExamRunner({ courseId, courseSlug }: { courseId: string; courseSlug: string }) {
   const qc = useQueryClient();
@@ -110,7 +127,7 @@ export function ExamRunner({ courseId, courseSlug }: { courseId: string; courseS
           <Card>
             <CardHeader><CardTitle className="text-base">Revisão das erradas</CardTitle></CardHeader>
             <CardContent className="space-y-4">
-              {result.results.filter((r) => !r.correct).map((r, i) => (
+          {result.results.filter((r: ResultRow) => !r.correct).map((r: ResultRow, i: number) => (
                 <div key={r.questionId} className="rounded-lg border border-border/60 p-4">
                   <p className="text-sm font-medium">{i + 1}. {r.stem}</p>
                   <p className="mt-2 text-xs text-muted-foreground">Sua resposta: <span className="text-destructive">{r.options[r.selectedIndex] ?? "—"}</span></p>
