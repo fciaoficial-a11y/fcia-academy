@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrilhasRouteImport } from './routes/trilhas'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
+import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as PlanoRouteImport } from './routes/plano'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as NotificacoesRouteImport } from './routes/notificacoes'
@@ -21,17 +22,23 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
+import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CertificadosRouteImport } from './routes/certificados'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CadastroRouteImport } from './routes/cadastro'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as TrilhaSlugRouteImport } from './routes/trilha.$slug'
 import { Route as QuizIdRouteImport } from './routes/quiz.$id'
 import { Route as ModuloSlugRouteImport } from './routes/modulo.$slug'
+import { Route as InstrutorSlugRouteImport } from './routes/instrutor.$slug'
 import { Route as CursoSlugRouteImport } from './routes/curso.$slug'
 import { Route as CertificadoIdRouteImport } from './routes/certificado.$id'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AulaSlugRouteImport } from './routes/aula.$slug'
 import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
 import { Route as AdminTrilhasRouteImport } from './routes/admin.trilhas'
@@ -41,6 +48,8 @@ import { Route as AdminCursosRouteImport } from './routes/admin.cursos'
 import { Route as AdminCertificadosRouteImport } from './routes/admin.certificados'
 import { Route as AdminAiStudioRouteImport } from './routes/admin.ai-studio'
 import { Route as AdminAiStudioIndexRouteImport } from './routes/admin.ai-studio.index'
+import { Route as BlogCategoriaSlugRouteImport } from './routes/blog.categoria.$slug'
+import { Route as BlogAutorSlugRouteImport } from './routes/blog.autor.$slug'
 import { Route as AdminAiStudioToolRouteImport } from './routes/admin.ai-studio.$tool'
 
 const TrilhasRoute = TrilhasRouteImport.update({
@@ -56,6 +65,11 @@ const SobreRoute = SobreRouteImport.update({
 const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
   id: '/recuperar-senha',
   path: '/recuperar-senha',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanosRoute = PlanosRouteImport.update({
+  id: '/planos',
+  path: '/planos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlanoRoute = PlanoRouteImport.update({
@@ -103,9 +117,19 @@ const ContatoRoute = ContatoRouteImport.update({
   path: '/contato',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConquistasRoute = ConquistasRouteImport.update({
+  id: '/conquistas',
+  path: '/conquistas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
   id: '/configuracoes',
   path: '/configuracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CertificadosRoute = CertificadosRouteImport.update({
@@ -123,6 +147,11 @@ const CadastroRoute = CadastroRouteImport.update({
   path: '/cadastro',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -132,6 +161,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogRoute,
 } as any)
 const TrilhaSlugRoute = TrilhaSlugRouteImport.update({
   id: '/trilha/$slug',
@@ -148,6 +182,11 @@ const ModuloSlugRoute = ModuloSlugRouteImport.update({
   path: '/modulo/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InstrutorSlugRoute = InstrutorSlugRouteImport.update({
+  id: '/instrutor/$slug',
+  path: '/instrutor/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CursoSlugRoute = CursoSlugRouteImport.update({
   id: '/curso/$slug',
   path: '/curso/$slug',
@@ -157,6 +196,11 @@ const CertificadoIdRoute = CertificadoIdRouteImport.update({
   id: '/certificado/$id',
   path: '/certificado/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
 } as any)
 const AulaSlugRoute = AulaSlugRouteImport.update({
   id: '/aula/$slug',
@@ -203,6 +247,16 @@ const AdminAiStudioIndexRoute = AdminAiStudioIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminAiStudioRoute,
 } as any)
+const BlogCategoriaSlugRoute = BlogCategoriaSlugRouteImport.update({
+  id: '/categoria/$slug',
+  path: '/categoria/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
+const BlogAutorSlugRoute = BlogAutorSlugRouteImport.update({
+  id: '/autor/$slug',
+  path: '/autor/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
 const AdminAiStudioToolRoute = AdminAiStudioToolRouteImport.update({
   id: '/$tool',
   path: '/$tool',
@@ -212,10 +266,13 @@ const AdminAiStudioToolRoute = AdminAiStudioToolRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/blog': typeof BlogRouteWithChildren
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
   '/certificados': typeof CertificadosRoute
+  '/checkout': typeof CheckoutRoute
   '/configuracoes': typeof ConfiguracoesRoute
+  '/conquistas': typeof ConquistasRoute
   '/contato': typeof ContatoRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
@@ -225,6 +282,7 @@ export interface FileRoutesByFullPath {
   '/notificacoes': typeof NotificacoesRoute
   '/perfil': typeof PerfilRoute
   '/plano': typeof PlanoRoute
+  '/planos': typeof PlanosRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
@@ -236,12 +294,17 @@ export interface FileRoutesByFullPath {
   '/admin/trilhas': typeof AdminTrilhasRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/aula/$slug': typeof AulaSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/certificado/$id': typeof CertificadoIdRoute
   '/curso/$slug': typeof CursoSlugRoute
+  '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
+  '/blog/autor/$slug': typeof BlogAutorSlugRoute
+  '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
 }
 export interface FileRoutesByTo {
@@ -250,7 +313,9 @@ export interface FileRoutesByTo {
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
   '/certificados': typeof CertificadosRoute
+  '/checkout': typeof CheckoutRoute
   '/configuracoes': typeof ConfiguracoesRoute
+  '/conquistas': typeof ConquistasRoute
   '/contato': typeof ContatoRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
@@ -260,6 +325,7 @@ export interface FileRoutesByTo {
   '/notificacoes': typeof NotificacoesRoute
   '/perfil': typeof PerfilRoute
   '/plano': typeof PlanoRoute
+  '/planos': typeof PlanosRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
@@ -270,22 +336,30 @@ export interface FileRoutesByTo {
   '/admin/trilhas': typeof AdminTrilhasRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/aula/$slug': typeof AulaSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/certificado/$id': typeof CertificadoIdRoute
   '/curso/$slug': typeof CursoSlugRoute
+  '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
+  '/blog/autor/$slug': typeof BlogAutorSlugRoute
+  '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/admin/ai-studio': typeof AdminAiStudioIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/blog': typeof BlogRouteWithChildren
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
   '/certificados': typeof CertificadosRoute
+  '/checkout': typeof CheckoutRoute
   '/configuracoes': typeof ConfiguracoesRoute
+  '/conquistas': typeof ConquistasRoute
   '/contato': typeof ContatoRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
@@ -295,6 +369,7 @@ export interface FileRoutesById {
   '/notificacoes': typeof NotificacoesRoute
   '/perfil': typeof PerfilRoute
   '/plano': typeof PlanoRoute
+  '/planos': typeof PlanosRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
@@ -306,12 +381,17 @@ export interface FileRoutesById {
   '/admin/trilhas': typeof AdminTrilhasRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/aula/$slug': typeof AulaSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/certificado/$id': typeof CertificadoIdRoute
   '/curso/$slug': typeof CursoSlugRoute
+  '/instrutor/$slug': typeof InstrutorSlugRoute
   '/modulo/$slug': typeof ModuloSlugRoute
   '/quiz/$id': typeof QuizIdRoute
   '/trilha/$slug': typeof TrilhaSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/admin/ai-studio/$tool': typeof AdminAiStudioToolRoute
+  '/blog/autor/$slug': typeof BlogAutorSlugRoute
+  '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/admin/ai-studio/': typeof AdminAiStudioIndexRoute
 }
 export interface FileRouteTypes {
@@ -319,10 +399,13 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/blog'
     | '/cadastro'
     | '/catalogo'
     | '/certificados'
+    | '/checkout'
     | '/configuracoes'
+    | '/conquistas'
     | '/contato'
     | '/dashboard'
     | '/faq'
@@ -332,6 +415,7 @@ export interface FileRouteTypes {
     | '/notificacoes'
     | '/perfil'
     | '/plano'
+    | '/planos'
     | '/recuperar-senha'
     | '/sobre'
     | '/trilhas'
@@ -343,12 +427,17 @@ export interface FileRouteTypes {
     | '/admin/trilhas'
     | '/admin/usuarios'
     | '/aula/$slug'
+    | '/blog/$slug'
     | '/certificado/$id'
     | '/curso/$slug'
+    | '/instrutor/$slug'
     | '/modulo/$slug'
     | '/quiz/$id'
     | '/trilha/$slug'
+    | '/blog/'
     | '/admin/ai-studio/$tool'
+    | '/blog/autor/$slug'
+    | '/blog/categoria/$slug'
     | '/admin/ai-studio/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -357,7 +446,9 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/catalogo'
     | '/certificados'
+    | '/checkout'
     | '/configuracoes'
+    | '/conquistas'
     | '/contato'
     | '/dashboard'
     | '/faq'
@@ -367,6 +458,7 @@ export interface FileRouteTypes {
     | '/notificacoes'
     | '/perfil'
     | '/plano'
+    | '/planos'
     | '/recuperar-senha'
     | '/sobre'
     | '/trilhas'
@@ -377,21 +469,29 @@ export interface FileRouteTypes {
     | '/admin/trilhas'
     | '/admin/usuarios'
     | '/aula/$slug'
+    | '/blog/$slug'
     | '/certificado/$id'
     | '/curso/$slug'
+    | '/instrutor/$slug'
     | '/modulo/$slug'
     | '/quiz/$id'
     | '/trilha/$slug'
+    | '/blog'
     | '/admin/ai-studio/$tool'
+    | '/blog/autor/$slug'
+    | '/blog/categoria/$slug'
     | '/admin/ai-studio'
   id:
     | '__root__'
     | '/'
     | '/admin'
+    | '/blog'
     | '/cadastro'
     | '/catalogo'
     | '/certificados'
+    | '/checkout'
     | '/configuracoes'
+    | '/conquistas'
     | '/contato'
     | '/dashboard'
     | '/faq'
@@ -401,6 +501,7 @@ export interface FileRouteTypes {
     | '/notificacoes'
     | '/perfil'
     | '/plano'
+    | '/planos'
     | '/recuperar-senha'
     | '/sobre'
     | '/trilhas'
@@ -412,22 +513,30 @@ export interface FileRouteTypes {
     | '/admin/trilhas'
     | '/admin/usuarios'
     | '/aula/$slug'
+    | '/blog/$slug'
     | '/certificado/$id'
     | '/curso/$slug'
+    | '/instrutor/$slug'
     | '/modulo/$slug'
     | '/quiz/$id'
     | '/trilha/$slug'
+    | '/blog/'
     | '/admin/ai-studio/$tool'
+    | '/blog/autor/$slug'
+    | '/blog/categoria/$slug'
     | '/admin/ai-studio/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  BlogRoute: typeof BlogRouteWithChildren
   CadastroRoute: typeof CadastroRoute
   CatalogoRoute: typeof CatalogoRoute
   CertificadosRoute: typeof CertificadosRoute
+  CheckoutRoute: typeof CheckoutRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
+  ConquistasRoute: typeof ConquistasRoute
   ContatoRoute: typeof ContatoRoute
   DashboardRoute: typeof DashboardRoute
   FaqRoute: typeof FaqRoute
@@ -437,12 +546,14 @@ export interface RootRouteChildren {
   NotificacoesRoute: typeof NotificacoesRoute
   PerfilRoute: typeof PerfilRoute
   PlanoRoute: typeof PlanoRoute
+  PlanosRoute: typeof PlanosRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
   SobreRoute: typeof SobreRoute
   TrilhasRoute: typeof TrilhasRoute
   AulaSlugRoute: typeof AulaSlugRoute
   CertificadoIdRoute: typeof CertificadoIdRoute
   CursoSlugRoute: typeof CursoSlugRoute
+  InstrutorSlugRoute: typeof InstrutorSlugRoute
   ModuloSlugRoute: typeof ModuloSlugRoute
   QuizIdRoute: typeof QuizIdRoute
   TrilhaSlugRoute: typeof TrilhaSlugRoute
@@ -469,6 +580,13 @@ declare module '@tanstack/react-router' {
       path: '/recuperar-senha'
       fullPath: '/recuperar-senha'
       preLoaderRoute: typeof RecuperarSenhaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planos': {
+      id: '/planos'
+      path: '/planos'
+      fullPath: '/planos'
+      preLoaderRoute: typeof PlanosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/plano': {
@@ -534,11 +652,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContatoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/conquistas': {
+      id: '/conquistas'
+      path: '/conquistas'
+      fullPath: '/conquistas'
+      preLoaderRoute: typeof ConquistasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/configuracoes': {
       id: '/configuracoes'
       path: '/configuracoes'
       fullPath: '/configuracoes'
       preLoaderRoute: typeof ConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/certificados': {
@@ -562,6 +694,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CadastroRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
@@ -575,6 +714,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/trilha/$slug': {
       id: '/trilha/$slug'
@@ -597,6 +743,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuloSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/instrutor/$slug': {
+      id: '/instrutor/$slug'
+      path: '/instrutor/$slug'
+      fullPath: '/instrutor/$slug'
+      preLoaderRoute: typeof InstrutorSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/curso/$slug': {
       id: '/curso/$slug'
       path: '/curso/$slug'
@@ -610,6 +763,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/certificado/$id'
       preLoaderRoute: typeof CertificadoIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/aula/$slug': {
       id: '/aula/$slug'
@@ -674,6 +834,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAiStudioIndexRouteImport
       parentRoute: typeof AdminAiStudioRoute
     }
+    '/blog/categoria/$slug': {
+      id: '/blog/categoria/$slug'
+      path: '/categoria/$slug'
+      fullPath: '/blog/categoria/$slug'
+      preLoaderRoute: typeof BlogCategoriaSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/blog/autor/$slug': {
+      id: '/blog/autor/$slug'
+      path: '/autor/$slug'
+      fullPath: '/blog/autor/$slug'
+      preLoaderRoute: typeof BlogAutorSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/admin/ai-studio/$tool': {
       id: '/admin/ai-studio/$tool'
       path: '/$tool'
@@ -720,13 +894,32 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
+  BlogAutorSlugRoute: typeof BlogAutorSlugRoute
+  BlogCategoriaSlugRoute: typeof BlogCategoriaSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
+  BlogAutorSlugRoute: BlogAutorSlugRoute,
+  BlogCategoriaSlugRoute: BlogCategoriaSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  BlogRoute: BlogRouteWithChildren,
   CadastroRoute: CadastroRoute,
   CatalogoRoute: CatalogoRoute,
   CertificadosRoute: CertificadosRoute,
+  CheckoutRoute: CheckoutRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
+  ConquistasRoute: ConquistasRoute,
   ContatoRoute: ContatoRoute,
   DashboardRoute: DashboardRoute,
   FaqRoute: FaqRoute,
@@ -736,12 +929,14 @@ const rootRouteChildren: RootRouteChildren = {
   NotificacoesRoute: NotificacoesRoute,
   PerfilRoute: PerfilRoute,
   PlanoRoute: PlanoRoute,
+  PlanosRoute: PlanosRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
   SobreRoute: SobreRoute,
   TrilhasRoute: TrilhasRoute,
   AulaSlugRoute: AulaSlugRoute,
   CertificadoIdRoute: CertificadoIdRoute,
   CursoSlugRoute: CursoSlugRoute,
+  InstrutorSlugRoute: InstrutorSlugRoute,
   ModuloSlugRoute: ModuloSlugRoute,
   QuizIdRoute: QuizIdRoute,
   TrilhaSlugRoute: TrilhaSlugRoute,
