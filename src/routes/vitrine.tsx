@@ -1,6 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
 import { useQuery, useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 import { AppShell } from "@/components/app/AppShell";
