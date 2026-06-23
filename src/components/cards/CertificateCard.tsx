@@ -17,7 +17,7 @@ export function CertificateCard({ c }: { c: Certificate }) {
         </div>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
-        <Link to="/certificado/$id" params={{ id: c.id }} className="rounded-full bg-secondary/60 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary">Ver</Link>
+        <Link to="/certificado/$code" params={{ code: c.id }} className="rounded-full bg-secondary/60 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary">Ver</Link>
         <button className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-primary to-accent px-3 py-1.5 text-xs font-medium text-primary-foreground ring-glow">
           <Download className="h-3 w-3" /> PDF
         </button>

@@ -33,7 +33,7 @@ const PUBLIC_FUNNEL = [
   { route: "/trilhas", label: "Trilhas (público)" },
   { route: "/catalogo", label: "Catálogo (público)" },
   { route: "/planos", label: "Planos" },
-  { route: "/certificado/$id", label: "Validação de certificado" },
+  { route: "/certificado/$code", label: "Validação de certificado" },
   { route: "/cadastro", label: "Cadastro" },
   { route: "/login", label: "Login" },
 ];

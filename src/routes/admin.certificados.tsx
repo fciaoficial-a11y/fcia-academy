@@ -48,7 +48,7 @@ function AdminCerts() {
         const id = r["id"];
         if (!id) return "—";
         return (
-          <Link to="/certificado/$id" params={{ id: String(id) }} className="text-xs text-primary hover:underline">
+          <Link to="/certificado/$code" params={{ code: String(id) }} className="text-xs text-primary hover:underline">
             visualizar
           </Link>
         );

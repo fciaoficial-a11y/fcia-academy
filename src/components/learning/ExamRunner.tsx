@@ -94,7 +94,7 @@ export function ExamRunner({ courseId, courseSlug }: { courseId: string; courseS
           {certData && (
             <div className="flex flex-wrap items-center gap-3">
               <Badge variant="secondary">Código: {certData.code}</Badge>
-              <Button asChild size="sm"><Link to="/certificado/$id" params={{ id: certData.code }}>Ver certificado</Link></Button>
+              <Button asChild size="sm"><Link to="/certificado/$code" params={{ code: certData.code }}>Ver certificado</Link></Button>
             </div>
           )}
           <AttemptsHistory rows={attemptRows} />
@@ -116,7 +116,7 @@ export function ExamRunner({ courseId, courseSlug }: { courseId: string; courseS
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">{result.correct} de {result.total} corretas · nota de corte {result.passingScore}%</p>
             {result.passed && result.certificate ? (
-              <Button asChild><Link to="/certificado/$id" params={{ id: result.certificate.code }}>Acessar certificado</Link></Button>
+              <Button asChild><Link to="/certificado/$code" params={{ code: result.certificate.code }}>Acessar certificado</Link></Button>
             ) : (
               <Button onClick={() => startMut.mutate()} disabled={startMut.isPending}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Nova tentativa
