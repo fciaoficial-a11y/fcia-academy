@@ -25,6 +25,12 @@ const EXPECTED: DomainGroup[] = [
   { domain: "IA", tables: ["ai_jobs"] },
 ];
 
+const ALTERNATIVES: { domain: string; expected: string; candidate: string; note: string }[] = [
+  { domain: "Gamificação", expected: "gamification_profile", candidate: "user_achievements", note: "Tabela real presente no banco" },
+  { domain: "Gamificação", expected: "xp_log", candidate: "achievements", note: "Tabela real presente no banco" },
+  { domain: "Matrículas", expected: "enrollments", candidate: "payments", note: "Tabela real presente no banco" },
+];
+
 type Probe = { status: "found" | "missing" | "rls" | "pending"; count: number | null; message: string };
 
 async function probe(table: string): Promise<Probe> {
@@ -125,6 +131,25 @@ function SystemSchemaPage() {
             </ul>
           </section>
         ))}
+
+        <section className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5">
+          <h3 className="mb-3 text-sm font-semibold">Mapeamento alternativo (tabelas reais)</h3>
+          <p className="mb-3 text-xs text-muted-foreground">
+            Tabelas existentes no banco que podem cobrir domínios ausentes. Confirmar com o master antes de bindar telas.
+          </p>
+          <ul className="space-y-2 text-sm">
+            {ALTERNATIVES.map((a) => (
+              <li key={a.candidate} className="flex items-center justify-between gap-3 border-b border-border/40 pb-2 last:border-none last:pb-0">
+                <div className="font-mono text-xs">
+                  <span className="text-muted-foreground">{a.domain}:</span>{" "}
+                  <span className="line-through opacity-60">{a.expected}</span>{" "}
+                  → <span className="text-amber-500">{a.candidate}</span>
+                </div>
+                <span className="text-xs text-muted-foreground">{a.note}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
     </main>
   );
