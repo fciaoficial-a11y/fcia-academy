@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { CheckCircle2, XCircle, Lock, Loader2 } from "lucide-react";
-import { getSupabase, isSupabaseConfigured } from "@/integrations/supabase/client";
+import { getSupabase, isSupabaseConfigured } from "@/integrations/supabase/legacy";
 
 export const Route = createFileRoute("/system/schema")({
   head: () => ({

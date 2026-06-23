@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getSupabase, isSupabaseConfigured } from "@/integrations/supabase/client";
+import { getSupabase, isSupabaseConfigured } from "@/integrations/supabase/legacy";
 
 export type Row = Record<string, unknown>;
 

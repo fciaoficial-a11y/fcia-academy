@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { CheckCircle2, AlertCircle, Circle, Rocket, ShieldCheck, Loader2, Gauge, Globe } from "lucide-react";
-import { getSupabase, isSupabaseConfigured, SUPABASE_URL, SUPABASE_PROJECT_REF } from "@/integrations/supabase/client";
+import { getSupabase, isSupabaseConfigured, SUPABASE_URL, SUPABASE_PROJECT_REF } from "@/integrations/supabase/legacy";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/system/launch-status")({

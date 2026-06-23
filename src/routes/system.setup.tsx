@@ -5,7 +5,7 @@ import {
   SUPABASE_URL,
   SUPABASE_PROJECT_REF,
   SUPABASE_PUBLISHABLE_KEY,
-} from "@/integrations/supabase/client";
+} from "@/integrations/supabase/legacy";
 
 export const Route = createFileRoute("/system/setup")({
   head: () => ({

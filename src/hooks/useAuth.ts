@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import type { Session, User } from "@supabase/supabase-js";
-import { getSupabase, isSupabaseConfigured } from "@/integrations/supabase/client";
+import { getSupabase, isSupabaseConfigured } from "@/integrations/supabase/legacy";
 
 export interface AuthState {
   user: User | null;
@@ -27,12 +27,12 @@ export function useAuth(): AuthState & {
     const sb = getSupabase();
     let mounted = true;
 
-    sb.auth.getSession().then(({ data }) => {
+    sb.auth.getSession().then(({ data }: { data: { session: any } }) => {
       if (!mounted) return;
       setState((s) => ({ ...s, session: data.session, user: data.session?.user ?? null, loading: false }));
     });
 
-    const { data: sub } = sb.auth.onAuthStateChange((_event, session) => {
+    const { data: sub } = sb.auth.onAuthStateChange((_event: string, session: any) => {
       setState((s) => ({ ...s, session, user: session?.user ?? null, loading: false }));
     });
 

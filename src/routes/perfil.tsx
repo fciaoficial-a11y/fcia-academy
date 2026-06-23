@@ -11,7 +11,7 @@ import {
   STUDENT_PROFILE, STUDENT_STATS, ACHIEVEMENTS, LEADERBOARD, XP_LEVELS, CERTIFICATES, COURSES,
 } from "@/lib/mock-data";
 import { useAuth } from "@/hooks/useAuth";
-import { getSupabase, isSupabaseConfigured } from "@/integrations/supabase/client";
+import { getSupabase, isSupabaseConfigured } from "@/integrations/supabase/legacy";
 import { DataState, RealDataSection } from "@/components/data/DataState";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import type { Row } from "@/lib/supabase-queries";

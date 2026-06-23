@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { CheckCircle2, AlertCircle, XCircle, ShieldCheck, Lock, Loader2 } from "lucide-react";
-import { getSupabase, isSupabaseConfigured, SUPABASE_URL } from "@/integrations/supabase/client";
+import { getSupabase, isSupabaseConfigured, SUPABASE_URL } from "@/integrations/supabase/legacy";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/system/security-status")({
