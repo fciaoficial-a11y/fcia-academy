@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight, Sparkles, Zap, Award, Target, Users, Brain, BookOpen,
-  ShieldCheck, Check, Star, ChevronDown,
+  ShieldCheck, Check, ChevronDown, Store,
 } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 import { TrackCard } from "@/components/cards/TrackCard";
@@ -9,17 +9,16 @@ import { TestimonialCard } from "@/components/social/TestimonialCard";
 import { SuccessCaseCard } from "@/components/social/SuccessCaseCard";
 import { RatingCard } from "@/components/social/RatingCard";
 import {
-  TRACKS, TESTIMONIALS, SUCCESS_CASES, PLANS_FULL, FAQS,
+  TRACKS, TESTIMONIALS, SUCCESS_CASES, FAQS,
 } from "@/lib/mock-data";
-import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "FCIA Academy — Aprenda em trilhas com certificados validáveis" },
-      { name: "description", content: "Trilhas guiadas, gamificação ativa, mentoria humana e certificados validáveis. Para profissionais e empresas em escala." },
-      { property: "og:title", content: "FCIA Academy — A nova forma de aprender" },
-      { property: "og:description", content: "Trilhas, XP, certificados e AI Studio em uma plataforma premium." },
+      { title: "FCIA Academy — Cursos premium de tecnologia, vendidos por curso" },
+      { name: "description", content: "Compre cursos individuais de alta qualidade na vitrine FCIA. Aprendizado prático, aplicado e com certificado validável." },
+      { property: "og:title", content: "FCIA Academy — Vitrine de cursos premium" },
+      { property: "og:description", content: "Cursos vendidos individualmente. Escolha, compre e comece agora pela vitrine." },
     ],
   }),
   component: Index,
@@ -31,24 +30,23 @@ function Index() {
       {/* HERO */}
       <section className="relative mx-auto flex max-w-7xl flex-col items-center px-4 pb-24 pt-16 text-center sm:px-6 lg:pt-24">
         <span className="eyebrow inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/40 px-3 py-1 text-muted-foreground backdrop-blur">
-          <Sparkles className="h-3 w-3 text-primary" /> 12.430+ alunos · nota 4,9 · certificados validáveis
+          <Sparkles className="h-3 w-3 text-primary" /> Cursos vendidos individualmente · sem assinatura
         </span>
         <h1 className="mt-6 max-w-4xl font-display text-5xl font-semibold tracking-tight text-foreground sm:text-6xl lg:text-7xl">
-          A nova forma de <span className="text-gradient">aprender tecnologia</span> em alta performance.
+          Cursos premium de <span className="text-gradient">tecnologia aplicada</span>, escolhidos por você.
         </h1>
         <p className="mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">
-          Trilhas guiadas por especialistas, gamificação que mantém o ritmo e certificados validáveis publicamente.
-          Comece grátis e cancele quando quiser.
+          Aprendizado prático e aplicado, com profundidade real. Você compra apenas os cursos que importam para a sua jornada — sem planos, sem assinatura.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link to="/cadastro" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground ring-glow transition-transform hover:-translate-y-0.5">
-            Começar grátis <ArrowRight className="h-4 w-4" />
+          <Link to="/vitrine" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-7 py-3.5 text-sm font-semibold text-primary-foreground ring-glow transition-transform hover:-translate-y-0.5">
+            Explorar vitrine <ArrowRight className="h-4 w-4" />
           </Link>
-          <Link to="/catalogo" className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-6 py-3 text-sm font-medium text-foreground backdrop-blur transition-colors hover:bg-secondary/60">
-            Explorar catálogo
+          <Link to="/" hash="trilhas" className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-6 py-3 text-sm font-medium text-foreground backdrop-blur transition-colors hover:bg-secondary/60">
+            Ver cursos em destaque
           </Link>
         </div>
-        <p className="mt-3 text-[11px] text-muted-foreground">7 dias de garantia incondicional · sem cartão para começar</p>
+        <p className="mt-3 text-[11px] text-muted-foreground">Pagamento por curso · acesso vitalício · 7 dias de garantia</p>
 
         {/* Stat strip */}
         <div className="mt-14 grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
@@ -63,6 +61,54 @@ function Index() {
               <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{s.l}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* VITRINE — BLOCO DOMINANTE */}
+      <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
+        <div className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card/70 to-accent/10 p-8 backdrop-blur-xl ring-glow sm:p-14">
+          <div className="absolute inset-0 tech-grid opacity-20" aria-hidden />
+          <div className="relative grid items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
+            <div>
+              <span className="eyebrow inline-flex items-center gap-2 text-primary">
+                <Store className="h-3.5 w-3.5" /> Vitrine FCIA
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-semibold text-foreground sm:text-5xl">
+                Todo o catálogo em um só lugar: <span className="text-gradient">cursos e trilhas</span> à venda
+              </h2>
+              <p className="mt-4 max-w-xl text-sm text-muted-foreground sm:text-base">
+                Navegue, escolha e compre o curso ou trilha que faz sentido para você — sem mensalidade, sem amarras.
+                O acesso é vitalício e a compra acontece direto na vitrine.
+              </p>
+              <ul className="mt-5 grid gap-2 text-sm text-foreground sm:grid-cols-2">
+                {["Compra por curso individual", "Trilhas curadas opcionais", "Acesso vitalício ao conteúdo", "Certificado validável incluso"].map((l) => (
+                  <li key={l} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> {l}</li>
+                ))}
+              </ul>
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                <Link to="/vitrine" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-7 py-3.5 text-sm font-semibold text-primary-foreground ring-glow transition-transform hover:-translate-y-0.5">
+                  Ir para a vitrine <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link to="/" hash="trilhas" className="text-sm text-muted-foreground hover:text-foreground">
+                  Ver destaques abaixo
+                </Link>
+              </div>
+            </div>
+            <div className="relative grid gap-3 sm:grid-cols-2">
+              {[
+                { t: "Curso", n: "React Avançado", p: "R$ 297" },
+                { t: "Trilha", n: "Full-Stack 2025", p: "R$ 897" },
+                { t: "Curso", n: "TypeScript Pro", p: "R$ 247" },
+                { t: "Curso", n: "Node.js APIs", p: "R$ 297" },
+              ].map((c) => (
+                <div key={c.n} className="rounded-2xl border border-border/60 bg-background/60 p-4 backdrop-blur">
+                  <p className="eyebrow text-primary">{c.t}</p>
+                  <p className="mt-1 font-display text-base font-semibold text-foreground">{c.n}</p>
+                  <p className="mt-3 font-display text-lg font-bold text-foreground">{c.p}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -132,9 +178,9 @@ function Index() {
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
             <span className="eyebrow text-primary">Em destaque</span>
-            <h2 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">Trilhas mais procuradas</h2>
+            <h2 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">Cursos e trilhas em destaque</h2>
           </div>
-          <Link to="/trilhas" className="text-sm text-primary hover:underline">Ver todas →</Link>
+          <Link to="/vitrine" className="text-sm text-primary hover:underline">Ver vitrine completa →</Link>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {TRACKS.slice(0, 3).map((t) => <TrackCard key={t.slug} track={t} />)}
@@ -192,33 +238,6 @@ function Index() {
         </div>
       </section>
 
-      {/* PLANOS PREVIEW */}
-      <section id="planos" className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 scroll-mt-24">
-        <header className="mx-auto mb-10 max-w-2xl text-center">
-          <span className="eyebrow text-primary">Planos</span>
-          <h2 className="mt-2 font-display text-3xl font-semibold text-foreground sm:text-4xl">Escolha o ritmo que cabe na sua jornada</h2>
-        </header>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {PLANS_FULL.map((p) => (
-            <article key={p.slug} className={cn(
-              "relative overflow-hidden rounded-3xl border p-6 backdrop-blur-xl",
-              p.highlighted ? "border-primary/40 bg-card/80 glow-primary" : "border-border/60 bg-card/60",
-            )}>
-              {p.highlighted && <span className="absolute right-4 top-4 rounded-full bg-gradient-to-r from-primary to-accent px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">Recomendado</span>}
-              <h3 className="font-display text-lg font-semibold text-foreground">{p.name}</h3>
-              <p className="mt-1 text-xs text-muted-foreground">{p.description}</p>
-              <p className="mt-4 font-display text-3xl font-bold text-foreground">
-                {p.price}<span className="ml-1 text-xs font-normal text-muted-foreground">{p.priceHint}</span>
-              </p>
-              <Link to="/planos" className={cn(
-                "mt-5 block w-full rounded-full px-4 py-2 text-center text-xs font-medium",
-                p.highlighted ? "bg-gradient-to-r from-primary to-accent text-primary-foreground" : "border border-border bg-card/50 text-foreground",
-              )}>{p.cta}</Link>
-            </article>
-          ))}
-        </div>
-      </section>
-
       {/* FAQ */}
       <section id="faq" className="mx-auto max-w-3xl px-4 pb-20 sm:px-6 scroll-mt-24">
         <header className="mb-8 text-center">
@@ -247,32 +266,6 @@ function Index() {
           <div className="min-w-0 flex-1">
             <h3 className="font-display text-lg font-semibold text-foreground">Garantia incondicional de 7 dias</h3>
             <p className="text-sm text-muted-foreground">Se não fizer sentido, devolvemos 100% do valor pago. Sem perguntas, sem burocracia.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA FINAL */}
-      <section className="mx-auto max-w-5xl px-4 pb-24 sm:px-6">
-        <div className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card/60 to-accent/10 p-10 text-center backdrop-blur-xl ring-glow sm:p-14">
-          <div className="absolute inset-0 tech-grid opacity-20" aria-hidden />
-          <div className="relative">
-            <div className="mx-auto flex items-center justify-center gap-1 text-primary">
-              {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
-            </div>
-            <h2 className="mt-4 font-display text-3xl font-semibold text-foreground sm:text-5xl">
-              Pronto para acelerar sua <span className="text-gradient">carreira em tech</span>?
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
-              Junte-se a milhares de profissionais que já evoluem com a FCIA. Comece grátis hoje.
-            </p>
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-              <Link to="/cadastro" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground ring-glow">
-                Criar conta grátis <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link to="/planos" className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-6 py-3 text-sm font-medium text-foreground">
-                Ver todos os planos
-              </Link>
-            </div>
           </div>
         </div>
       </section>
