@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RequireAuth } from "@/components/auth/RequireAuth";
+import { RequireAdminMaster } from "@/components/auth/RequireAdminMaster";
 import { Users, DollarSign, Award, BookOpen, Activity, Target } from "lucide-react";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { PageHeader } from "@/components/shared/PageHeader";
@@ -13,9 +13,9 @@ export const Route = createFileRoute("/admin")({
 
 function AdminHomeGated() {
   return (
-    <RequireAuth>
+    <RequireAdminMaster>
       <AdminHome />
-    </RequireAuth>
+    </RequireAdminMaster>
   );
 }
 
