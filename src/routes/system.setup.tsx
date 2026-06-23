@@ -6,7 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle, ShieldCheck, Database, KeyRound, Lock } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { AlertTriangle, ShieldCheck, Database, KeyRound, Lock, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/system/setup")({
   head: () => ({
@@ -25,15 +26,27 @@ type FieldKey =
   | "SUPABASE_SERVICE_ROLE_KEY"
   | "SUPABASE_DB_URL";
 
-const FIELDS: { key: FieldKey; label: string; placeholder: string; secret?: boolean; hint: string }[] = [
+const REQUIRED_FIELDS: { key: FieldKey; label: string; placeholder: string; secret?: boolean; hint: string }[] = [
   { key: "SUPABASE_URL", label: "SUPABASE_URL", placeholder: "https://<project-ref>.supabase.co", hint: "URL pública da API REST/Auth do projeto." },
-  { key: "SUPABASE_ANON_KEY", label: "SUPABASE_ANON_KEY", placeholder: "eyJhbGciOi...", hint: "Chave pública (anon) — segura para frontend.", secret: true },
-  { key: "SUPABASE_PROJECT_REF", label: "SUPABASE_PROJECT_REF", placeholder: "awimyyqqnnohoixiqxwf", hint: "Identificador do projeto Supabase oficial." },
-  { key: "SUPABASE_SERVICE_ROLE_KEY", label: "SUPABASE_SERVICE_ROLE_KEY", placeholder: "eyJhbGciOi...", hint: "Chave privilegiada — uso exclusivo server-side.", secret: true },
-  { key: "SUPABASE_DB_URL", label: "SUPABASE_DB_URL", placeholder: "postgresql://postgres:<password>@db.<ref>.supabase.co:5432/postgres", hint: "String de conexão direta ao Postgres.", secret: true },
+  { key: "SUPABASE_ANON_KEY", label: "SUPABASE_ANON_KEY", placeholder: "eyJhbGciOi...", hint: "Chave pública (anon) — usada apenas nesta sessão.", secret: true },
+  { key: "SUPABASE_PROJECT_REF", label: "SUPABASE_PROJECT_REF", placeholder: "awimyyqqnnohoixiqxwf", hint: "Identificador do projeto — exibido apenas para auditoria." },
 ];
 
-const AUTHORIZED_REF = "awimyyqqnnohoixiqxwf";
+const OPTIONAL_FIELDS: { key: FieldKey; label: string; placeholder: string; secret?: boolean; hint: string }[] = [
+  { key: "SUPABASE_SERVICE_ROLE_KEY", label: "SUPABASE_SERVICE_ROLE_KEY (opcional)", placeholder: "eyJhbGciOi...", hint: "Placeholder — não utilizado nesta fase.", secret: true },
+  { key: "SUPABASE_DB_URL", label: "SUPABASE_DB_URL (opcional)", placeholder: "postgresql://postgres:<password>@db.<ref>.supabase.co:5432/postgres", hint: "Placeholder — não utilizado nesta fase.", secret: true },
+];
+
+type TestResult =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "error"; message: string }
+  | {
+      status: "ok";
+      database: string;
+      schema: string;
+      tables: string[];
+    };
 
 function SystemSetupPage() {
   const [values, setValues] = useState<Record<FieldKey, string>>({
@@ -44,12 +57,48 @@ function SystemSetupPage() {
     SUPABASE_DB_URL: "",
   });
   const [environment, setEnvironment] = useState("production");
+  const [confirmed, setConfirmed] = useState(false);
+  const [result, setResult] = useState<TestResult>({ status: "idle" });
 
-  const filledCount = useMemo(() => Object.values(values).filter((v) => v.trim().length > 0).length, [values]);
-  const refMatches = values.SUPABASE_PROJECT_REF.trim() === AUTHORIZED_REF;
-  const allFilled = filledCount === FIELDS.length;
+  const requiredFilled = useMemo(
+    () => REQUIRED_FIELDS.every((f) => values[f.key].trim().length > 0),
+    [values],
+  );
+  const canTest = requiredFilled && confirmed && result.status !== "loading";
 
   const mask = (v: string) => (v.length <= 8 ? "•".repeat(v.length) : `${v.slice(0, 4)}…${v.slice(-4)}`);
+
+  async function handleTest() {
+    setResult({ status: "loading" });
+    try {
+      const baseUrl = values.SUPABASE_URL.trim().replace(/\/$/, "");
+      const apikey = values.SUPABASE_ANON_KEY.trim();
+      const res = await fetch(`${baseUrl}/rest/v1/?apikey=${encodeURIComponent(apikey)}`, {
+        method: "GET",
+        headers: {
+          apikey,
+          Authorization: `Bearer ${apikey}`,
+          Accept: "application/openapi+json",
+        },
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status} — ${res.statusText || "falha na requisição read-only"}`);
+      }
+      const spec = (await res.json()) as { definitions?: Record<string, unknown>; basePath?: string };
+      const tables = Object.keys(spec.definitions ?? {}).sort();
+      setResult({
+        status: "ok",
+        database: "postgres",
+        schema: "public",
+        tables,
+      });
+    } catch (err) {
+      setResult({
+        status: "error",
+        message: err instanceof Error ? err.message : "Erro desconhecido ao consultar a API.",
+      });
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background px-4 py-10">
@@ -80,12 +129,12 @@ function SystemSetupPage() {
               <KeyRound className="h-5 w-5" /> Placeholders Supabase
             </CardTitle>
             <CardDescription>
-              Preencha os campos manualmente. Project Ref autorizado:{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">{AUTHORIZED_REF}</code>
+              Preencha os campos manualmente. Apenas <code className="rounded bg-muted px-1 font-mono text-xs">SUPABASE_URL</code> e{" "}
+              <code className="rounded bg-muted px-1 font-mono text-xs">SUPABASE_ANON_KEY</code> são usados nesta fase.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {FIELDS.map((f) => (
+            {[...REQUIRED_FIELDS, ...OPTIONAL_FIELDS].map((f) => (
               <div key={f.key} className="space-y-1.5">
                 <Label htmlFor={f.key}>{f.label}</Label>
                 <Input
@@ -127,28 +176,28 @@ function SystemSetupPage() {
               <Row label="URL informada" value={values.SUPABASE_URL || "—"} />
               <Row label="Project Ref" value={values.SUPABASE_PROJECT_REF || "—"} />
               <Row label="Ambiente" value={environment} />
-              <Row label="Tipo de conexão" value="Supabase (REST + Postgres direto)" />
-              <Row label="Estratégia de auth" value="anon (client) + service_role (server-only)" />
+              <Row label="Tipo de conexão" value="Supabase REST (read-only)" />
+              <Row label="Estratégia de auth" value="anon key (client-side)" />
               <Row
                 label="ANON_KEY"
                 value={values.SUPABASE_ANON_KEY ? mask(values.SUPABASE_ANON_KEY) : "—"}
               />
               <Row
                 label="SERVICE_ROLE_KEY"
-                value={values.SUPABASE_SERVICE_ROLE_KEY ? mask(values.SUPABASE_SERVICE_ROLE_KEY) : "—"}
+                value={values.SUPABASE_SERVICE_ROLE_KEY ? `${mask(values.SUPABASE_SERVICE_ROLE_KEY)} (não usado)` : "— (opcional)"}
               />
-              <Row label="DB_URL" value={values.SUPABASE_DB_URL ? mask(values.SUPABASE_DB_URL) : "—"} />
+              <Row
+                label="DB_URL"
+                value={values.SUPABASE_DB_URL ? `${mask(values.SUPABASE_DB_URL)} (não usado)` : "— (opcional)"}
+              />
             </dl>
 
             <div className="mt-4 flex flex-wrap gap-2">
-              <Badge variant={allFilled ? "default" : "secondary"}>
-                {filledCount}/{FIELDS.length} campos preenchidos
-              </Badge>
-              <Badge variant={refMatches ? "default" : "destructive"}>
-                {refMatches ? "Project Ref autorizado ✓" : "Project Ref divergente"}
+              <Badge variant={requiredFilled ? "default" : "secondary"}>
+                {requiredFilled ? "Campos obrigatórios prontos" : "Preencha URL + ANON_KEY + REF"}
               </Badge>
               <Badge variant="outline">Persistência: desativada</Badge>
-              <Badge variant="outline">Conexão: bloqueada</Badge>
+              <Badge variant="outline">Modo: READ ONLY</Badge>
             </div>
           </CardContent>
         </Card>
@@ -159,41 +208,99 @@ function SystemSetupPage() {
               <Database className="h-5 w-5" /> Confirmação explícita
             </CardTitle>
             <CardDescription>
-              Nenhuma conexão será aberta automaticamente. Aprovação manual é obrigatória.
+              O teste só é habilitado após confirmação. Apenas leituras read-only são executadas.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              Ao clicar abaixo, apenas um <strong>resumo de auditoria</strong> é registrado no console
-              local. Nenhum dado é enviado a servidores, nenhum secret é gravado e nenhuma chamada à
-              Supabase é executada.
-            </p>
+            <label className="flex items-start gap-3 rounded-md border border-border bg-card/50 p-3 text-sm">
+              <Checkbox
+                checked={confirmed}
+                onCheckedChange={(v) => setConfirmed(v === true)}
+                className="mt-0.5"
+              />
+              <span className="text-foreground">
+                Confirmo que os parâmetros acima foram revisados e autorizo uma chamada{" "}
+                <strong>read-only</strong> à URL informada. Nenhum recurso será criado, alterado ou removido.
+              </span>
+            </label>
             <div className="flex flex-wrap gap-2">
-              <Button
-                disabled={!allFilled || !refMatches}
-                onClick={() =>
-                  console.info("[FCIA setup] Auditoria local:", {
-                    url: values.SUPABASE_URL,
-                    ref: values.SUPABASE_PROJECT_REF,
-                    environment,
-                    keys: {
-                      anon: Boolean(values.SUPABASE_ANON_KEY),
-                      service_role: Boolean(values.SUPABASE_SERVICE_ROLE_KEY),
-                      db_url: Boolean(values.SUPABASE_DB_URL),
-                    },
-                  })
-                }
-              >
-                Gerar resumo de auditoria
-              </Button>
-              <Button variant="outline" disabled>
-                Testar conexão (requer autorização)
+              <Button disabled={!canTest} onClick={handleTest}>
+                {result.status === "loading" ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Testando…
+                  </>
+                ) : (
+                  "Testar conexão (read-only)"
+                )}
               </Button>
             </div>
-            {!refMatches && values.SUPABASE_PROJECT_REF.length > 0 && (
-              <p className="text-xs text-destructive">
-                Project Ref difere do autorizado ({AUTHORIZED_REF}). Conexão permanece bloqueada.
-              </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              {result.status === "ok" ? (
+                <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+              ) : result.status === "error" ? (
+                <XCircle className="h-5 w-5 text-destructive" />
+              ) : (
+                <Database className="h-5 w-5" />
+              )}
+              Resultado da conexão
+            </CardTitle>
+            <CardDescription>Saída da leitura read-only do schema público.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {result.status === "idle" && (
+              <p className="text-sm text-muted-foreground">Nenhum teste executado.</p>
+            )}
+            {result.status === "loading" && (
+              <p className="text-sm text-muted-foreground">Consultando endpoint REST…</p>
+            )}
+            {result.status === "error" && (
+              <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Falha na conexão</AlertTitle>
+                <AlertDescription>{result.message}</AlertDescription>
+              </Alert>
+            )}
+            {result.status === "ok" && (
+              <>
+                <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+                  <Row label="URL conectada" value={values.SUPABASE_URL} />
+                  <Row label="Project Ref conectado" value={values.SUPABASE_PROJECT_REF || "—"} />
+                  <Row label="current_database" value={result.database} />
+                  <Row label="current_schema" value={result.schema} />
+                  <Row label="Tabelas encontradas" value={String(result.tables.length)} />
+                  <Row label="Status" value="READ ONLY" />
+                </dl>
+                <div>
+                  <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
+                    Lista de tabelas (schema public)
+                  </p>
+                  {result.tables.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">Nenhuma tabela exposta via REST.</p>
+                  ) : (
+                    <div className="flex flex-wrap gap-1.5">
+                      {result.tables.map((t) => (
+                        <Badge key={t} variant="secondary" className="font-mono text-xs">
+                          {t}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <Alert>
+                  <ShieldCheck className="h-4 w-4" />
+                  <AlertTitle>Nenhum recurso foi criado</AlertTitle>
+                  <AlertDescription>
+                    A chamada usou apenas o endpoint <code>/rest/v1/</code> com a anon key, em modo
+                    somente leitura. Nenhuma migration, tabela, policy, função, trigger ou bucket foi
+                    tocado.
+                  </AlertDescription>
+                </Alert>
+              </>
             )}
           </CardContent>
         </Card>
