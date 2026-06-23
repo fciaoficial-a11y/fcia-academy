@@ -4,9 +4,8 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { hash: "beneficios", label: "Benefícios" },
-  { hash: "metodologia", label: "Metodologia" },
   { hash: "trilhas", label: "Trilhas" },
+  { hash: "beneficios", label: "Por que FCIA" },
   { hash: "faq", label: "FAQ" },
 ] as const;
 
@@ -35,7 +34,6 @@ export function SiteHeader({ className }: { className?: string }) {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">
-          <Link to="/login" className="hidden text-xs text-muted-foreground hover:text-foreground sm:inline">Entrar</Link>
           <Link to="/vitrine" className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2 text-sm font-medium text-primary-foreground ring-glow transition-transform hover:-translate-y-0.5 sm:inline-flex">
             Explorar vitrine <ArrowRight className="h-3.5 w-3.5" />
           </Link>
@@ -52,9 +50,8 @@ export function SiteHeader({ className }: { className?: string }) {
                 <Link to="/" hash={item.hash} onClick={() => setOpen(false)} className="block rounded-xl px-3 py-2 text-sm text-foreground hover:bg-secondary/60">{item.label}</Link>
               </li>
             ))}
-            <li className="mt-2 flex gap-2 border-t border-border/60 pt-3">
-              <Link to="/login" onClick={() => setOpen(false)} className="flex-1 rounded-full bg-secondary/60 px-4 py-2 text-center text-sm text-foreground">Entrar</Link>
-              <Link to="/vitrine" onClick={() => setOpen(false)} className="flex-1 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2 text-center text-sm font-medium text-primary-foreground ring-glow">Explorar vitrine</Link>
+            <li className="mt-2 border-t border-border/60 pt-3">
+              <Link to="/vitrine" onClick={() => setOpen(false)} className="block w-full rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2 text-center text-sm font-medium text-primary-foreground ring-glow">Explorar vitrine</Link>
             </li>
           </ul>
         </div>
