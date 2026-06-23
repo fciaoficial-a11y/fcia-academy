@@ -2,7 +2,7 @@ import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { QuizCard } from "@/components/cards/QuizCard";
-import { MODULES } from "@/lib/mock-data";
+import { MODULES, type Lesson } from "@/lib/mock-data";
 import { CheckCircle2, Circle, Play } from "lucide-react";
 
 export const Route = createFileRoute("/modulo/$slug")({
@@ -31,7 +31,7 @@ function ModuleDetail() {
       <section className="space-y-3">
         <h2 className="font-display text-lg font-semibold text-foreground">Aulas</h2>
         <ul className="space-y-2">
-          {mod.lessons.map((l) => (
+          {mod.lessons.map((l: Lesson) => (
             <li key={l.slug}>
               <Link to="/aula/$slug" params={{ slug: l.slug }} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl border border-border/60 bg-card/60 p-4 backdrop-blur-xl transition-colors hover:bg-secondary/40">
                 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-secondary text-foreground"><Play className="h-4 w-4" /></span>
