@@ -9,38 +9,544 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrilhasRouteImport } from './routes/trilhas'
+import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
+import { Route as PlanoRouteImport } from './routes/plano'
+import { Route as PerfilRouteImport } from './routes/perfil'
+import { Route as NotificacoesRouteImport } from './routes/notificacoes'
+import { Route as MinhasTrilhasRouteImport } from './routes/minhas-trilhas'
+import { Route as MeusCursosRouteImport } from './routes/meus-cursos'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
+import { Route as CertificadosRouteImport } from './routes/certificados'
+import { Route as CatalogoRouteImport } from './routes/catalogo'
+import { Route as CadastroRouteImport } from './routes/cadastro'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TrilhaSlugRouteImport } from './routes/trilha.$slug'
+import { Route as QuizIdRouteImport } from './routes/quiz.$id'
+import { Route as ModuloSlugRouteImport } from './routes/modulo.$slug'
+import { Route as CursoSlugRouteImport } from './routes/curso.$slug'
+import { Route as CertificadoIdRouteImport } from './routes/certificado.$id'
+import { Route as AulaSlugRouteImport } from './routes/aula.$slug'
+import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
+import { Route as AdminTrilhasRouteImport } from './routes/admin.trilhas'
+import { Route as AdminQuestoesRouteImport } from './routes/admin.questoes'
+import { Route as AdminModulosRouteImport } from './routes/admin.modulos'
+import { Route as AdminCursosRouteImport } from './routes/admin.cursos'
+import { Route as AdminCertificadosRouteImport } from './routes/admin.certificados'
+import { Route as AdminAiStudioRouteImport } from './routes/admin.ai-studio'
 
+const TrilhasRoute = TrilhasRouteImport.update({
+  id: '/trilhas',
+  path: '/trilhas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SobreRoute = SobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
+  id: '/recuperar-senha',
+  path: '/recuperar-senha',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanoRoute = PlanoRouteImport.update({
+  id: '/plano',
+  path: '/plano',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificacoesRoute = NotificacoesRouteImport.update({
+  id: '/notificacoes',
+  path: '/notificacoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MinhasTrilhasRoute = MinhasTrilhasRouteImport.update({
+  id: '/minhas-trilhas',
+  path: '/minhas-trilhas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeusCursosRoute = MeusCursosRouteImport.update({
+  id: '/meus-cursos',
+  path: '/meus-cursos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CertificadosRoute = CertificadosRouteImport.update({
+  id: '/certificados',
+  path: '/certificados',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CatalogoRoute = CatalogoRouteImport.update({
+  id: '/catalogo',
+  path: '/catalogo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroRoute = CadastroRouteImport.update({
+  id: '/cadastro',
+  path: '/cadastro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrilhaSlugRoute = TrilhaSlugRouteImport.update({
+  id: '/trilha/$slug',
+  path: '/trilha/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizIdRoute = QuizIdRouteImport.update({
+  id: '/quiz/$id',
+  path: '/quiz/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModuloSlugRoute = ModuloSlugRouteImport.update({
+  id: '/modulo/$slug',
+  path: '/modulo/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CursoSlugRoute = CursoSlugRouteImport.update({
+  id: '/curso/$slug',
+  path: '/curso/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CertificadoIdRoute = CertificadoIdRouteImport.update({
+  id: '/certificado/$id',
+  path: '/certificado/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AulaSlugRoute = AulaSlugRouteImport.update({
+  id: '/aula/$slug',
+  path: '/aula/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTrilhasRoute = AdminTrilhasRouteImport.update({
+  id: '/trilhas',
+  path: '/trilhas',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminQuestoesRoute = AdminQuestoesRouteImport.update({
+  id: '/questoes',
+  path: '/questoes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminModulosRoute = AdminModulosRouteImport.update({
+  id: '/modulos',
+  path: '/modulos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCursosRoute = AdminCursosRouteImport.update({
+  id: '/cursos',
+  path: '/cursos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCertificadosRoute = AdminCertificadosRouteImport.update({
+  id: '/certificados',
+  path: '/certificados',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAiStudioRoute = AdminAiStudioRouteImport.update({
+  id: '/ai-studio',
+  path: '/ai-studio',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/cadastro': typeof CadastroRoute
+  '/catalogo': typeof CatalogoRoute
+  '/certificados': typeof CertificadosRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/contato': typeof ContatoRoute
+  '/dashboard': typeof DashboardRoute
+  '/faq': typeof FaqRoute
+  '/login': typeof LoginRoute
+  '/meus-cursos': typeof MeusCursosRoute
+  '/minhas-trilhas': typeof MinhasTrilhasRoute
+  '/notificacoes': typeof NotificacoesRoute
+  '/perfil': typeof PerfilRoute
+  '/plano': typeof PlanoRoute
+  '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/sobre': typeof SobreRoute
+  '/trilhas': typeof TrilhasRoute
+  '/admin/ai-studio': typeof AdminAiStudioRoute
+  '/admin/certificados': typeof AdminCertificadosRoute
+  '/admin/cursos': typeof AdminCursosRoute
+  '/admin/modulos': typeof AdminModulosRoute
+  '/admin/questoes': typeof AdminQuestoesRoute
+  '/admin/trilhas': typeof AdminTrilhasRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/aula/$slug': typeof AulaSlugRoute
+  '/certificado/$id': typeof CertificadoIdRoute
+  '/curso/$slug': typeof CursoSlugRoute
+  '/modulo/$slug': typeof ModuloSlugRoute
+  '/quiz/$id': typeof QuizIdRoute
+  '/trilha/$slug': typeof TrilhaSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/cadastro': typeof CadastroRoute
+  '/catalogo': typeof CatalogoRoute
+  '/certificados': typeof CertificadosRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/contato': typeof ContatoRoute
+  '/dashboard': typeof DashboardRoute
+  '/faq': typeof FaqRoute
+  '/login': typeof LoginRoute
+  '/meus-cursos': typeof MeusCursosRoute
+  '/minhas-trilhas': typeof MinhasTrilhasRoute
+  '/notificacoes': typeof NotificacoesRoute
+  '/perfil': typeof PerfilRoute
+  '/plano': typeof PlanoRoute
+  '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/sobre': typeof SobreRoute
+  '/trilhas': typeof TrilhasRoute
+  '/admin/ai-studio': typeof AdminAiStudioRoute
+  '/admin/certificados': typeof AdminCertificadosRoute
+  '/admin/cursos': typeof AdminCursosRoute
+  '/admin/modulos': typeof AdminModulosRoute
+  '/admin/questoes': typeof AdminQuestoesRoute
+  '/admin/trilhas': typeof AdminTrilhasRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/aula/$slug': typeof AulaSlugRoute
+  '/certificado/$id': typeof CertificadoIdRoute
+  '/curso/$slug': typeof CursoSlugRoute
+  '/modulo/$slug': typeof ModuloSlugRoute
+  '/quiz/$id': typeof QuizIdRoute
+  '/trilha/$slug': typeof TrilhaSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/cadastro': typeof CadastroRoute
+  '/catalogo': typeof CatalogoRoute
+  '/certificados': typeof CertificadosRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/contato': typeof ContatoRoute
+  '/dashboard': typeof DashboardRoute
+  '/faq': typeof FaqRoute
+  '/login': typeof LoginRoute
+  '/meus-cursos': typeof MeusCursosRoute
+  '/minhas-trilhas': typeof MinhasTrilhasRoute
+  '/notificacoes': typeof NotificacoesRoute
+  '/perfil': typeof PerfilRoute
+  '/plano': typeof PlanoRoute
+  '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/sobre': typeof SobreRoute
+  '/trilhas': typeof TrilhasRoute
+  '/admin/ai-studio': typeof AdminAiStudioRoute
+  '/admin/certificados': typeof AdminCertificadosRoute
+  '/admin/cursos': typeof AdminCursosRoute
+  '/admin/modulos': typeof AdminModulosRoute
+  '/admin/questoes': typeof AdminQuestoesRoute
+  '/admin/trilhas': typeof AdminTrilhasRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/aula/$slug': typeof AulaSlugRoute
+  '/certificado/$id': typeof CertificadoIdRoute
+  '/curso/$slug': typeof CursoSlugRoute
+  '/modulo/$slug': typeof ModuloSlugRoute
+  '/quiz/$id': typeof QuizIdRoute
+  '/trilha/$slug': typeof TrilhaSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/cadastro'
+    | '/catalogo'
+    | '/certificados'
+    | '/configuracoes'
+    | '/contato'
+    | '/dashboard'
+    | '/faq'
+    | '/login'
+    | '/meus-cursos'
+    | '/minhas-trilhas'
+    | '/notificacoes'
+    | '/perfil'
+    | '/plano'
+    | '/recuperar-senha'
+    | '/sobre'
+    | '/trilhas'
+    | '/admin/ai-studio'
+    | '/admin/certificados'
+    | '/admin/cursos'
+    | '/admin/modulos'
+    | '/admin/questoes'
+    | '/admin/trilhas'
+    | '/admin/usuarios'
+    | '/aula/$slug'
+    | '/certificado/$id'
+    | '/curso/$slug'
+    | '/modulo/$slug'
+    | '/quiz/$id'
+    | '/trilha/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/cadastro'
+    | '/catalogo'
+    | '/certificados'
+    | '/configuracoes'
+    | '/contato'
+    | '/dashboard'
+    | '/faq'
+    | '/login'
+    | '/meus-cursos'
+    | '/minhas-trilhas'
+    | '/notificacoes'
+    | '/perfil'
+    | '/plano'
+    | '/recuperar-senha'
+    | '/sobre'
+    | '/trilhas'
+    | '/admin/ai-studio'
+    | '/admin/certificados'
+    | '/admin/cursos'
+    | '/admin/modulos'
+    | '/admin/questoes'
+    | '/admin/trilhas'
+    | '/admin/usuarios'
+    | '/aula/$slug'
+    | '/certificado/$id'
+    | '/curso/$slug'
+    | '/modulo/$slug'
+    | '/quiz/$id'
+    | '/trilha/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/cadastro'
+    | '/catalogo'
+    | '/certificados'
+    | '/configuracoes'
+    | '/contato'
+    | '/dashboard'
+    | '/faq'
+    | '/login'
+    | '/meus-cursos'
+    | '/minhas-trilhas'
+    | '/notificacoes'
+    | '/perfil'
+    | '/plano'
+    | '/recuperar-senha'
+    | '/sobre'
+    | '/trilhas'
+    | '/admin/ai-studio'
+    | '/admin/certificados'
+    | '/admin/cursos'
+    | '/admin/modulos'
+    | '/admin/questoes'
+    | '/admin/trilhas'
+    | '/admin/usuarios'
+    | '/aula/$slug'
+    | '/certificado/$id'
+    | '/curso/$slug'
+    | '/modulo/$slug'
+    | '/quiz/$id'
+    | '/trilha/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  CadastroRoute: typeof CadastroRoute
+  CatalogoRoute: typeof CatalogoRoute
+  CertificadosRoute: typeof CertificadosRoute
+  ConfiguracoesRoute: typeof ConfiguracoesRoute
+  ContatoRoute: typeof ContatoRoute
+  DashboardRoute: typeof DashboardRoute
+  FaqRoute: typeof FaqRoute
+  LoginRoute: typeof LoginRoute
+  MeusCursosRoute: typeof MeusCursosRoute
+  MinhasTrilhasRoute: typeof MinhasTrilhasRoute
+  NotificacoesRoute: typeof NotificacoesRoute
+  PerfilRoute: typeof PerfilRoute
+  PlanoRoute: typeof PlanoRoute
+  RecuperarSenhaRoute: typeof RecuperarSenhaRoute
+  SobreRoute: typeof SobreRoute
+  TrilhasRoute: typeof TrilhasRoute
+  AulaSlugRoute: typeof AulaSlugRoute
+  CertificadoIdRoute: typeof CertificadoIdRoute
+  CursoSlugRoute: typeof CursoSlugRoute
+  ModuloSlugRoute: typeof ModuloSlugRoute
+  QuizIdRoute: typeof QuizIdRoute
+  TrilhaSlugRoute: typeof TrilhaSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trilhas': {
+      id: '/trilhas'
+      path: '/trilhas'
+      fullPath: '/trilhas'
+      preLoaderRoute: typeof TrilhasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sobre': {
+      id: '/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recuperar-senha': {
+      id: '/recuperar-senha'
+      path: '/recuperar-senha'
+      fullPath: '/recuperar-senha'
+      preLoaderRoute: typeof RecuperarSenhaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plano': {
+      id: '/plano'
+      path: '/plano'
+      fullPath: '/plano'
+      preLoaderRoute: typeof PlanoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notificacoes': {
+      id: '/notificacoes'
+      path: '/notificacoes'
+      fullPath: '/notificacoes'
+      preLoaderRoute: typeof NotificacoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/minhas-trilhas': {
+      id: '/minhas-trilhas'
+      path: '/minhas-trilhas'
+      fullPath: '/minhas-trilhas'
+      preLoaderRoute: typeof MinhasTrilhasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meus-cursos': {
+      id: '/meus-cursos'
+      path: '/meus-cursos'
+      fullPath: '/meus-cursos'
+      preLoaderRoute: typeof MeusCursosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/configuracoes': {
+      id: '/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof ConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/certificados': {
+      id: '/certificados'
+      path: '/certificados'
+      fullPath: '/certificados'
+      preLoaderRoute: typeof CertificadosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/catalogo': {
+      id: '/catalogo'
+      path: '/catalogo'
+      fullPath: '/catalogo'
+      preLoaderRoute: typeof CatalogoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastro': {
+      id: '/cadastro'
+      path: '/cadastro'
+      fullPath: '/cadastro'
+      preLoaderRoute: typeof CadastroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +554,147 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trilha/$slug': {
+      id: '/trilha/$slug'
+      path: '/trilha/$slug'
+      fullPath: '/trilha/$slug'
+      preLoaderRoute: typeof TrilhaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz/$id': {
+      id: '/quiz/$id'
+      path: '/quiz/$id'
+      fullPath: '/quiz/$id'
+      preLoaderRoute: typeof QuizIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/modulo/$slug': {
+      id: '/modulo/$slug'
+      path: '/modulo/$slug'
+      fullPath: '/modulo/$slug'
+      preLoaderRoute: typeof ModuloSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/curso/$slug': {
+      id: '/curso/$slug'
+      path: '/curso/$slug'
+      fullPath: '/curso/$slug'
+      preLoaderRoute: typeof CursoSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/certificado/$id': {
+      id: '/certificado/$id'
+      path: '/certificado/$id'
+      fullPath: '/certificado/$id'
+      preLoaderRoute: typeof CertificadoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aula/$slug': {
+      id: '/aula/$slug'
+      path: '/aula/$slug'
+      fullPath: '/aula/$slug'
+      preLoaderRoute: typeof AulaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/usuarios': {
+      id: '/admin/usuarios'
+      path: '/usuarios'
+      fullPath: '/admin/usuarios'
+      preLoaderRoute: typeof AdminUsuariosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/trilhas': {
+      id: '/admin/trilhas'
+      path: '/trilhas'
+      fullPath: '/admin/trilhas'
+      preLoaderRoute: typeof AdminTrilhasRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/questoes': {
+      id: '/admin/questoes'
+      path: '/questoes'
+      fullPath: '/admin/questoes'
+      preLoaderRoute: typeof AdminQuestoesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/modulos': {
+      id: '/admin/modulos'
+      path: '/modulos'
+      fullPath: '/admin/modulos'
+      preLoaderRoute: typeof AdminModulosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/cursos': {
+      id: '/admin/cursos'
+      path: '/cursos'
+      fullPath: '/admin/cursos'
+      preLoaderRoute: typeof AdminCursosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/certificados': {
+      id: '/admin/certificados'
+      path: '/certificados'
+      fullPath: '/admin/certificados'
+      preLoaderRoute: typeof AdminCertificadosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/ai-studio': {
+      id: '/admin/ai-studio'
+      path: '/ai-studio'
+      fullPath: '/admin/ai-studio'
+      preLoaderRoute: typeof AdminAiStudioRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminAiStudioRoute: typeof AdminAiStudioRoute
+  AdminCertificadosRoute: typeof AdminCertificadosRoute
+  AdminCursosRoute: typeof AdminCursosRoute
+  AdminModulosRoute: typeof AdminModulosRoute
+  AdminQuestoesRoute: typeof AdminQuestoesRoute
+  AdminTrilhasRoute: typeof AdminTrilhasRoute
+  AdminUsuariosRoute: typeof AdminUsuariosRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAiStudioRoute: AdminAiStudioRoute,
+  AdminCertificadosRoute: AdminCertificadosRoute,
+  AdminCursosRoute: AdminCursosRoute,
+  AdminModulosRoute: AdminModulosRoute,
+  AdminQuestoesRoute: AdminQuestoesRoute,
+  AdminTrilhasRoute: AdminTrilhasRoute,
+  AdminUsuariosRoute: AdminUsuariosRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  CadastroRoute: CadastroRoute,
+  CatalogoRoute: CatalogoRoute,
+  CertificadosRoute: CertificadosRoute,
+  ConfiguracoesRoute: ConfiguracoesRoute,
+  ContatoRoute: ContatoRoute,
+  DashboardRoute: DashboardRoute,
+  FaqRoute: FaqRoute,
+  LoginRoute: LoginRoute,
+  MeusCursosRoute: MeusCursosRoute,
+  MinhasTrilhasRoute: MinhasTrilhasRoute,
+  NotificacoesRoute: NotificacoesRoute,
+  PerfilRoute: PerfilRoute,
+  PlanoRoute: PlanoRoute,
+  RecuperarSenhaRoute: RecuperarSenhaRoute,
+  SobreRoute: SobreRoute,
+  TrilhasRoute: TrilhasRoute,
+  AulaSlugRoute: AulaSlugRoute,
+  CertificadoIdRoute: CertificadoIdRoute,
+  CursoSlugRoute: CursoSlugRoute,
+  ModuloSlugRoute: ModuloSlugRoute,
+  QuizIdRoute: QuizIdRoute,
+  TrilhaSlugRoute: TrilhaSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
