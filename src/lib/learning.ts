@@ -1,5 +1,30 @@
 import { supabase } from "@/integrations/supabase/client";
 import { queryOptions } from "@tanstack/react-query";
+import { MODULES, type Lesson } from "@/lib/mock-data";
+
+export const mockModuleQO = (slug: string) =>
+  queryOptions({
+    queryKey: ["mock", "module", slug] as const,
+    queryFn: async () => {
+      const mod = MODULES.find((m) => m.slug === slug);
+      return mod ?? null;
+    },
+    staleTime: Infinity,
+  });
+
+export const mockLessonQO = (slug: string) =>
+  queryOptions({
+    queryKey: ["mock", "lesson", slug] as const,
+    queryFn: async () => {
+      const lesson = MODULES.flatMap((m) => m.lessons).find((l: Lesson) => l.slug === slug);
+      const mod = MODULES.find((m) => m.lessons.some((l) => l.slug === slug));
+      if (!lesson || !mod) return null;
+      const idx = mod.lessons.findIndex((l) => l.slug === slug);
+      const next = mod.lessons[idx + 1] ?? null;
+      return { lesson, mod, next };
+    },
+    staleTime: Infinity,
+  });
 
 export interface CourseRow {
   id: string;

@@ -1,54 +1,34 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Award, Loader2 } from "lucide-react";
+import { Award } from "lucide-react";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useAuth } from "@/hooks/useAuth";
 import { myEnrollmentsQO, type EnrollmentWithCourse } from "@/lib/learning";
 import { listMyAttempts, getMyCertificate } from "@/lib/ai-study.functions";
 
-export const Route = createFileRoute("/meus-cursos")({
+export const Route = createFileRoute("/_authenticated/meus-cursos")({
   head: () => ({
     meta: [
       { title: "Meus cursos — FCIA Academy" },
       { name: "description", content: "Cursos em que você está matriculado." },
     ],
   }),
+  loader: ({ context }) => {
+    const { userId, queryClient } = context as { userId: string; queryClient: import("@tanstack/react-query").QueryClient };
+    return queryClient.ensureQueryData(myEnrollmentsQO(userId));
+  },
+  errorComponent: ({ error }) => (
+    <StudentShell><p className="text-sm text-destructive">Erro: {error.message}</p></StudentShell>
+  ),
   component: MyCourses,
 });
 
 function MyCourses() {
-  const { user, loading } = useAuth();
-  const q = useQuery(myEnrollmentsQO(user?.id));
-
-  if (loading) {
-    return (
-      <StudentShell>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" /> Carregando…
-        </div>
-      </StudentShell>
-    );
-  }
-
-  if (!user) {
-    return (
-      <StudentShell>
-        <PageHeader eyebrow="Aprendizado" title="Meus cursos" />
-        <div className="rounded-2xl border border-dashed border-border/60 bg-card/40 p-10 text-center">
-          <p className="text-sm text-muted-foreground">Entre para ver seus cursos.</p>
-          <Button asChild className="mt-4">
-            <Link to="/login">Fazer login</Link>
-          </Button>
-        </div>
-      </StudentShell>
-    );
-  }
-
-  const enrollments = q.data ?? [];
+  const { userId } = Route.useRouteContext() as { userId: string };
+  const { data: enrollments } = useSuspenseQuery(myEnrollmentsQO(userId));
 
   return (
     <StudentShell>
@@ -57,13 +37,7 @@ function MyCourses() {
         title="Meus cursos"
         description={`${enrollments.length} matrícula(s)`}
       />
-      {q.isLoading ? (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" /> Carregando matrículas…
-        </div>
-      ) : q.error ? (
-        <p className="text-sm text-destructive">Erro: {(q.error as Error).message}</p>
-      ) : enrollments.length === 0 ? (
+      {enrollments.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border/60 bg-card/40 p-10 text-center">
           <p className="text-sm text-muted-foreground">Você ainda não está matriculado em nenhum curso.</p>
           <Button asChild className="mt-4">

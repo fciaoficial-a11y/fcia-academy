@@ -1,10 +1,12 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { CoursePlayer } from "@/components/learning/CoursePlayer";
 import { ModuleSidebar } from "@/components/learning/ModuleSidebar";
 import { ProgressSystem } from "@/components/learning/ProgressSystem";
 import { MODULES, type Lesson } from "@/lib/mock-data";
+import { mockLessonQO } from "@/lib/learning";
 import { FileDown, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/aula/$slug")({
@@ -15,13 +17,10 @@ export const Route = createFileRoute("/aula/$slug")({
       { name: "description", content: "Player de aula com anotações e materiais." },
     ] };
   },
-  loader: ({ params }) => {
-    const lesson = MODULES.flatMap((m) => m.lessons).find((l) => l.slug === params.slug);
-    const mod = MODULES.find((m) => m.lessons.some((l) => l.slug === params.slug));
-    if (!lesson || !mod) throw notFound();
-    const idx = mod.lessons.findIndex((l) => l.slug === lesson.slug);
-    const next = mod.lessons[idx + 1];
-    return { lesson, mod, next };
+  loader: async ({ params, context }) => {
+    const { queryClient } = context as { queryClient: import("@tanstack/react-query").QueryClient };
+    const data = await queryClient.ensureQueryData(mockLessonQO(params.slug));
+    if (!data) throw notFound();
   },
   notFoundComponent: () => <StudentShell><p className="text-muted-foreground">Aula não encontrada.</p></StudentShell>,
   errorComponent: ({ error }) => <StudentShell><p className="text-destructive">Erro: {error.message}</p></StudentShell>,
@@ -29,7 +28,10 @@ export const Route = createFileRoute("/aula/$slug")({
 });
 
 function LessonPage() {
-  const { lesson, mod, next } = Route.useLoaderData();
+  const { slug } = Route.useParams();
+  const { data } = useSuspenseQuery(mockLessonQO(slug));
+  if (!data) return null;
+  const { lesson, mod, next } = data;
   const completedLessons = mod.lessons.filter((l: Lesson) => l.completed).length;
   return (
     <StudentShell>

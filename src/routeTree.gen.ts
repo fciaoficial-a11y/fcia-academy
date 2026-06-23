@@ -20,7 +20,6 @@ import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotificacoesRouteImport } from './routes/notificacoes'
 import { Route as MinhasTrilhasRouteImport } from './routes/minhas-trilhas'
-import { Route as MeusCursosRouteImport } from './routes/meus-cursos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -32,6 +31,7 @@ import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SystemIndexRouteImport } from './routes/system.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
@@ -55,6 +55,7 @@ import { Route as AdminModulosRouteImport } from './routes/admin.modulos'
 import { Route as AdminCursosRouteImport } from './routes/admin.cursos'
 import { Route as AdminCertificadosRouteImport } from './routes/admin.certificados'
 import { Route as AdminAiStudioRouteImport } from './routes/admin.ai-studio'
+import { Route as AuthenticatedMeusCursosRouteImport } from './routes/_authenticated.meus-cursos'
 import { Route as AdminAiStudioIndexRouteImport } from './routes/admin.ai-studio.index'
 import { Route as CursoSlugProvaRouteImport } from './routes/curso.$slug.prova'
 import { Route as BlogCategoriaSlugRouteImport } from './routes/blog.categoria.$slug'
@@ -118,11 +119,6 @@ const MinhasTrilhasRoute = MinhasTrilhasRouteImport.update({
   path: '/minhas-trilhas',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MeusCursosRoute = MeusCursosRouteImport.update({
-  id: '/meus-cursos',
-  path: '/meus-cursos',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -176,6 +172,10 @@ const BlogRoute = BlogRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -293,6 +293,11 @@ const AdminAiStudioRoute = AdminAiStudioRouteImport.update({
   path: '/ai-studio',
   getParentRoute: () => AdminRoute,
 } as any)
+const AuthenticatedMeusCursosRoute = AuthenticatedMeusCursosRouteImport.update({
+  id: '/meus-cursos',
+  path: '/meus-cursos',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AdminAiStudioIndexRoute = AdminAiStudioIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -343,7 +348,6 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
-  '/meus-cursos': typeof MeusCursosRoute
   '/minhas-trilhas': typeof MinhasTrilhasRoute
   '/notificacoes': typeof NotificacoesRoute
   '/onboarding': typeof OnboardingRoute
@@ -355,6 +359,7 @@ export interface FileRoutesByFullPath {
   '/sobre': typeof SobreRoute
   '/system': typeof SystemRouteWithChildren
   '/trilhas': typeof TrilhasRoute
+  '/meus-cursos': typeof AuthenticatedMeusCursosRoute
   '/admin/ai-studio': typeof AdminAiStudioRouteWithChildren
   '/admin/certificados': typeof AdminCertificadosRoute
   '/admin/cursos': typeof AdminCursosRoute
@@ -397,7 +402,6 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
-  '/meus-cursos': typeof MeusCursosRoute
   '/minhas-trilhas': typeof MinhasTrilhasRoute
   '/notificacoes': typeof NotificacoesRoute
   '/onboarding': typeof OnboardingRoute
@@ -408,6 +412,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/trilhas': typeof TrilhasRoute
+  '/meus-cursos': typeof AuthenticatedMeusCursosRoute
   '/admin/certificados': typeof AdminCertificadosRoute
   '/admin/cursos': typeof AdminCursosRoute
   '/admin/modulos': typeof AdminModulosRoute
@@ -440,6 +445,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
   '/cadastro': typeof CadastroRoute
@@ -451,7 +457,6 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
-  '/meus-cursos': typeof MeusCursosRoute
   '/minhas-trilhas': typeof MinhasTrilhasRoute
   '/notificacoes': typeof NotificacoesRoute
   '/onboarding': typeof OnboardingRoute
@@ -463,6 +468,7 @@ export interface FileRoutesById {
   '/sobre': typeof SobreRoute
   '/system': typeof SystemRouteWithChildren
   '/trilhas': typeof TrilhasRoute
+  '/_authenticated/meus-cursos': typeof AuthenticatedMeusCursosRoute
   '/admin/ai-studio': typeof AdminAiStudioRouteWithChildren
   '/admin/certificados': typeof AdminCertificadosRoute
   '/admin/cursos': typeof AdminCursosRoute
@@ -508,7 +514,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/faq'
     | '/login'
-    | '/meus-cursos'
     | '/minhas-trilhas'
     | '/notificacoes'
     | '/onboarding'
@@ -520,6 +525,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/system'
     | '/trilhas'
+    | '/meus-cursos'
     | '/admin/ai-studio'
     | '/admin/certificados'
     | '/admin/cursos'
@@ -562,7 +568,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/faq'
     | '/login'
-    | '/meus-cursos'
     | '/minhas-trilhas'
     | '/notificacoes'
     | '/onboarding'
@@ -573,6 +578,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sobre'
     | '/trilhas'
+    | '/meus-cursos'
     | '/admin/certificados'
     | '/admin/cursos'
     | '/admin/modulos'
@@ -604,6 +610,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/admin'
     | '/blog'
     | '/cadastro'
@@ -615,7 +622,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/faq'
     | '/login'
-    | '/meus-cursos'
     | '/minhas-trilhas'
     | '/notificacoes'
     | '/onboarding'
@@ -627,6 +633,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/system'
     | '/trilhas'
+    | '/_authenticated/meus-cursos'
     | '/admin/ai-studio'
     | '/admin/certificados'
     | '/admin/cursos'
@@ -660,6 +667,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
   CadastroRoute: typeof CadastroRoute
@@ -671,7 +679,6 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
-  MeusCursosRoute: typeof MeusCursosRoute
   MinhasTrilhasRoute: typeof MinhasTrilhasRoute
   NotificacoesRoute: typeof NotificacoesRoute
   OnboardingRoute: typeof OnboardingRoute
@@ -770,13 +777,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MinhasTrilhasRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/meus-cursos': {
-      id: '/meus-cursos'
-      path: '/meus-cursos'
-      fullPath: '/meus-cursos'
-      preLoaderRoute: typeof MeusCursosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -852,6 +852,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -1015,6 +1022,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAiStudioRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_authenticated/meus-cursos': {
+      id: '/_authenticated/meus-cursos'
+      path: '/meus-cursos'
+      fullPath: '/meus-cursos'
+      preLoaderRoute: typeof AuthenticatedMeusCursosRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/admin/ai-studio/': {
       id: '/admin/ai-studio/'
       path: '/'
@@ -1066,6 +1080,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedMeusCursosRoute: typeof AuthenticatedMeusCursosRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedMeusCursosRoute: AuthenticatedMeusCursosRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
 
 interface AdminAiStudioRouteChildren {
   AdminAiStudioToolRoute: typeof AdminAiStudioToolRoute
@@ -1160,6 +1186,7 @@ const CursoSlugRouteWithChildren = CursoSlugRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
   CadastroRoute: CadastroRoute,
@@ -1171,7 +1198,6 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
-  MeusCursosRoute: MeusCursosRoute,
   MinhasTrilhasRoute: MinhasTrilhasRoute,
   NotificacoesRoute: NotificacoesRoute,
   OnboardingRoute: OnboardingRoute,
