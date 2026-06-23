@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { CheckCircle2, Circle, Lock, MapPin, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 import { PageHeader } from "@/components/shared/PageHeader";
@@ -6,6 +7,8 @@ import { TrackCard } from "@/components/cards/TrackCard";
 import { FilterChips } from "@/components/shared/FilterChips";
 import { TRACKS, CATEGORIES } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
+import { tracksQuery, normalize } from "@/lib/supabase-queries";
+import { DataState, RealDataSection } from "@/components/data/DataState";
 
 export const Route = createFileRoute("/trilhas")({
   head: () => ({ meta: [{ title: "Trilhas — FCIA Academy" }, { name: "description", content: "Trilhas guiadas com progresso e certificação." }] }),
@@ -13,10 +16,40 @@ export const Route = createFileRoute("/trilhas")({
 });
 
 function TracksPage() {
+  const q = useQuery(tracksQuery());
+  const rows = q.data?.rows;
   return (
     <AppShell>
       <section className="mx-auto max-w-7xl space-y-8 px-4 py-12 sm:px-6">
         <PageHeader eyebrow="Trilhas" title="Aprenda em sequência" description="Caminhos curados por especialistas, do básico ao avançado." />
+
+        <RealDataSection title="Trilhas do banco" source={`tracks · ${q.data?.count ?? 0} linhas`}>
+          <DataState
+            loading={q.isLoading}
+            error={q.error as Error | null}
+            data={rows}
+            configured={q.data?.configured ?? true}
+            emptyTitle="Tabela tracks está vazia"
+            emptyHint="Insira registros no Supabase para vê-los aqui. O conteúdo curado abaixo permanece como fallback."
+          >
+            {(data) => (
+              <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {data.map((r, i) => {
+                  const n = normalize(r, String(i));
+                  return (
+                    <li key={n.id} className="rounded-2xl border border-border/60 bg-card/60 p-4">
+                      <p className="font-display text-sm font-semibold text-foreground">{n.title}</p>
+                      {n.description && <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{n.description}</p>}
+                      <p className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground">
+                        {n.level ?? "—"} · {n.category ?? "—"}
+                      </p>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </DataState>
+        </RealDataSection>
 
         {/* Roadmap visual */}
         <section className="rounded-3xl border border-border/60 bg-card/60 p-6 backdrop-blur-xl">

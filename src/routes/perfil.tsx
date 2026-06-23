@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatCard } from "@/components/cards/StatCard";
@@ -9,19 +10,71 @@ import { AuthInput } from "@/components/auth/AuthShell";
 import {
   STUDENT_PROFILE, STUDENT_STATS, ACHIEVEMENTS, LEADERBOARD, XP_LEVELS, CERTIFICATES, COURSES,
 } from "@/lib/mock-data";
+import { useAuth } from "@/hooks/useAuth";
+import { getSupabase, isSupabaseConfigured } from "@/integrations/supabase/client";
+import { DataState, RealDataSection } from "@/components/data/DataState";
+import { RequireAuth } from "@/components/auth/RequireAuth";
+import type { Row } from "@/lib/supabase-queries";
+import { normalize } from "@/lib/supabase-queries";
+import { queryOptions } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/perfil")({
   head: () => ({ meta: [{ title: "Perfil — FCIA Academy" }, { name: "description", content: "Gerencie seus dados e preferências." }] }),
-  component: ProfilePage,
+  component: ProfilePageGated,
 });
+
+function ProfilePageGated() {
+  return (<RequireAuth><ProfilePage /></RequireAuth>);
+}
 
 function ProfilePage() {
   const finished = COURSES.filter((c) => c.progress === 100).length;
   const initials = STUDENT_PROFILE.name.split(" ").map((p) => p[0]).slice(0, 2).join("");
+  const { user } = useAuth();
+  const q = useQuery(
+    queryOptions({
+      queryKey: ["sb", "profiles", user?.id ?? "anon"],
+      enabled: isSupabaseConfigured && !!user?.id,
+      queryFn: async () => {
+        const sb = getSupabase();
+        const { data, error } = await sb.from("profiles").select("*").eq("id", user!.id).limit(1);
+        if (error) {
+          // tenta por user_id
+          const alt = await sb.from("profiles").select("*").eq("user_id", user!.id).limit(1);
+          if (alt.error) throw new Error(error.message);
+          return (alt.data ?? []) as Row[];
+        }
+        return (data ?? []) as Row[];
+      },
+    }),
+  );
 
   return (
     <StudentShell>
       <PageHeader eyebrow="Conta" title="Meu perfil" description="Dados visíveis para a equipe FCIA Academy." />
+
+      <RealDataSection title="Perfil no banco" source={`profiles · ${user?.email ?? "—"}`}>
+        <DataState
+          loading={q.isLoading}
+          error={q.error as Error | null}
+          data={q.data}
+          configured={isSupabaseConfigured}
+          emptyTitle="Sem perfil em profiles para este usuário"
+          emptyHint="Conteúdo abaixo é fallback do mock."
+        >
+          {(data) => {
+            const n = normalize(data[0]);
+            return (
+              <dl className="grid gap-2 text-xs">
+                <div className="flex justify-between gap-2"><dt className="text-muted-foreground">id</dt><dd className="font-mono">{n.id}</dd></div>
+                <div className="flex justify-between gap-2"><dt className="text-muted-foreground">title/name</dt><dd>{n.title}</dd></div>
+                {n.description && <div className="flex justify-between gap-2"><dt className="text-muted-foreground">bio</dt><dd className="text-right">{n.description}</dd></div>}
+              </dl>
+            );
+          }}
+        </DataState>
+      </RealDataSection>
+
 
       <section className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-4 rounded-3xl border border-border/60 bg-card/60 p-6 backdrop-blur-xl sm:flex">
         <div className="grid h-20 w-20 shrink-0 place-items-center rounded-full bg-gradient-to-br from-primary to-accent text-xl font-bold text-primary-foreground ring-glow">{initials}</div>

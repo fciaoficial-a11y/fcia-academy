@@ -1,8 +1,11 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { COURSES, MODULES } from "@/lib/mock-data";
 import { Clock, BookOpen, Star, Award, Play, CheckCircle2, Circle } from "lucide-react";
+import { coursesQuery, modulesQuery, normalize } from "@/lib/supabase-queries";
+import { DataState, RealDataSection } from "@/components/data/DataState";
 
 export const Route = createFileRoute("/curso/$slug")({
   head: ({ params }) => {
@@ -26,9 +29,64 @@ function CourseDetail() {
   const { course } = Route.useLoaderData();
   const modules = MODULES.filter((m) => m.courseSlug === course.slug);
   const Icon = course.icon;
+  const allCourses = useQuery(coursesQuery());
+  const realCourse = allCourses.data?.rows.find((r) => {
+    const n = normalize(r);
+    return n.slug === course.slug || n.title.toLowerCase() === course.title.toLowerCase();
+  });
+  const realCourseId = realCourse ? (normalize(realCourse).id) : undefined;
+  const mods = useQuery(modulesQuery(realCourseId));
   return (
     <StudentShell>
       <PageHeader crumbs={[{ label: "Catálogo", to: "/catalogo" }, { label: course.title }]} eyebrow={course.category} title={course.title} description={course.description} />
+
+      <RealDataSection title="Curso no banco" source={realCourse ? `courses · 1 match` : "courses"}>
+        <DataState
+          loading={allCourses.isLoading}
+          error={allCourses.error as Error | null}
+          data={realCourse ? [realCourse] : []}
+          configured={allCourses.data?.configured ?? true}
+          emptyTitle="Curso não encontrado no Supabase"
+          emptyHint="Renderização abaixo usa o mock curado."
+        >
+          {(data) => {
+            const n = normalize(data[0]);
+            return (
+              <dl className="grid gap-2 text-xs">
+                <div className="flex justify-between"><dt className="text-muted-foreground">id</dt><dd className="font-mono">{n.id}</dd></div>
+                <div className="flex justify-between"><dt className="text-muted-foreground">title</dt><dd>{n.title}</dd></div>
+                {n.level && <div className="flex justify-between"><dt className="text-muted-foreground">level</dt><dd>{n.level}</dd></div>}
+              </dl>
+            );
+          }}
+        </DataState>
+      </RealDataSection>
+
+      <RealDataSection title="Módulos do banco" source={`modules · ${mods.data?.count ?? 0} linhas`}>
+        <DataState
+          loading={mods.isLoading}
+          error={mods.error as Error | null}
+          data={mods.data?.rows}
+          configured={mods.data?.configured ?? true}
+          emptyTitle="Sem módulos vinculados"
+          emptyHint="Módulos abaixo usam o mock curado."
+        >
+          {(data) => (
+            <ul className="space-y-2">
+              {data.map((r, i) => {
+                const n = normalize(r, String(i));
+                return (
+                  <li key={n.id} className="rounded-xl border border-border/60 bg-card/60 p-3 text-sm">
+                    <span className="font-mono text-xs text-muted-foreground mr-2">{String(i + 1).padStart(2, "0")}</span>
+                    {n.title}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </DataState>
+      </RealDataSection>
+
       <section className="relative grid gap-6 overflow-hidden rounded-3xl border border-border/60 bg-card/60 p-6 backdrop-blur-xl lg:grid-cols-[1.5fr_1fr]">
         <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
         <div className="space-y-4">

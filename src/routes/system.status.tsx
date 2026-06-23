@@ -26,12 +26,12 @@ const EXPECTED = [
 ];
 
 const MOCK_STATUS: { screen: string; replaced: boolean; note: string }[] = [
-  { screen: "trilhas", replaced: false, note: "Liberada Sprint 6 — tracks ✅" },
-  { screen: "cursos", replaced: false, note: "Liberada Sprint 6 — courses ✅" },
-  { screen: "curso/[slug]", replaced: false, note: "Liberada Sprint 6 — courses + modules ✅" },
-  { screen: "perfil", replaced: false, note: "Liberada Sprint 6 — profiles ✅ (xp_log ausente, fallback)" },
-  { screen: "certificados", replaced: false, note: "Liberada Sprint 6 — certificates ✅" },
-  { screen: "dashboard", replaced: false, note: "Liberada Sprint 6 — composta de tabelas ✅" },
+  { screen: "trilhas", replaced: true, note: "Sprint 6 ✅ — bloco Dados reais + fallback mock" },
+  { screen: "cursos (catálogo)", replaced: true, note: "Sprint 6 ✅ — bloco Dados reais + fallback mock" },
+  { screen: "curso/[slug]", replaced: true, note: "Sprint 6 ✅ — courses + modules + fallback mock" },
+  { screen: "perfil", replaced: true, note: "Sprint 6 ✅ — profiles por user.id (fallback p/ XP)" },
+  { screen: "certificados", replaced: true, note: "Sprint 6 ✅ — certificates + fallback mock" },
+  { screen: "dashboard", replaced: true, note: "Sprint 6 ✅ — resumo real (tracks/courses/certificates)" },
   { screen: "quiz", replaced: false, note: "Bloqueada — questions ausente (quiz_attempts ✅)" },
   { screen: "conquistas", replaced: false, note: "Avaliar mapeamento alternativo: achievements / user_achievements" },
   { screen: "admin overview", replaced: false, note: "Bloqueada — user_roles ausente, gate fica em getUser()" },

@@ -1,17 +1,26 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Award, Clock, Download, Linkedin, Share2, ShieldCheck } from "lucide-react";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { CertificateCard } from "@/components/cards/CertificateCard";
 import { CERTIFICATES, COURSES } from "@/lib/mock-data";
+import { certificatesQuery, normalize } from "@/lib/supabase-queries";
+import { DataState, RealDataSection } from "@/components/data/DataState";
+import { RequireAuth } from "@/components/auth/RequireAuth";
 
 export const Route = createFileRoute("/certificados")({
   head: () => ({ meta: [{ title: "Certificados — FCIA Academy" }, { name: "description", content: "Seus certificados digitais validáveis." }] }),
-  component: CertsPage,
+  component: CertsPageGated,
 });
+
+function CertsPageGated() {
+  return (<RequireAuth><CertsPage /></RequireAuth>);
+}
 
 function CertsPage() {
   const pending = COURSES.filter((c) => c.progress >= 50 && c.progress < 100);
+  const q = useQuery(certificatesQuery());
 
   return (
     <StudentShell>
@@ -20,6 +29,31 @@ function CertsPage() {
         title="Seus certificados"
         description="Todos os certificados possuem código único, são vitalícios e compatíveis com LinkedIn."
       />
+
+      <RealDataSection title="Certificados no banco" source={`certificates · ${q.data?.count ?? 0} linhas`}>
+        <DataState
+          loading={q.isLoading}
+          error={q.error as Error | null}
+          data={q.data?.rows}
+          configured={q.data?.configured ?? true}
+          emptyTitle="Sem certificados emitidos"
+          emptyHint="Certificados de demonstração aparecem abaixo."
+        >
+          {(data) => (
+            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {data.map((r, i) => {
+                const n = normalize(r, String(i));
+                return (
+                  <li key={n.id} className="rounded-2xl border border-border/60 bg-card/60 p-4">
+                    <p className="font-display text-sm font-semibold text-foreground">{n.title}</p>
+                    <p className="mt-1 font-mono text-[10px] text-muted-foreground">id: {n.id}</p>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </DataState>
+      </RealDataSection>
 
       {/* Stats */}
       <section className="grid gap-4 sm:grid-cols-3">
