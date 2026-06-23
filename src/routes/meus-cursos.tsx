@@ -32,6 +32,7 @@ function MyCourses() {
         <div className="grid gap-2 sm:grid-cols-2">
           {(realCourses.data?.rows ?? []).map((row) => {
             const c = normalize(row);
+            if (!c.id || !c.slug) return null;
             return <CourseApprovalRow key={c.id} courseId={c.id} title={c.title} slug={c.slug} />;
           })}
           {realCourses.data && realCourses.data.rows.length === 0 && (
