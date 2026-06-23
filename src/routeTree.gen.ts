@@ -13,9 +13,16 @@ import { Route as TrilhasRouteImport } from './routes/trilhas'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
 import { Route as PlanoRouteImport } from './routes/plano'
+import { Route as PerfilRouteImport } from './routes/perfil'
+import { Route as NotificacoesRouteImport } from './routes/notificacoes'
+import { Route as MinhasTrilhasRouteImport } from './routes/minhas-trilhas'
+import { Route as MeusCursosRouteImport } from './routes/meus-cursos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
+import { Route as CertificadosRouteImport } from './routes/certificados'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as IndexRouteImport } from './routes/index'
@@ -40,6 +47,26 @@ const PlanoRoute = PlanoRouteImport.update({
   path: '/plano',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificacoesRoute = NotificacoesRouteImport.update({
+  id: '/notificacoes',
+  path: '/notificacoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MinhasTrilhasRoute = MinhasTrilhasRouteImport.update({
+  id: '/minhas-trilhas',
+  path: '/minhas-trilhas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeusCursosRoute = MeusCursosRouteImport.update({
+  id: '/meus-cursos',
+  path: '/meus-cursos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -50,9 +77,24 @@ const FaqRoute = FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContatoRoute = ContatoRouteImport.update({
   id: '/contato',
   path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CertificadosRoute = CertificadosRouteImport.update({
+  id: '/certificados',
+  path: '/certificados',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CatalogoRoute = CatalogoRouteImport.update({
@@ -75,9 +117,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
+  '/certificados': typeof CertificadosRoute
+  '/configuracoes': typeof ConfiguracoesRoute
   '/contato': typeof ContatoRoute
+  '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/meus-cursos': typeof MeusCursosRoute
+  '/minhas-trilhas': typeof MinhasTrilhasRoute
+  '/notificacoes': typeof NotificacoesRoute
+  '/perfil': typeof PerfilRoute
   '/plano': typeof PlanoRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
@@ -87,9 +136,16 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
+  '/certificados': typeof CertificadosRoute
+  '/configuracoes': typeof ConfiguracoesRoute
   '/contato': typeof ContatoRoute
+  '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/meus-cursos': typeof MeusCursosRoute
+  '/minhas-trilhas': typeof MinhasTrilhasRoute
+  '/notificacoes': typeof NotificacoesRoute
+  '/perfil': typeof PerfilRoute
   '/plano': typeof PlanoRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
@@ -100,9 +156,16 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/catalogo': typeof CatalogoRoute
+  '/certificados': typeof CertificadosRoute
+  '/configuracoes': typeof ConfiguracoesRoute
   '/contato': typeof ContatoRoute
+  '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/meus-cursos': typeof MeusCursosRoute
+  '/minhas-trilhas': typeof MinhasTrilhasRoute
+  '/notificacoes': typeof NotificacoesRoute
+  '/perfil': typeof PerfilRoute
   '/plano': typeof PlanoRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/sobre': typeof SobreRoute
@@ -114,9 +177,16 @@ export interface FileRouteTypes {
     | '/'
     | '/cadastro'
     | '/catalogo'
+    | '/certificados'
+    | '/configuracoes'
     | '/contato'
+    | '/dashboard'
     | '/faq'
     | '/login'
+    | '/meus-cursos'
+    | '/minhas-trilhas'
+    | '/notificacoes'
+    | '/perfil'
     | '/plano'
     | '/recuperar-senha'
     | '/sobre'
@@ -126,9 +196,16 @@ export interface FileRouteTypes {
     | '/'
     | '/cadastro'
     | '/catalogo'
+    | '/certificados'
+    | '/configuracoes'
     | '/contato'
+    | '/dashboard'
     | '/faq'
     | '/login'
+    | '/meus-cursos'
+    | '/minhas-trilhas'
+    | '/notificacoes'
+    | '/perfil'
     | '/plano'
     | '/recuperar-senha'
     | '/sobre'
@@ -138,9 +215,16 @@ export interface FileRouteTypes {
     | '/'
     | '/cadastro'
     | '/catalogo'
+    | '/certificados'
+    | '/configuracoes'
     | '/contato'
+    | '/dashboard'
     | '/faq'
     | '/login'
+    | '/meus-cursos'
+    | '/minhas-trilhas'
+    | '/notificacoes'
+    | '/perfil'
     | '/plano'
     | '/recuperar-senha'
     | '/sobre'
@@ -151,9 +235,16 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CadastroRoute: typeof CadastroRoute
   CatalogoRoute: typeof CatalogoRoute
+  CertificadosRoute: typeof CertificadosRoute
+  ConfiguracoesRoute: typeof ConfiguracoesRoute
   ContatoRoute: typeof ContatoRoute
+  DashboardRoute: typeof DashboardRoute
   FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
+  MeusCursosRoute: typeof MeusCursosRoute
+  MinhasTrilhasRoute: typeof MinhasTrilhasRoute
+  NotificacoesRoute: typeof NotificacoesRoute
+  PerfilRoute: typeof PerfilRoute
   PlanoRoute: typeof PlanoRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
   SobreRoute: typeof SobreRoute
@@ -190,6 +281,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notificacoes': {
+      id: '/notificacoes'
+      path: '/notificacoes'
+      fullPath: '/notificacoes'
+      preLoaderRoute: typeof NotificacoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/minhas-trilhas': {
+      id: '/minhas-trilhas'
+      path: '/minhas-trilhas'
+      fullPath: '/minhas-trilhas'
+      preLoaderRoute: typeof MinhasTrilhasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meus-cursos': {
+      id: '/meus-cursos'
+      path: '/meus-cursos'
+      fullPath: '/meus-cursos'
+      preLoaderRoute: typeof MeusCursosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -204,11 +323,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contato': {
       id: '/contato'
       path: '/contato'
       fullPath: '/contato'
       preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/configuracoes': {
+      id: '/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof ConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/certificados': {
+      id: '/certificados'
+      path: '/certificados'
+      fullPath: '/certificados'
+      preLoaderRoute: typeof CertificadosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/catalogo': {
@@ -239,9 +379,16 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CadastroRoute: CadastroRoute,
   CatalogoRoute: CatalogoRoute,
+  CertificadosRoute: CertificadosRoute,
+  ConfiguracoesRoute: ConfiguracoesRoute,
   ContatoRoute: ContatoRoute,
+  DashboardRoute: DashboardRoute,
   FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
+  MeusCursosRoute: MeusCursosRoute,
+  MinhasTrilhasRoute: MinhasTrilhasRoute,
+  NotificacoesRoute: NotificacoesRoute,
+  PerfilRoute: PerfilRoute,
   PlanoRoute: PlanoRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
   SobreRoute: SobreRoute,
