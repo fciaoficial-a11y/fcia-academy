@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { AuthShell, AuthInput, AuthSubmit } from "@/components/auth/AuthShell";
+import { GoogleButton, AuthDivider } from "@/components/auth/GoogleButton";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/login")({
@@ -42,6 +43,8 @@ function LoginPage() {
         {error && <p className="text-xs text-destructive">{error}</p>}
         <AuthSubmit disabled={loading}>Entrar</AuthSubmit>
       </form>
+      <AuthDivider />
+      <GoogleButton label="Entrar com Google" />
     </AuthShell>
   );
 }

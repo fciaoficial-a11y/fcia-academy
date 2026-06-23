@@ -69,7 +69,7 @@ export function useAuth(): AuthState & {
   const resetPassword = useCallback(async (email: string) => {
     const sb = getSupabase();
     const { error } = await sb.auth.resetPasswordForEmail(email, {
-      redirectTo: typeof window !== "undefined" ? `${window.location.origin}/recuperar-senha` : undefined,
+      redirectTo: typeof window !== "undefined" ? `${window.location.origin}/reset-password` : undefined,
     });
     return { error: error?.message ?? null };
   }, []);

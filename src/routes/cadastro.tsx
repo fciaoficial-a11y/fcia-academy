@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { AuthShell, AuthInput, AuthSubmit } from "@/components/auth/AuthShell";
+import { GoogleButton, AuthDivider } from "@/components/auth/GoogleButton";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/cadastro")({
@@ -25,7 +26,7 @@ function SignUpPage() {
     const { error } = await signUp(email, password, name);
     setLoading(false);
     if (error) setError(error);
-    else { setSuccess("Conta criada. Verifique seu e-mail para confirmar."); setTimeout(() => navigate({ to: "/login" }), 1500); }
+    else { setSuccess("Conta criada. Vamos personalizar sua experiência."); setTimeout(() => navigate({ to: "/onboarding" }), 800); }
   }
 
   return (
@@ -38,6 +39,8 @@ function SignUpPage() {
         {success && <p className="text-xs text-emerald-500">{success}</p>}
         <AuthSubmit disabled={loading}>{loading ? "Criando…" : "Criar conta"}</AuthSubmit>
       </form>
+      <AuthDivider />
+      <GoogleButton label="Cadastrar com Google" />
     </AuthShell>
   );
 }
