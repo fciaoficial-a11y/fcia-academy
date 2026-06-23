@@ -39,7 +39,7 @@ async function fetchOrFallback(
       }
       throw new Error(error.message);
     }
-    const rows = (data ?? []) as Row[];
+    const rows = ((data ?? []) as unknown) as Row[];
     if (rows.length === 0) {
       return { rows: [], count: count ?? 0, source: "rls-empty", table, notice: "Sem registros visíveis. Pode ser RLS restringindo o acesso." };
     }
