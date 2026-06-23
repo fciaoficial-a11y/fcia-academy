@@ -92,7 +92,7 @@ function InstructorPage() {
                 <Award className="h-4 w-4 text-primary" /> Certificações
               </h3>
               <ul className="mt-3 space-y-2 text-sm">
-                {instructor.certifications.map((c) => (
+                {instructor.certifications.map((c: string) => (
                   <li key={c} className="rounded-xl border border-border/40 bg-background/40 px-3 py-2 text-foreground">{c}</li>
                 ))}
               </ul>
