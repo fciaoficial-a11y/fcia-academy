@@ -211,27 +211,6 @@ function VitrinePage() {
         </div>
       </section>
 
-      {/* CTA FINAL */}
-      <section className="mx-auto max-w-5xl px-4 pb-24 sm:px-6">
-        <div className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card/60 to-accent/10 p-10 text-center backdrop-blur-xl ring-glow sm:p-14">
-          <h2 className="font-display text-3xl font-semibold text-foreground sm:text-4xl">
-            Pronto para começar?
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
-            Escolha um curso ou trilha e comece em minutos. Sem complicação, sem mensalidade.
-          </p>
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <a href="#cursos" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground ring-glow">
-              Ver cursos <ArrowRight className="h-4 w-4" />
-            </a>
-            {!user && (
-              <Link to="/cadastro" className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-6 py-3 text-sm font-medium text-foreground">
-                Criar conta grátis
-              </Link>
-            )}
-          </div>
-        </div>
-      </section>
     </AppShell>
   );
 }
