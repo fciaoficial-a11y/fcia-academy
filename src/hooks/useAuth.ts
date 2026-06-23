@@ -27,12 +27,12 @@ export function useAuth(): AuthState & {
     const sb = getSupabase();
     let mounted = true;
 
-    sb.auth.getSession().then(({ data }) => {
+    sb.auth.getSession().then(({ data }: { data: { session: any } }) => {
       if (!mounted) return;
       setState((s) => ({ ...s, session: data.session, user: data.session?.user ?? null, loading: false }));
     });
 
-    const { data: sub } = sb.auth.onAuthStateChange((_event, session) => {
+    const { data: sub } = sb.auth.onAuthStateChange((_event: string, session: any) => {
       setState((s) => ({ ...s, session, user: session?.user ?? null, loading: false }));
     });
 
