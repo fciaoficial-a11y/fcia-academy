@@ -73,18 +73,31 @@ function SystemSetupPage() {
     try {
       const baseUrl = values.SUPABASE_URL.trim().replace(/\/$/, "");
       const apikey = values.SUPABASE_ANON_KEY.trim();
-      const res = await fetch(`${baseUrl}/rest/v1/?apikey=${encodeURIComponent(apikey)}`, {
-        method: "GET",
-        headers: {
-          apikey,
-          Authorization: `Bearer ${apikey}`,
-          Accept: "application/openapi+json",
-        },
-      });
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status} — ${res.statusText || "falha na requisição read-only"}`);
+      if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(baseUrl)) {
+        throw new Error(
+          "SUPABASE_URL inválida. Formato esperado: https://<project-ref>.supabase.co (sem barra final, sem /rest/v1).",
+        );
       }
-      const spec = (await res.json()) as { definitions?: Record<string, unknown>; basePath?: string };
+      const res = await fetch(`${baseUrl}/rest/v1/`, {
+        method: "GET",
+        headers: { apikey, Authorization: `Bearer ${apikey}` },
+      });
+      const raw = await res.text();
+      if (!res.ok) {
+        let detail = raw.slice(0, 300);
+        try {
+          const j = JSON.parse(raw) as { message?: string; hint?: string };
+          detail = [j.message, j.hint].filter(Boolean).join(" — ") || detail;
+        } catch {
+          /* keep raw */
+        }
+        const hint401 =
+          res.status === 401
+            ? " · Verifique se a ANON_KEY corresponde exatamente ao projeto da URL informada (e não é a service_role nem chave de outro projeto)."
+            : "";
+        throw new Error(`HTTP ${res.status} — ${detail || res.statusText}${hint401}`);
+      }
+      const spec = JSON.parse(raw) as { definitions?: Record<string, unknown> };
       const tables = Object.keys(spec.definitions ?? {}).sort();
       setResult({
         status: "ok",
