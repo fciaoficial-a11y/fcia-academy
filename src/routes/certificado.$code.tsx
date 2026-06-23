@@ -5,7 +5,6 @@ import { QRCodeSVG } from "qrcode.react";
 import { Award, CheckCircle2, Download, ShieldCheck, ShieldX, Sparkles } from "lucide-react";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { DataState } from "@/components/data/DataState";
 import { getCertificateByCode } from "@/lib/ai-study.functions";
 import { useAuth } from "@/hooks/useAuth";
 import { CERTIFICATES } from "@/lib/mock-data";
@@ -67,14 +66,16 @@ function PublicCertPage() {
         description={`Código ${code}`}
       />
 
-      {query.isLoading && <DataState variant="loading" title="Validando certificado…" />}
+      {query.isLoading && (
+        <div className="rounded-2xl border border-border/60 bg-card/40 p-6 text-sm text-muted-foreground">
+          Validando certificado…
+        </div>
+      )}
 
       {!query.isLoading && !cert && (
-        <DataState
-          variant="empty"
-          title="Certificado inválido"
-          description="Não localizamos um certificado ativo com este código."
-        />
+        <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-6 text-sm text-destructive inline-flex items-center gap-2">
+          <ShieldX className="h-4 w-4" /> Certificado inválido — código não localizado.
+        </div>
       )}
 
       {cert && <CertificateRender cert={cert} publicUrl={publicUrl} isOwner={!!user} />}
