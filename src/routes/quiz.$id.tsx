@@ -1,7 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { StudentShell } from "@/components/student/StudentShell";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { QUIZ_BANK } from "@/lib/mock-data";
+import { QUIZ_BANK, type QuizQuestion } from "@/lib/mock-data";
 import { Brain } from "lucide-react";
 
 export const Route = createFileRoute("/quiz/$id")({
@@ -35,11 +35,11 @@ function QuizPage() {
       </section>
 
       <ol className="space-y-4">
-        {quiz.questions.map((q, i) => (
+        {quiz.questions.map((q: QuizQuestion, i: number) => (
           <li key={q.id} className="rounded-2xl border border-border/60 bg-card/60 p-5 backdrop-blur-xl">
             <p className="text-sm font-semibold text-foreground"><span className="text-primary">{i + 1}.</span> {q.prompt}</p>
             <div className="mt-3 grid gap-2">
-              {q.options.map((opt, oi) => (
+              {q.options.map((opt: string, oi: number) => (
                 <label key={oi} className="flex items-center gap-3 rounded-xl border border-border/40 bg-background/40 p-3 text-sm text-foreground transition-colors hover:bg-secondary/40">
                   <input type="radio" name={q.id} className="h-4 w-4 accent-[oklch(var(--primary))]" />
                   {opt}
