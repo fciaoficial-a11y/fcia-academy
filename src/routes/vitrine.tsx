@@ -81,8 +81,8 @@ function VitrinePage() {
     return all.filter((t) => t.title.toLowerCase().includes(s) || (t.description ?? "").toLowerCase().includes(s));
   }, [tracks.data, search]);
 
-  const setTab = (next: "cursos" | "trilhas") =>
-    navigate({ to: "/vitrine", search: (prev) => ({ ...prev, tab: next }) });
+  const setTab = (nextTab: "cursos" | "trilhas") =>
+    navigate({ to: "/vitrine", search: { q: search || undefined, tab: nextTab } });
 
   return (
     <AppShell>
