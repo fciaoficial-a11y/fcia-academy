@@ -58,7 +58,6 @@ function TestimonialCard({ handleShuffle, testimonial, role, position, author, a
 
   return (
     <motion.div
-      style={{ zIndex: positionStyles[position].zIndex }}
       animate={{ rotate: positionStyles[position].rotate, x: positionStyles[position].x }}
       drag={isFront ? "x" : false}
       dragConstraints={{ left: 0, right: 0 }}
