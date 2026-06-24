@@ -70,12 +70,17 @@ function TestimonialCard({ handleShuffle, testimonial, role, position, author, a
         dragRef.current = 0;
       }}
       transition={{ duration: 0.4, type: "spring", stiffness: 200, damping: 25 }}
-      className={`absolute left-0 top-0 flex h-[380px] w-[300px] select-none flex-col items-center gap-4 rounded-2xl border p-6 shadow-2xl ${
+      className={`absolute left-0 top-0 flex h-[380px] w-[300px] select-none flex-col items-center gap-4 rounded-2xl border p-6 shadow-2xl backdrop-blur-xl ${
         isFront
           ? "cursor-grab border-primary/40 active:cursor-grabbing"
           : "border-border/60"
       }`}
-      style={{ zIndex: positionStyles[position].zIndex, backgroundColor: "oklch(0.14 0.03 265)" }}
+      style={{
+        zIndex: positionStyles[position].zIndex,
+        backgroundColor: isFront
+          ? "oklch(0.16 0.035 268 / 0.92)"
+          : "oklch(0.18 0.04 268 / 0.7)",
+      }}
     >
       <img
         src={avatar}
