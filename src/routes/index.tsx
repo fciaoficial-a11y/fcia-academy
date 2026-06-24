@@ -242,31 +242,7 @@ function Index() {
       </section>
 
       {/* PROVA SOCIAL */}
-      <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
-        <header className="mx-auto mb-10 max-w-2xl text-center">
-          <span className="eyebrow text-primary">Quem passou por aqui</span>
-          <h2 className="mt-2 font-display text-3xl font-semibold text-foreground sm:text-4xl">Histórias reais. Carreiras reais.</h2>
-        </header>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {TESTIMONIES.map((t) => (
-            <article key={t.name} className="relative overflow-hidden rounded-3xl border border-border/60 bg-card/60 p-6 backdrop-blur-xl">
-              <div className="flex items-center gap-1 text-primary">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="h-3.5 w-3.5 fill-current" />
-                ))}
-              </div>
-              <p className="mt-4 text-sm leading-relaxed text-foreground">"{t.quote}"</p>
-              <footer className="mt-5 flex items-center gap-3 border-t border-border/40 pt-4">
-                <img src={t.avatar} alt={t.name} width={512} height={512} loading="lazy" className="h-11 w-11 rounded-full object-cover ring-2 ring-primary/30" />
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-foreground">{t.name}</p>
-                  <p className="truncate text-xs text-muted-foreground">{t.role}</p>
-                </div>
-              </footer>
-            </article>
-          ))}
-        </div>
-      </section>
+      <ShuffleTestimonials />
 
       {/* TENSÃO DE CURIOSIDADE */}
       <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
