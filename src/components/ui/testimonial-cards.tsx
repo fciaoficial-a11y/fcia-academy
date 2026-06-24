@@ -1,6 +1,9 @@
 "use client";
 import * as React from "react";
 import { motion } from "framer-motion";
+import avatar1 from "@/assets/avatar-1.jpg";
+import avatar2 from "@/assets/avatar-2.jpg";
+import avatar3 from "@/assets/avatar-3.jpg";
 
 type Position = "front" | "middle" | "back";
 
@@ -9,6 +12,7 @@ type Testimonial = {
   testimonial: string;
   author: string;
   role: string;
+  avatar: string;
 };
 
 const TESTIMONIALS: Testimonial[] = [
@@ -18,6 +22,7 @@ const TESTIMONIALS: Testimonial[] = [
       "A FCIA mudou minha rotina de estudos. A trilha de Frontend Moderno me preparou para uma promoção em 3 meses.",
     author: "Marina Souza",
     role: "Frontend Engineer · Nubank",
+    avatar: avatar1,
   },
   {
     id: 12,
@@ -25,6 +30,7 @@ const TESTIMONIALS: Testimonial[] = [
       "Os certificados são reconhecidos pelo meu time. Já indiquei a plataforma para 12 colegas.",
     author: "Diego Lima",
     role: "Tech Lead · iFood",
+    avatar: avatar2,
   },
   {
     id: 31,
@@ -32,6 +38,7 @@ const TESTIMONIALS: Testimonial[] = [
       "O AI Studio acelerou em 4x a produção de conteúdo do meu squad de educação interna.",
     author: "Aline Pires",
     role: "Design Systems Lead · Globo",
+    avatar: avatar3,
   },
 ];
 
@@ -40,7 +47,7 @@ interface CardProps extends Testimonial {
   handleShuffle: () => void;
 }
 
-function TestimonialCard({ handleShuffle, testimonial, role, position, author }: CardProps) {
+function TestimonialCard({ handleShuffle, testimonial, role, position, author, avatar }: CardProps) {
   const dragRef = React.useRef(0);
   const isFront = position === "front";
   const positionStyles: Record<Position, { rotate: string; x: string; zIndex: number }> = {
@@ -64,12 +71,21 @@ function TestimonialCard({ handleShuffle, testimonial, role, position, author }:
         dragRef.current = 0;
       }}
       transition={{ duration: 0.4, type: "spring", stiffness: 200, damping: 25 }}
-      className={`absolute left-0 top-0 flex h-[380px] w-[300px] select-none flex-col items-center gap-4 rounded-2xl border p-6 backdrop-blur-sm ${
+      className={`absolute left-0 top-0 flex h-[380px] w-[300px] select-none flex-col items-center gap-4 rounded-2xl border p-6 shadow-2xl ${
         isFront
-          ? "cursor-grab border-primary/30 bg-primary/[0.04] active:cursor-grabbing"
-          : "border-border/60 bg-card/40"
+          ? "cursor-grab border-primary/40 bg-card active:cursor-grabbing"
+          : "border-border/60 bg-card"
       }`}
     >
+      <img
+        src={avatar}
+        alt={author}
+        width={72}
+        height={72}
+        loading="lazy"
+        className="h-18 w-18 rounded-full object-cover ring-2 ring-primary/40"
+        style={{ height: 72, width: 72 }}
+      />
       <div className="flex gap-1 text-primary">
         {[...Array(5)].map((_, i) => (
           <span key={i}>★</span>
