@@ -198,7 +198,7 @@ function VitrinePage() {
           ].map(({ icon: Icon, title, desc }) => (
             <article key={title} className="group rounded-2xl border border-border/60 bg-card/60 p-5 backdrop-blur-xl transition-colors hover:border-primary/40">
               <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-md transition-transform group-hover:scale-105">
-                <Icon className="h-4.5 w-4.5" />
+                <Icon className="h-5 w-5" />
               </span>
               <h3 className="mt-3 font-display text-base font-semibold text-foreground">{title}</h3>
               <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
