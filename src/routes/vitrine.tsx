@@ -284,6 +284,21 @@ function CourseCard({
           Top
         </span>
       )}
+      <div className="relative -mx-5 -mt-5 mb-4 aspect-[16/9] overflow-hidden border-b border-border/60 bg-gradient-to-br from-primary/20 via-card to-accent/20">
+        {course.image ? (
+          <img
+            src={course.image}
+            alt={course.title}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-primary/40">
+            <BookOpen className="h-12 w-12" />
+          </div>
+        )}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card/80 via-transparent to-transparent" />
+      </div>
       <div className="flex items-start justify-between gap-3">
         <Badge variant="secondary" className="text-[10px] uppercase tracking-wider">
           {highlight ? "Destaque" : "Curso"}

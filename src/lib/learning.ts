@@ -36,6 +36,7 @@ export interface CourseRow {
   track_id: string | null;
   price_cents?: number;
   currency?: string;
+  image?: string | null;
 }
 
 export interface ModuleRow {
