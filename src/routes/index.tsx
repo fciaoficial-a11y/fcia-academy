@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import {
   ArrowRight, Sparkles, ShoppingBag, GraduationCap, Award,
   Target, Brain, ShieldCheck, Users, ChevronDown,
@@ -64,10 +65,89 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const heroRef = useRef<HTMLElement | null>(null);
+  const spot1Ref = useRef<HTMLDivElement | null>(null);
+  const spot2Ref = useRef<HTMLDivElement | null>(null);
+  const cursorRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    const s1 = spot1Ref.current;
+    const s2 = spot2Ref.current;
+    const c = cursorRef.current;
+    if (!hero || !s1 || !s2 || !c) return;
+
+    const onMove = (e: MouseEvent) => {
+      const r = hero.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      s1.style.left = `${x}px`;
+      s1.style.top = `${y}px`;
+      s2.style.left = `${x + 30}px`;
+      s2.style.top = `${y + 20}px`;
+      c.style.left = `${x}px`;
+      c.style.top = `${y}px`;
+    };
+    const onEnter = () => {
+      s1.style.opacity = "1";
+      s2.style.opacity = "1";
+      c.style.opacity = "1";
+    };
+    const onLeave = () => {
+      s1.style.opacity = "0";
+      s2.style.opacity = "0";
+      c.style.opacity = "0";
+    };
+    hero.addEventListener("mousemove", onMove);
+    hero.addEventListener("mouseenter", onEnter);
+    hero.addEventListener("mouseleave", onLeave);
+    return () => {
+      hero.removeEventListener("mousemove", onMove);
+      hero.removeEventListener("mouseenter", onEnter);
+      hero.removeEventListener("mouseleave", onLeave);
+    };
+  }, []);
+
   return (
     <AppShell>
       {/* HERO */}
-      <section className="relative overflow-hidden">
+      <section ref={heroRef} className="relative overflow-hidden [cursor:none]">
+        <div
+          ref={spot1Ref}
+          aria-hidden
+          className="pointer-events-none absolute z-0 rounded-full opacity-0 transition-opacity duration-300"
+          style={{
+            width: 500,
+            height: 500,
+            transform: "translate(-50%, -50%)",
+            background: "radial-gradient(circle at center, rgba(0,212,255,0.18), transparent 70%)",
+            filter: "blur(2px)",
+          }}
+        />
+        <div
+          ref={spot2Ref}
+          aria-hidden
+          className="pointer-events-none absolute z-0 rounded-full opacity-0 transition-opacity duration-300"
+          style={{
+            width: 350,
+            height: 350,
+            transform: "translate(-50%, -50%)",
+            background: "radial-gradient(circle at center, rgba(168,85,247,0.12), transparent 70%)",
+            filter: "blur(8px)",
+          }}
+        />
+        <div
+          ref={cursorRef}
+          aria-hidden
+          className="pointer-events-none absolute z-50 rounded-full opacity-0 transition-opacity duration-200"
+          style={{
+            width: 12,
+            height: 12,
+            transform: "translate(-50%, -50%)",
+            background: "#00D4FF",
+            mixBlendMode: "screen",
+          }}
+        />
         <div className="absolute inset-0 -z-10" aria-hidden>
           <div className="absolute inset-0 tech-grid opacity-30" />
           <div className="absolute -top-40 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-primary/20 blur-[120px] animate-pulse" />
