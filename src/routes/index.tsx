@@ -6,6 +6,7 @@ import {
   Code2, Database, Briefcase, Star,
 } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
+import { ShuffleTestimonials } from "@/components/ui/testimonial-cards";
 import heroMentor from "@/assets/landing-hero-mentor.jpg";
 import avatar1 from "@/assets/avatar-1.jpg";
 import avatar2 from "@/assets/avatar-2.jpg";
